@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SellerInformationApps.Pages.ChartPage"
+              xmlns:telerik="Telerik.Maui"
+             Title="Grafik Sayfası"
+             BackgroundColor="#f5f5f5">
+    <VerticalStackLayout>
+        <Label 
+            Text="Grafik sayfasına hoşgeldiniz bu sayfa hala geliştirme sürecinde ondan dolayı diğer sayfalara bakabilirsiniz"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+    </VerticalStackLayout>
+</ContentPage>

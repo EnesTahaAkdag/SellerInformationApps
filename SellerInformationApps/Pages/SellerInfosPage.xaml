@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SellerInformationApps.Pages.SellerInfosPage"
+             Title="Satıcı Bilgileri Sayfası"
+             Padding="10"
+             BackgroundColor="#f5f5f5">
+    <!-- Açık gri arka plan -->
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Başlıklar -->
+        <ScrollView Grid.Row="0"
+                    Orientation="Horizontal"
+                    HorizontalScrollBarVisibility="Never"
+                    x:Name="headerScroll">
+            <StackLayout Orientation="Vertical"
+                         BackgroundColor="White"
+                         Padding="10"
+                         Spacing="10"
+>
+                <Grid BackgroundColor="#333"
+                  Padding="10">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0"
+                       Text="Id"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="White"
+                       FontAttributes="Bold"/>
+                    <Label Grid.Column="1"
+                       Text="Mağza İsmi"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="White"
+                       FontAttributes="Bold"/>
+                    <Label Grid.Column="2"
+                       Text="Telefon"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="White"
+                       FontAttributes="Bold"/>
+                    <Label Grid.Column="3"
+                       Text="Email"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="White"
+                       FontAttributes="Bold"/>
+                    <Label Grid.Column="4"
+                       Text="Adres"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="White"
+                       FontAttributes="Bold"/>
+                    <Label Grid.Column="5"
+                       Text="Satıcı İsmi"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="White"
+                       FontAttributes="Bold"/>
+                </Grid>
+            </StackLayout>
+        </ScrollView>
+
+        <!-- İçerik -->
+        <ScrollView Grid.Row="1"
+                    Orientation="Vertical"
+                    Margin="0,10,0,0"
+                    Scrolled="OnScrollViewScrolled">
+            <ScrollView Grid.Row="1" 
+                        Orientation="Horizontal"
+                        Scrolled="OnScrolled"
+                        x:Name="s">
+
+                <StackLayout Orientation="Vertical"
+                             BackgroundColor="White"
+                             Padding="10"
+                             Spacing="10">
+
+                    <StackLayout BindableLayout.ItemsSource="{Binding StoreInfos}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="50,150,150,200,200,150"
+                                  Padding="10"
+                                  Margin="0,5"
+                                  BackgroundColor="#e0e0e0">
+                                    <Label Grid.Column="0"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       Text="{Binding Id}"
+                                       TextColor="#333"/>
+                                    <Label Grid.Column="1"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       Text="{Binding StoreName}"
+                                       TextColor="#333"/>
+                                    <Label Grid.Column="2"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       Text="{Binding Telephone}"
+                                       TextColor="#333"/>
+                                    <Label Grid.Column="3"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       Text="{Binding Email}"
+                                       TextColor="#333"/>
+                                    <Label Grid.Column="4"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       Text="{Binding Address}"
+                                       TextColor="#333"/>
+                                    <Label Grid.Column="5"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       Text="{Binding SellerName}"
+                                       TextColor="#333"/>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </StackLayout>
+            </ScrollView>
+        </ScrollView>
+    </Grid>
+</ContentPage>

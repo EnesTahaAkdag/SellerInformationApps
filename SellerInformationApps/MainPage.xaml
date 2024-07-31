@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SellerInformationApps"
+             x:Class="SellerInformationApps.MainPage"
+             Title="Ana Sayfa"
+             BackgroundColor="#F5F5F5">
+    <!-- Arka Plan Rengini Açık Gri Yaptım -->
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Üst Kısım Başlık -->
+        <Label Text="Hoşgeldiniz!"
+               FontSize="32"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               VerticalOptions="Start"
+               Margin="0,20,0,10"
+               TextColor="Black"/>
+
+        <!-- Butonlar -->
+        <StackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center">
+            <Button Text="Satıcı Bilgileri Sayfası"
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Fill"
+                    Clicked="OpenSellerInfoPage"
+                    Margin="0"
+                    BackgroundColor="#FFA500"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Padding="10"/>
+
+            <Button Text="Grafik Sayfası"
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Fill" 
+                    Clicked="OpenChartPage"
+                    Margin="0"
+                    BackgroundColor="#FFA500" 
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Padding="10"/>
+        </StackLayout>
+    </Grid>
+</ContentPage>
