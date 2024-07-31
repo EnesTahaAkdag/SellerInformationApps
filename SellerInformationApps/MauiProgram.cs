@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 using Telerik.Maui.Controls.Compatibility;
 
 namespace SellerInformationApps
@@ -11,6 +12,7 @@ namespace SellerInformationApps
 			builder
 				.UseMauiApp<App>()
 				.UseTelerik()
+				.UseSkiaSharp()
 				.ConfigureFonts(fonts =>
 				{
 					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

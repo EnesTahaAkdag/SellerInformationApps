@@ -20,7 +20,7 @@ namespace PraPazar.ServiceHelper
 				new HttpClient(handler, false)
 				{
 					BaseAddress = new Uri(endpoint),
-					Timeout = TimeSpan.FromSeconds(150),
+					//Timeout = TimeSpan.FromSeconds(10),
 				}
 			);
 			return client;

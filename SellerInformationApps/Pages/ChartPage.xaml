@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SellerInformationApps.Pages"
              x:Class="SellerInformationApps.Pages.ChartPage"
-              xmlns:telerik="Telerik.Maui"
+             xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
              Title="Grafik Sayfası"
              BackgroundColor="#f5f5f5">
-    <VerticalStackLayout>
-        <Label 
-            Text="Grafik sayfasına hoşgeldiniz bu sayfa hala geliştirme sürecinde ondan dolayı diğer sayfalara bakabilirsiniz"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <telerik:RadPieChart>
+        <telerik:RadPieChart.Series>
+                    <telerik:DonutSeries ShowLabels="True" 
+                                         ItemsSource="{Binding data}" 
+                                         ValueBinding="Value" 
+                                         LabelBinding="Label">
+                    </telerik:DonutSeries>
+                </telerik:RadPieChart.Series>
+            </telerik:RadPieChart>
 </ContentPage>
