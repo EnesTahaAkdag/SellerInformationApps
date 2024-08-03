@@ -1,33 +1,16 @@
-using System.Collections.ObjectModel;
+using SellerInformationApps.ViewModel;
 
-namespace SellerInformationApps.Pages;
-
-public partial class ChartPage : ContentPage
+namespace SellerInformationApps.Pages
 {
-	public ObservableCollection<CategoricalData> Data { get; set; }
-
-	public ChartPage()
+	public partial class ChartPage : ContentPage
 	{
-		InitializeComponent();
-		this.Data = GetCategoricalData();
+		public ChartPageViewModel ChartPageView { get; set; }
 
-	}
-	private static ObservableCollection<CategoricalData> GetCategoricalData()
-	{
-		var data = new ObservableCollection<CategoricalData>
+		public ChartPage()
 		{
-			new CategoricalData { Category = "Greenings", Value = 52 },
-			new CategoricalData { Category = "Perfecto", Value = 19 },
-			new CategoricalData { Category = "NearBy", Value = 82 },
-			new CategoricalData { Category = "Family", Value = 23 },
-			new CategoricalData { Category = "Fresh", Value = 56 },
-		};
-		return data;
-	}
-
-	public class CategoricalData
-	{
-		public object Category { get; set; }
-		public double Value { get; set; }
+			InitializeComponent();
+			ChartPageView = new ChartPageViewModel();
+			BindingContext = ChartPageView;
+		}
 	}
 }

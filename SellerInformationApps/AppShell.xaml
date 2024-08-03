@@ -6,19 +6,24 @@
     xmlns:local="clr-namespace:SellerInformationApps"
     xmlns:pages="clr-namespace:SellerInformationApps.Pages"
     Shell.FlyoutBehavior="Flyout"
-    Title="SellerInformationApps">
-
+    Title="SellerInformationApps"
+    Shell.BackgroundColor="GhostWhite"
+    Shell.TitleColor="Black"
+    Shell.FlyoutBackground="#f5f5f5"
+    >
     <ShellContent
         Title="Ana Sayfa"
         ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Route="MainPage"
+        Icon="pngwingcom.png" />
     <ShellContent
         Title="Satıcı Bilgileri"
         ContentTemplate="{DataTemplate pages:SellerInfosPage}"
-        Route="SellerInfosPage"/>
+        Route="SellerInfosPage"
+        Icon="my_info.png" />
     <ShellContent
         Title="Grafik Sayfası"
         ContentTemplate="{DataTemplate pages:ChartPage}"
-        Route="ChartPage"/>
-
+        Route="ChartPage"
+        Icon="vectorbarcharticon.png" />
 </Shell>

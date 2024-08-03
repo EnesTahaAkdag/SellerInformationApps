@@ -1,32 +1,34 @@
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
-
-
 namespace SellerInformationApps.Pages;
-
 public partial class SellerInfosPage : ContentPage
 {
 	public ObservableCollection<StoreInfo> StoreInfos { get; set; }
+
 	private int currentPage = 1;
+
 	private const int pageSize = 50;
+
 	public SellerInfosPage()
 	{
 		InitializeComponent();
 		StoreInfos = new ObservableCollection<StoreInfo>();
 		BindingContext = this;
 	}
+
 	protected override async void OnAppearing()
 	{
 		base.OnAppearing();
 		await FetchDataFromAPI();
 	}
+
 	private async Task FetchDataFromAPI()
 	{
 		try
 		{
-			var httpClient = HttpClientFactory.Create("https://4309-37-130-115-34.ngrok-free.app");
-			string url = $"https://4309-37-130-115-34.ngrok-free.app/DataSendApp/MarketPlaceData?page={currentPage}&pageSize{pageSize}";
+			var httpClient = HttpClientFactory.Create("https://70dd-37-130-115-34.ngrok-free.app");
+			string url = $"https://70dd-37-130-115-34.ngrok-free.app/DataSendApp/MarketPlaceData?page={currentPage}&pageSize{pageSize}";
 
 			using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 			{
@@ -69,6 +71,7 @@ public partial class SellerInfosPage : ContentPage
 			});
 		}
 	}
+
 	private async void OnScrollViewScrolled(object sender, ScrolledEventArgs e)
 	{
 		var scrollView = sender as ScrollView;
@@ -82,10 +85,12 @@ public partial class SellerInfosPage : ContentPage
 			await FetchDataFromAPI();
 		}
 	}
+
 	private void OnScrolled(object sender, ScrolledEventArgs e)
 	{
 		headerScroll.ScrollToAsync(e.ScrollX, 0, false);
 	}
+
 	public class StoreInfo
 	{
 		public long Id { get; set; }
@@ -95,6 +100,7 @@ public partial class SellerInfosPage : ContentPage
 		public string Address { get; set; }
   		public string SellerName { get; set; }
 	}
+
 	public class ApiResponse
 	{
 		public bool Success { get; set; }

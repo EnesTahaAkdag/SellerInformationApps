@@ -3,16 +3,51 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:SellerInformationApps.Pages"
              x:Class="SellerInformationApps.Pages.ChartPage"
+             xmlns:viewModel="clr-namespace:SellerInformationApps.ViewModel"
              xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
              Title="Grafik Sayfası"
              BackgroundColor="#f5f5f5">
-    <telerik:RadPieChart>
-        <telerik:RadPieChart.Series>
-                    <telerik:DonutSeries ShowLabels="True" 
-                                         ItemsSource="{Binding data}" 
-                                         ValueBinding="Value" 
-                                         LabelBinding="Label">
-                    </telerik:DonutSeries>
-                </telerik:RadPieChart.Series>
-            </telerik:RadPieChart>
+
+    <ContentPage.BindingContext>
+        <viewModel:ChartPageViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto, Auto, *" Padding="10">
+        <telerik:RadCartesianChart x:Name="chart"  
+                                   AutomationId="chart"  
+                                   Grid.Row="2"
+                                   HeightRequest="300">
+            <telerik:RadCartesianChart.ChartBehaviors>
+                <telerik:ChartSelectionBehavior DataPointSelectionMode="None"
+                                                SeriesSelectionMode="None" />
+                <telerik:ChartTooltipBehavior TriggerMode="Tap" />
+            </telerik:RadCartesianChart.ChartBehaviors>
+            <telerik:RadCartesianChart.HorizontalAxis>
+                <telerik:CategoricalAxis LineColor="#A9A9A9" 
+                                         MajorTickThickness="3" 
+                                         PlotMode="BetweenTicks" 
+                                         ShowLabels="True"
+                                         LabelTextColor="Black"
+                                         MajorTickBackgroundColor="#A9A9A9" />
+            </telerik:RadCartesianChart.HorizontalAxis>
+            <telerik:RadCartesianChart.VerticalAxis>
+                <telerik:NumericalAxis LineColor="#A9A9A9"
+                                       ShowLabels="True"
+                                       LabelFormat="0"
+                                       LabelTextColor="Black"
+                                       LabelFitMode="Rotate"
+                                       MajorTickBackgroundColor="#A9A9A9" />
+            </telerik:RadCartesianChart.VerticalAxis>
+
+            <telerik:RadCartesianChart.Grid>
+                <telerik:CartesianChartGrid MajorLinesVisibility="Y" 
+                                            MajorLineThickness="3" />
+            </telerik:RadCartesianChart.Grid>
+            <telerik:RadCartesianChart.Series>
+                <telerik:BarSeries CategoryBinding="StoreName"
+                                   ValueBinding="RatingScore"
+                                   ItemsSource="{Binding Data}" />
+            </telerik:RadCartesianChart.Series>
+        </telerik:RadCartesianChart>
+    </Grid>
 </ContentPage>

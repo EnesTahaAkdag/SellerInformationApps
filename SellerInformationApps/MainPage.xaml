@@ -6,7 +6,7 @@
              x:Class="SellerInformationApps.MainPage"
              Title="Ana Sayfa"
              BackgroundColor="#F5F5F5">
-    <!-- Arka Plan Rengini Açık Gri Yaptım -->
+
     <Grid Padding="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
