@@ -7,4 +7,8 @@ public partial class MainPage : ContentPage
 	private async void OpenChartPage(object sender, EventArgs e) => await Navigation.PushAsync(new Pages.ChartPage());
 
 	private async void OpenSellerInfoPage(object sender, EventArgs e) => await Navigation.PushAsync(new Pages.SellerInfosPage());
+
+	private async void OpenLoginPage(object sender, EventArgs e) => await Navigation.PushAsync(new Pages.LoginPage());
+
+	private async void OpenRegisterPage(object sender, EventArgs e) => await Navigation.PushAsync(new Pages.RegisterPage());
 }

@@ -45,6 +45,28 @@
                     CornerRadius="10"
                     HeightRequest="50"
                     Padding="10"/>
+            
+            <Button Text="Giriş Sayfası"
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Fill" 
+                    Clicked="OpenLoginPage"
+                    Margin="0"
+                    BackgroundColor="#FFA500" 
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Padding="10"/>
+            
+            <Button Text="Kayıt Sayfası"
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Fill" 
+                    Clicked="OpenRegisterPage"
+                    Margin="0"
+                    BackgroundColor="#FFA500" 
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Padding="10"/>
         </StackLayout>
     </Grid>
 </ContentPage>

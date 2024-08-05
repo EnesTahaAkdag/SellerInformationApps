@@ -57,8 +57,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\LoginIcon.png" />
 	  <None Remove="Resources\Images\my_info.png" />
 	  <None Remove="Resources\Images\pngwingcom.png" />
+	  <None Remove="Resources\Images\register.png" />
 	  <None Remove="Resources\Images\vectorbarcharticon.png" />
 	</ItemGroup>
 
@@ -92,6 +94,12 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Pages\ChartPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\RegisterPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\SellerInfosPage.xaml">

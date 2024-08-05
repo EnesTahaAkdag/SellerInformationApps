@@ -26,4 +26,14 @@
         ContentTemplate="{DataTemplate pages:ChartPage}"
         Route="ChartPage"
         Icon="vectorbarcharticon.png" />
+    <ShellContent
+        Title="Giriş Sayfası"
+        ContentTemplate="{DataTemplate pages:LoginPage}"
+        Route="LoginPage"
+        Icon="loginicon.png"/>
+    <ShellContent
+        Title="Kayıt Sayfası"
+        ContentTemplate="{DataTemplate pages:RegisterPage}"
+        Route="RegisterPage"
+        Icon="register.png"/>
 </Shell>

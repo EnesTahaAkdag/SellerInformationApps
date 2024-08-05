@@ -65,7 +65,7 @@ namespace SellerInformationApps.ViewModel
 									});
 								}
 
-								MainThread.BeginInvokeOnMainThread(async () =>
+								MainThread.BeginInvokeOnMainThread(() =>
 								{
 									foreach (var item in result)
 									{
