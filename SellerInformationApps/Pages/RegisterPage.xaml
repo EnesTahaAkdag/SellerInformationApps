@@ -5,53 +5,156 @@
              xmlns:local="clr-namespace:SellerInformationApps.ViewModel"
              Title="Kayıt Sayfası"
              BackgroundColor="#f5f5f5">
-    <ContentPage.BindingContext>
-        <local:DatePickerViewModel/>
-    </ContentPage.BindingContext>
-    <ScrollView Grid.Row="0" Orientation="Vertical">
+    <!--<ContentPage.BindingContext>
+        <local:DataPickerViewModel/>
+    </ContentPage.BindingContext>-->
+
+    <ScrollView Grid.Row="0"
+                Orientation="Vertical">
         <Grid Padding="10">
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Label Text="Hesap Oluştur"
-               TextColor="Black"
-               HorizontalOptions="Center"
-               VerticalOptions="Start"
-               FontAttributes="Bold"
-               FontSize="20"
-               Grid.Row="0"
-               Margin="0,20,0,0"/>
-            <Frame Grid.Row="1" Padding="20" CornerRadius="10" BackgroundColor="White" HasShadow="True" Margin="0,20,0,0">
-                <StackLayout Padding="0" Spacing="15" Orientation="Vertical">
-                    <Label Text="Ad" TextColor="Black" FontSize="Medium"/>
-                    <Entry x:Name="FirstNameEntry" Placeholder="Adınızı girin" BackgroundColor="#f0f0f0"/>
 
-                    <Label Text="Soyad" TextColor="Black" FontSize="Medium"/>
-                    <Entry x:Name="LastNameEntry" Placeholder="Soyadınızı girin" BackgroundColor="#f0f0f0"/>
+            <Frame Grid.Row="1"
+                   Padding="20"
+                   CornerRadius="10" 
+                   BackgroundColor="White"
+                   HasShadow="True"
+                   Margin="0,20,0,0">
 
-                    <Label Text="Kullanıcı Adı" TextColor="Black" FontSize="Medium"/>
-                    <Entry x:Name="UserNameEntry" Placeholder="Kullanıcı adınızı girin" BackgroundColor="#f0f0f0"/>
+                <StackLayout Padding="0" 
+                             Spacing="15" 
+                             Orientation="Vertical">
 
-                    <Label Text="E-posta" TextColor="Black" FontSize="Medium"/>
-                    <Entry x:Name="EmailEntry" Placeholder="E-postanızı girin" Keyboard="Email" BackgroundColor="#f0f0f0"/>
+                    <Label Text="Hesap Oluştur" 
+                           TextColor="Black"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Start"
+                           FontAttributes="Bold" 
+                           FontSize="20" 
+                           Grid.Row="0"/>
 
-                    <Label Text="Doğum Tarihi" TextColor="Black" FontSize="Medium"/>
-                    <DatePicker x:Name="AgeEntry" MinimumDate="1900-01-01" MaximumDate="{Binding CurrentDate}" TextColor="Black" BackgroundColor="#f0f0f0"/>
+                    <Label Text="Ad" 
+                           TextColor="Black" 
+                           FontSize="Medium"/>
 
-                    <Label Text="Şifre" TextColor="Black" FontSize="Medium"/>
-                    <Entry x:Name="PasswordEntry" Placeholder="Şifrenizi girin" IsPassword="True" BackgroundColor="#f0f0f0" />
+                    <Frame BackgroundColor="#f0f0f0" 
+                           CornerRadius="5"
+                           Padding="10">
 
-                    <Label Text="Şifreyi Doğrula" TextColor="Black" FontSize="Medium"/>
-                    <Entry x:Name="VerifyPasswordEntry" Placeholder="Şifrenizi girin" IsPassword="True" BackgroundColor="#f0f0f0"/>
+                        <Entry x:Name="FirstNameEntry" 
+                               Placeholder="Adınızı girin" 
+                               BackgroundColor="Transparent" 
+                               Text="{Binding FirstName}"
+                               TextColor="Black"/>
+                    </Frame>
 
-                    <Button Text="Kayıt Ol"
-                        BackgroundColor="#007AFF"
-                        TextColor="White"
-                        VerticalOptions="EndAndExpand"
-                        Margin="0,20,0,0"
-                        CornerRadius="10"
-                        Clicked="OnRegisterButtonClicked"/>
+                    <Label Text="Soyad"
+                           TextColor="Black" 
+                           FontSize="Medium"/>
+
+                    <Frame BackgroundColor="#f0f0f0" 
+                           CornerRadius="5"
+                           Padding="10">
+
+                        <Entry x:Name="LastNameEntry" 
+                               Placeholder="Soyadınızı girin"
+                               BackgroundColor="Transparent"
+                               Text="{Binding LastName}"
+                               TextColor="Black"/>
+                    </Frame>
+
+                    <Label Text="Kullanıcı Adı"
+                           TextColor="Black"
+                           FontSize="Medium"/>
+
+                    <Frame BackgroundColor="#f0f0f0" 
+                           CornerRadius="5" 
+                           Padding="10">
+
+                        <Entry x:Name="UserNameEntry"
+                               Placeholder="Kullanıcı adınızı girin"
+                               BackgroundColor="Transparent" 
+                               Text="{Binding UserName}"
+                               TextColor="Black"/>
+                    </Frame>
+
+                    <Label Text="E-posta" 
+                           TextColor="Black" 
+                           FontSize="Medium"/>
+
+                    <Frame BackgroundColor="#f0f0f0" 
+                           CornerRadius="5" 
+                           Padding="10">
+
+                        <Entry x:Name="EmailEntry"
+                               Placeholder="E-postanızı girin" 
+                               Keyboard="Email"
+                               BackgroundColor="Transparent"
+                               Text="{Binding Email}"
+                               TextColor="Black"/>
+                    </Frame>
+
+                    <Label Text="Doğum Tarihi" 
+                           TextColor="Black" 
+                           FontSize="Medium"/>
+
+                    <Frame BackgroundColor="#f0f0f0" 
+                           CornerRadius="5" 
+                           Padding="10">
+
+                        <DatePicker x:Name="AgeEntry"
+                                    MinimumDate="1900-01-01"
+                                    MaximumDate="{Binding CurrentDate}" 
+                                    TextColor="Black" 
+                                    BackgroundColor="Transparent" 
+                                    Date="{Binding DateOfBirth, Mode=TwoWay}"/>
+                    </Frame>
+
+                    <Label Text="Şifre" 
+                           TextColor="Black" 
+                           FontSize="Medium"/>
+
+                    <Frame BackgroundColor="#f0f0f0" 
+                           CornerRadius="5" 
+                           Padding="10">
+
+                        <Entry x:Name="PasswordEntry" 
+                               Placeholder="Şifrenizi girin" 
+                               IsPassword="True" 
+                               BackgroundColor="Transparent"
+                               Text="{Binding Password}"
+                               TextColor="Black"/>
+                    </Frame>
+
+                    <Label Text="Şifreyi Doğrula" 
+                           TextColor="Black" 
+                           FontSize="Medium"/>
+
+                    <Frame BackgroundColor="#f0f0f0" 
+                           CornerRadius="5" 
+                           Padding="10">
+
+                        <Entry x:Name="VerifyPasswordEntry"
+                               Placeholder="Şifrenizi girin" 
+                               IsPassword="True" 
+                               BackgroundColor="Transparent" 
+                               Text="{Binding VerifyPassword}"
+                               TextColor="Black"/>
+                    </Frame>
+
+                    <Button 
+
+                        Text="Kayıt Ol" 
+                        BackgroundColor="#007AFF" 
+                        TextColor="White" 
+                        VerticalOptions="EndAndExpand" 
+                        Margin="0,20,0,0" 
+                        Command="{Binding RegisterCommand}" />
+
                 </StackLayout>
             </Frame>
         </Grid>

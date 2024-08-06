@@ -11,4 +11,6 @@ public partial class MainPage : ContentPage
 	private async void OpenLoginPage(object sender, EventArgs e) => await Navigation.PushAsync(new Pages.LoginPage());
 
 	private async void OpenRegisterPage(object sender, EventArgs e) => await Navigation.PushAsync(new Pages.RegisterPage());
+
+	private async void OpenUserListPage(object sender, EventArgs e) => await Navigation.PushAsync(new Pages.UserListPage());
 }

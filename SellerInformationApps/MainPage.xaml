@@ -67,6 +67,17 @@
                     CornerRadius="10"
                     HeightRequest="50"
                     Padding="10"/>
+            
+            <Button Text="Kullanıcılar Sayfası"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Fill" 
+                    Clicked="OpenUserListPage"
+                    Margin="0"
+                    BackgroundColor="#FFA500" 
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Padding="10"/>
         </StackLayout>
     </Grid>
 </ContentPage>

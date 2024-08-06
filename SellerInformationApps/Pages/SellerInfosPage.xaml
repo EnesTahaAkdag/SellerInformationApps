@@ -17,7 +17,8 @@
         <ScrollView Grid.Row="0"
                     Orientation="Horizontal"
                     HorizontalScrollBarVisibility="Never"
-                    x:Name="headerScroll">
+                    x:Name="headerScroll"
+                    InputTransparent="True">
             <StackLayout Orientation="Vertical"
                          BackgroundColor="White"
                          Padding="10"
@@ -93,7 +94,7 @@
                     <StackLayout BindableLayout.ItemsSource="{Binding StoreInfos}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Grid ColumnDefinitions="50,150,150,200,200,150"
+                                <Grid ColumnDefinitions="80,150,150,200,200,150"
                                   Padding="10"
                                   Margin="0,5"
                                   BackgroundColor="#e0e0e0">

@@ -36,4 +36,9 @@
         ContentTemplate="{DataTemplate pages:RegisterPage}"
         Route="RegisterPage"
         Icon="register.png"/>
+    <ShellContent
+        Title="Kullanıcı Listesi"
+        ContentTemplate="{DataTemplate pages:UserListPage}"
+        Route="UserListPage"
+        Icon="usersicone.png"/>
 </Shell>

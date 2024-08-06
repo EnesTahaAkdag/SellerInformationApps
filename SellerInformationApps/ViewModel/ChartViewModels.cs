@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Microsoft.Maui.Dispatching;
 using PraPazar.ServiceHelper;
+using SellerInformationApps.Models;
 
 namespace SellerInformationApps.ViewModel
 {
@@ -101,22 +102,6 @@ namespace SellerInformationApps.ViewModel
 					await App.Current.MainPage.DisplayAlert("HATA", $"Hata Oluştu Apiye İstek Atılamadı: {ex.Message}", "Tamam");
 				});
 			}
-		}
-
-		public class SellerRaitingScore
-		{
-			public decimal? RatingScore { get; set; }
-			public Color SegmentColor { get; set; }
-			public string StoreName { get; set; }
-		}
-
-		public class ApiResponses
-		{
-			public bool Success { get; set; }
-			public string ErrorMessage { get; set; }
-			public object Data { get; set; }
-			public int Count { get; set; }
-			public int TotalCount { get; set; }
 		}
 	}
 }
