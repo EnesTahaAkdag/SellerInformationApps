@@ -1,91 +1,39 @@
 using System.Collections.ObjectModel;
-using Newtonsoft.Json;
-using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
+using SellerInformationApps.ViewModel;
 
 namespace SellerInformationApps.Pages
 {
 	public partial class SellerInfosPage : ContentPage
 	{
-		public ObservableCollection<StoreInfo> StoreInfos { get; set; }
-
-		private int currentPage = 1;
-
-		private const int pageSize = 50;
+		public ObservableCollection<StoreInfo> StoreInfos { get; private set; }
+		private SellerInfosViewModel viewModel;
 
 		public SellerInfosPage()
 		{
 			InitializeComponent();
 			StoreInfos = new ObservableCollection<StoreInfo>();
-			BindingContext = this;
+
+			viewModel = new SellerInfosViewModel();
+			BindingContext = viewModel;
 		}
 
 		protected override async void OnAppearing()
 		{
 			base.OnAppearing();
-			await FetchDataFromAPI();
-		}
-
-		private async Task FetchDataFromAPI()
-		{
-			try
-			{
-				var httpClient = HttpClientFactory.Create("https://70dd-37-130-115-34.ngrok-free.app");
-				string url = $"https://70dd-37-130-115-34.ngrok-free.app/DataSendApp/MarketPlaceData?page={currentPage}&pageSize{pageSize}";
-
-				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-				{
-					using (var response = await httpClient.SendAsync(request))
-					{
-						if (response.IsSuccessStatusCode)
-						{
-							string json = await response.Content.ReadAsStringAsync();
-							ApiResponsess apiResponse = JsonConvert.DeserializeObject<ApiResponsess>(json);
-							if (apiResponse.Success)
-							{
-								foreach (var items in apiResponse.Data)
-								{
-									StoreInfos.Add(items);
-								}
-							}
-							else
-							{
-								await MainThread.InvokeOnMainThreadAsync(async () =>
-								{
-									await DisplayAlert("HATA", $"API Ýsteði Baþarýsýz:{apiResponse.ErrorMessage}", "Tamam");
-								});
-							}
-						}
-						else
-						{
-							await MainThread.InvokeOnMainThreadAsync(async () =>
-							{
-								await DisplayAlert("HATA", $"HTTP Ýsteði Baþarýsýz:{response.StatusCode}", "Tamam");
-							});
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				await MainThread.InvokeOnMainThreadAsync(async () =>
-				{
-					await DisplayAlert("HATA", $"Hata Oluþtu Apiye Ýstek Atýlamadý:{ex}", "Tamam");
-				});
-			}
+			await viewModel.FetchDataFromAPIAsync();
 		}
 
 		private async void OnScrollViewScrolled(object sender, ScrolledEventArgs e)
 		{
-			var scrollView = sender as ScrollView;
-			if (scrollView == null)
-				return;
-
-			double scrollingSpace = scrollView.ContentSize.Height - scrollView.Height;
-			if (scrollingSpace <= e.ScrollY)
+			if (sender is ScrollView scrollView)
 			{
-				currentPage++;
-				await FetchDataFromAPI();
+				double scrollingSpace = scrollView.ContentSize.Height - scrollView.Height;
+				if (scrollingSpace <= e.ScrollY)
+				{
+					viewModel.CurrentPage++;
+					await viewModel.FetchDataFromAPIAsync();
+				}
 			}
 		}
 

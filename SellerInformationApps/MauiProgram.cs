@@ -30,9 +30,20 @@ namespace SellerInformationApps
 
 
 			builder.Services.AddSingleton<ChartPage>();
-
+			builder.Services.AddSingleton<LoginPage>();
+			builder.Services.AddSingleton<ProfilePage>();
+			builder.Services.AddSingleton<RegisterPage>();
+			builder.Services.AddSingleton<SellerInfosPage>();
+			builder.Services.AddSingleton<UpdateProfilePage>();
+			builder.Services.AddSingleton<UserListPage>();
 
 			builder.Services.AddSingleton<ChartPageViewModel>();
+			builder.Services.AddSingleton<LoginPageViewModel>();
+			builder.Services.AddSingleton<ProfilePageViewModel>();
+			builder.Services.AddSingleton<RegisterViewModel>();
+			builder.Services.AddSingleton<SellerInfosViewModel>();
+			builder.Services.AddSingleton<UpdateProfileViewModel>();
+			builder.Services.AddSingleton<UserListViewModel>();
 
 			return builder.Build();
 		}

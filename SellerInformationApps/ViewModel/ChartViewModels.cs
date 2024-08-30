@@ -23,85 +23,63 @@ namespace SellerInformationApps.ViewModel
 		{
 			try
 			{
-				var httpClient = HttpClientFactory.Create("https://70dd-37-130-115-34.ngrok-free.app");
-				string url = "https://70dd-37-130-115-34.ngrok-free.app/SendDataToChart/ChartData";
-				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+				var httpClient = HttpClientFactory.Create("https://e669-37-130-115-34.ngrok-free.app");
+				string url = "https://e669-37-130-115-34.ngrok-free.app/SendDataToChart/ChartData";
+
+				var response = await httpClient.GetAsync(url);
+
+				if (response.IsSuccessStatusCode)
 				{
-					using (var response = await httpClient.SendAsync(request))
+					string json = await response.Content.ReadAsStringAsync();
+					var apiResponses = JsonConvert.DeserializeObject<ApiResponses>(json);
+					if (apiResponses.Success)
 					{
-						if (response.IsSuccessStatusCode)
+						var apiData = JsonConvert.DeserializeObject<List<SellerRaitingScore>>(apiResponses.Data.ToString());
+
+						var ratingCounts = apiData
+							.Where(item => item.RatingScore.HasValue && item.RatingScore.Value != 0.00m)
+							.GroupBy(item => (int)Math.Floor(item.RatingScore.Value))
+							.ToDictionary(g => g.Key, g => g.Count());
+
+						var result = Enumerable.Range(1, 5).Select(i => new SellerRaitingScore
 						{
-							string json = await response.Content.ReadAsStringAsync();
-							ApiResponses apiResponses = JsonConvert.DeserializeObject<ApiResponses>(json);
-							if (apiResponses.Success)
-							{
-								var apiData = JsonConvert.DeserializeObject<List<SellerRaitingScore>>(apiResponses.Data.ToString());
+							StoreName = $"{i}",
+							RatingScore = ratingCounts.ContainsKey(i) ? ratingCounts[i] : 0
+						}).ToList();
 
-								var ratingCounts = new Dictionary<int, int>();
-
-								foreach (var item in apiData)
-								{
-									if (item.RatingScore.HasValue && item.RatingScore.Value != 0.00m)
-									{
-										int rating = (int)Math.Floor(item.RatingScore.Value);
-										if (ratingCounts.ContainsKey(rating))
-										{
-											ratingCounts[rating]++;
-										}
-										else
-										{
-											ratingCounts[rating] = 1;
-										}
-									}
-								}
-
-								var result = new List<SellerRaitingScore>();
-								for (int i = 1; i <= 5; i++)
-								{
-									int count = ratingCounts.ContainsKey(i) ? ratingCounts[i] : 0;
-									result.Add(new SellerRaitingScore
-									{
-										StoreName = $"{i}",
-										RatingScore = count
-									});
-								}
-
-								MainThread.BeginInvokeOnMainThread(() =>
-								{
-									foreach (var item in result)
-									{
-										Data.Add(new SellerRaitingScore { StoreName = "Boş", RatingScore = 2898 });
-										Data.Add(new SellerRaitingScore { StoreName = "0", RatingScore = 2411 });
-										Data.Add(item);
-										
-									}
-								});
-							}
-							else
-							{
-								await MainThread.InvokeOnMainThreadAsync(async () =>
-								{
-									await App.Current.MainPage.DisplayAlert("HATA", $"API İsteği Başarısız: {apiResponses.ErrorMessage}", "Tamam");
-								});
-							}
-						}
-						else
+						MainThread.BeginInvokeOnMainThread(() =>
 						{
-							await MainThread.InvokeOnMainThreadAsync(async () =>
+							Data.Add(new SellerRaitingScore { StoreName = "Boş", RatingScore = 2898 });
+							Data.Add(new SellerRaitingScore { StoreName = "0", RatingScore = 2411 });
+
+							foreach (var item in result)
 							{
-								await App.Current.MainPage.DisplayAlert("HATA", $"HTTP İsteği Başarısız: {response.StatusCode}", "Tamam");
-							});
-						}
+								Data.Add(item);
+							}
+						});
 					}
+					else
+					{
+						await ShowAlertAsync("API İsteği Başarısız", apiResponses.ErrorMessage);
+					}
+				}
+				else
+				{
+					await ShowAlertAsync("HTTP İsteği Başarısız", response.StatusCode.ToString());
 				}
 			}
 			catch (Exception ex)
 			{
-				await MainThread.InvokeOnMainThreadAsync(async () =>
-				{
-					await App.Current.MainPage.DisplayAlert("HATA", $"Hata Oluştu Apiye İstek Atılamadı: {ex.Message}", "Tamam");
-				});
+				await ShowAlertAsync("Hata Oluştu", $"Apiye İstek Atılamadı: {ex.Message}");
 			}
+		}
+
+		private async Task ShowAlertAsync(string title, string message)
+		{
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				await App.Current.MainPage.DisplayAlert("HATA", $"{title}: {message}", "Tamam");
+			});
 		}
 	}
 }

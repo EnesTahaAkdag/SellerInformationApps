@@ -7,6 +7,16 @@
              xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
              Title="Grafik Sayfası"
              BackgroundColor="#f5f5f5">
+    <Shell.TitleView>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+            <Label Text="Grafik Sayfası"
+               FontSize="30"
+               FontAttributes="Bold"
+               TextColor="Black"
+               VerticalOptions="Center"/>
+        </StackLayout>
+    </Shell.TitleView>
+
     <ContentPage.BindingContext>
         <viewModel:ChartPageViewModel/>
     </ContentPage.BindingContext>

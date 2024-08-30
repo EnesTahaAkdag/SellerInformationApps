@@ -60,6 +60,7 @@
 	  <None Remove="Resources\Images\loginicon.png" />
 	  <None Remove="Resources\Images\my_info.png" />
 	  <None Remove="Resources\Images\pngwingcom.png" />
+	  <None Remove="Resources\Images\profileicone.png" />
 	  <None Remove="Resources\Images\register.png" />
 	  <None Remove="Resources\Images\usersicone.png" />
 	  <None Remove="Resources\Images\vectorbarcharticon.png" />
@@ -103,10 +104,16 @@
 	  <MauiXaml Update="Pages\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\ProfilePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\RegisterPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\SellerInfosPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\UpdateProfilePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\UserListPage.xaml">
