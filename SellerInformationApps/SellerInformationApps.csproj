@@ -58,6 +58,7 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\loginicon.png" />
+	  <None Remove="Resources\Images\moreicone.png" />
 	  <None Remove="Resources\Images\my_info.png" />
 	  <None Remove="Resources\Images\pngwingcom.png" />
 	  <None Remove="Resources\Images\profileicone.png" />

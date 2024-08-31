@@ -4,7 +4,17 @@
              x:Class="SellerInformationApps.Pages.UserListPage"
              Title="Giriş Sayfası"
              Padding="10"
-             BackgroundColor="#f5f5f5">
+             BackgroundColor="#f5f5f5"
+             Shell.BackgroundColor="#FFFFFF">
+    <Shell.TitleView>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+            <Label Text="Kullanıcı Listesi"
+               FontSize="30"
+               FontAttributes="Bold"
+               TextColor="Black"
+               VerticalOptions="Center"/>
+        </StackLayout>
+    </Shell.TitleView>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

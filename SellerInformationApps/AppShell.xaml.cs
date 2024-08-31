@@ -17,7 +17,7 @@ namespace SellerInformationApps
 			Routing.RegisterRoute(nameof(ProfilePage), typeof(ProfilePage));
 
 			// Styling Tab Bar
-			Shell.SetTabBarBackgroundColor(this, Colors.FromArgb("#333333"));
+			Shell.SetTabBarBackgroundColor(this, Color.FromArgb("#333333"));
 			Shell.SetTabBarTitleColor(this, Colors.White);
 			Shell.SetTabBarUnselectedColor(this, Colors.LightGray);
 		}

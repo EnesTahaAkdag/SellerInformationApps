@@ -21,10 +21,18 @@
             <ShellContent ContentTemplate="{DataTemplate pages:SellerInfosPage}" Route="SellerInfosPage" />
         </Tab>
 
+        <Tab Title="Kullanıcı Listesi" Icon="usersicone.png">
+            <ShellContent ContentTemplate="{DataTemplate pages:UserListPage}" Route="UserListPage" />
+        </Tab>
+        
         <Tab Title="Grafik Sayfası" Icon="vectorbarcharticon.png">
             <ShellContent ContentTemplate="{DataTemplate pages:ChartPage}" Route="ChartPage" />
         </Tab>
 
+        <Tab Title="Profil Sayfası" Icon="profileicone.png">
+            <ShellContent ContentTemplate="{DataTemplate pages:ProfilePage}" Route="ProfilePage" />
+        </Tab>
+        
         <Tab Title="Giriş Sayfası" Icon="loginicon.png">
             <ShellContent ContentTemplate="{DataTemplate pages:LoginPage}" Route="LoginPage" />
         </Tab>
@@ -33,12 +41,5 @@
             <ShellContent ContentTemplate="{DataTemplate pages:RegisterPage}" Route="RegisterPage" />
         </Tab>
 
-        <Tab Title="Kullanıcı Listesi" Icon="usersicone.png">
-            <ShellContent ContentTemplate="{DataTemplate pages:UserListPage}" Route="UserListPage" />
-        </Tab>
-
-        <Tab Title="Profil Sayfası" Icon="profileicone.png">
-            <ShellContent ContentTemplate="{DataTemplate pages:ProfilePage}" Route="ProfilePage" />
-        </Tab>
     </TabBar>
 </Shell>

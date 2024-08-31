@@ -1,9 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Microsoft.Maui.Dispatching;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 

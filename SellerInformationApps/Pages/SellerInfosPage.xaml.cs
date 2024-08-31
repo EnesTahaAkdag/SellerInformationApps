@@ -21,8 +21,12 @@ namespace SellerInformationApps.Pages
 		protected override async void OnAppearing()
 		{
 			base.OnAppearing();
+			viewModel.StoreInfos.Clear();
+			viewModel.CurrentPage = 1;
 			await viewModel.FetchDataFromAPIAsync();
 		}
+
+		
 
 		private async void OnScrollViewScrolled(object sender, ScrolledEventArgs e)
 		{

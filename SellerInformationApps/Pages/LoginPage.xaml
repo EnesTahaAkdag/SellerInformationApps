@@ -3,18 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SellerInformationApps.Pages.LoginPage"
              Title="Giriş Yap"
-             BackgroundColor="#f5f5f5">
+             BackgroundColor="#FFFFFF"
+             Shell.BackgroundColor="#007AFF">
+
     <Shell.TitleView>
         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
             <Label Text="Giriş Yap"
-               FontSize="30"
-               FontAttributes="Bold"
-               TextColor="Black"
-               VerticalOptions="Center"/>
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   VerticalOptions="Center"/>
         </StackLayout>
     </Shell.TitleView>
 
-    <Grid Padding="10">
+    <Grid Padding="20" VerticalOptions="Center">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -22,48 +24,48 @@
         </Grid.RowDefinitions>
 
         <Frame Grid.Row="1"
-               Padding="20"
-               CornerRadius="10"
-               BackgroundColor="White"
-               HasShadow="True">
+               Padding="30"
+               CornerRadius="15"
+               BackgroundColor="#F5F5F5"
+               HasShadow="True"
+               VerticalOptions="CenterAndExpand">
 
-            <StackLayout Spacing="15"
-                         Orientation="Vertical">
+            <StackLayout Spacing="20">
 
-                <Label
-                    Text="Hesap Aç"
-                    TextColor="Black"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Start"
-                    FontAttributes="Bold"
-                    FontSize="24"/>
+                <Label Text="Hoşgeldiniz"
+                       TextColor="Black"
+                       HorizontalOptions="Center"
+                       FontAttributes="Bold"
+                       FontSize="28"/>
 
-                <Label
-                    Text="Kullanıcı Adı"
-                    TextColor="Black"
-                    FontSize="Medium"/>
+                <Label Text="Lütfen hesabınıza giriş yapın"
+                       TextColor="Gray"
+                       HorizontalOptions="Center"
+                       FontSize="14"/>
 
-                <Frame BackgroundColor="#f0f0f0"
-                       CornerRadius="5"
-                       Padding="5">
+                <Label Text="Kullanıcı Adı"
+                       TextColor="Black"
+                       FontSize="Medium"/>
 
-                    <Entry x:Name="UserNameEntrys"
-                           Placeholder="Kullanıcı Adını giriniz"
+                <Frame BackgroundColor="#E0E0E0"
+                       CornerRadius="10"
+                       Padding="10">
+                    <Entry x:Name="UserNameEntry"
+                           Placeholder="Kullanıcı adınızı girin"
                            BackgroundColor="Transparent"
                            Text="{Binding UserName}"
                            TextColor="Black"/>
                 </Frame>
 
-                <Label Text="Şifre" 
-                       TextColor="Black" 
+                <Label Text="Şifre"
+                       TextColor="Black"
                        FontSize="Medium"/>
 
-                <Frame BackgroundColor="#f0f0f0" 
-                       CornerRadius="5"
-                       Padding="5">
-
-                    <Entry x:Name="PasswordEntrys"
-                           Placeholder="Şifrenizi Giriniz" 
+                <Frame BackgroundColor="#E0E0E0"
+                       CornerRadius="10"
+                       Padding="10">
+                    <Entry x:Name="PasswordEntry"
+                           Placeholder="Şifrenizi girin"
                            IsPassword="True"
                            BackgroundColor="Transparent"
                            Text="{Binding Password}"
@@ -73,9 +75,29 @@
                 <Button Text="Giriş Yap"
                         BackgroundColor="#007AFF"
                         TextColor="White"
+                        CornerRadius="25"
+                        HeightRequest="50"
                         VerticalOptions="EndAndExpand"
-                        Margin="0,20,0,0"
                         Command="{Binding LoginCommand}"/>
+
+                <StackLayout Orientation="Horizontal"
+                             HorizontalOptions="Center"
+                             Spacing="5">
+                    
+                    <Label Text="Hesabınız yok mu?"
+                           TextColor="Gray"
+                           FontSize="Small"/>
+
+                    <Label Text="Kayıt Ol"
+                           TextColor="#007AFF"
+                           FontSize="Small"
+                           FontAttributes="Bold">
+                        
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RegisterCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
 
             </StackLayout>
         </Frame>

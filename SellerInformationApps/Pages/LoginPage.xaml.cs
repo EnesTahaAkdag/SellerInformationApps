@@ -1,9 +1,23 @@
-namespace SellerInformationApps.Pages;
+using SellerInformationApps.ViewModel;
 
-public partial class LoginPage : ContentPage
+namespace SellerInformationApps.Pages
 {
-	public LoginPage()
+	public partial class LoginPage : ContentPage
 	{
-		InitializeComponent();
+		private LoginPageViewModel viewModel;
+
+		public LoginPage()
+		{
+			InitializeComponent();
+			viewModel = new LoginPageViewModel();
+			BindingContext = viewModel;
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			viewModel.UserName = string.Empty;
+			viewModel.Password = string.Empty;
+		}
 	}
 }
