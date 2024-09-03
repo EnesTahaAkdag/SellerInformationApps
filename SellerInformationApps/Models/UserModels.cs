@@ -48,7 +48,12 @@ namespace SellerInformationApps.Models
 		public string Password { get; set; }
 	}
 
-	public class UpdateUser
+	public class UpdateUser : UserProfileData
+	{
+
+	}
+
+	public class UserProfileData
 	{
 		[StringLength(50, ErrorMessage = "50 Karakterden Fazla Giriş Yapılamaz")]
 		[Required(ErrorMessage = "İsim Boş Bırakılamaz")]
@@ -80,11 +85,11 @@ namespace SellerInformationApps.Models
 		public long Id { get; set; }
 	}
 
-	public class UserProfileDataResonse
+	public class ProfileApiResponse
 	{
 		public bool Success { get; set; }
 		public string ErrorMessage { get; set; }
-		public User Data { get; set; }
+		public UserProfileData Data { get; set; }
 	}
 
 	public class LoginApiResponse

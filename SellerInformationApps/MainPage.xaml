@@ -5,8 +5,10 @@
              Title="Ana Sayfa"
              BackgroundColor="#EFEFEF"
              Shell.BackgroundColor="#FFFFFF">
+
     <Shell.TitleView>
-        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+        <StackLayout Orientation="Horizontal"
+                     HorizontalOptions="CenterAndExpand">
             <Label Text="Ana Sayfa"
                    FontSize="30"
                    FontAttributes="Bold"
@@ -14,10 +16,10 @@
                    VerticalOptions="Center"/>
         </StackLayout>
     </Shell.TitleView>
-    
+
     <ContentPage.Content>
         <Grid Padding="20">
-            
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -25,83 +27,102 @@
 
             <StackLayout Grid.Row="0" Padding="10" Orientation="Horizontal" 
                          HorizontalOptions="Center" Margin="0,0,0,70">
-                <Label Text="Hoşgeldin:"
+                <Label Text="{Binding Accessed}"
                        FontSize="22"
                        FontAttributes="Bold"
                        VerticalOptions="Center"
                        TextColor="Black"/>
-                <Label Text="[UserName]" 
-                    FontSize="22"
+                <Label Text="{Binding UsersName}" 
+                       FontSize="22"
                        FontAttributes="Bold"
                        VerticalOptions="Center"
                        TextColor="Black"/>
             </StackLayout>
 
-                <StackLayout Spacing="20"  Grid.Row="1" Padding="10">
+            <!-- Giriş Yapılmamışsa Görünecek Olan Kısım -->
+            <StackLayout Spacing="20" Grid.Row="1" Padding="10"
+                         IsVisible="{Binding IsLoginVisible}">
 
-                    <StackLayout Spacing="10">
-                        <Label Text="Giriş Yap || Kayıt Ol"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               HorizontalOptions="Center"
-                               TextColor="#333"/>
+                <StackLayout Spacing="10">
+                    <Label Text="Giriş Yap || Kayıt Ol"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="#333"/>
 
-                        <Button Text="Giriş Yap"
-                                Clicked="OpenLoginPage"
-                                BackgroundColor="#007AFF"
-                                TextColor="White"
-                                CornerRadius="10"
-                                FontAttributes="Bold"
-                                HeightRequest="50"/>
+                    <Button Text="Giriş Yap"
+                            Clicked="OpenLoginPage"
+                            BackgroundColor="#0056b3" 
+                            TextColor="White"
+                            BorderColor="Black"
+                            CornerRadius="10"
+                            BorderWidth="1"
+                            FontAttributes="Bold"
+                            HeightRequest="50"/>
 
-                        <Button Text="Kayıt Ol"
-                                Clicked="OpenRegisterPage"
-                                BackgroundColor="#34C759"
-                                TextColor="White"
-                                CornerRadius="10"
-                                FontAttributes="Bold"
-                                HeightRequest="50" />
-                    </StackLayout>
+                    <Button Text="Kayıt Ol"
+                            Clicked="OpenRegisterPage"
+                            BackgroundColor="#1e7e34"  
+                            TextColor="White"
+                            CornerRadius="10"
+                            BorderWidth="1"
+                            FontAttributes="Bold"
+                            BorderColor="Black"
+                            HeightRequest="50" />
 
-                    <StackLayout Spacing="10">
-                        <Label Text="Uygulama İçeriği"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               HorizontalOptions="Center"
-                               TextColor="#333"/>
-
-                        <Button Text="Satıcı Bilgileri"
-                                Clicked="OpenSellerInfoPage"
-                                BackgroundColor="#FF3B30"
-                                TextColor="White"
-                                CornerRadius="10"
-                                FontAttributes="Bold"
-                                HeightRequest="50"/>
-
-                        <Button Text="Kullanıcılar"
-                                Clicked="OpenUserListPage"
-                                BackgroundColor="#5856D6"
-                                TextColor="White"
-                                CornerRadius="10"
-                                FontAttributes="Bold"
-                                HeightRequest="50"/>
-                        
-                        <Button Text="Grafik"
-                                Clicked="OpenChartPage"
-                                BackgroundColor="#FF9500"
-                                TextColor="White"
-                                CornerRadius="10"
-                                FontAttributes="Bold"
-                                HeightRequest="50"/>
-                        
-                        <Button Text="Kullanıcı Profili"
-                                Clicked="OpenProfilePage"
-                                TextColor="White"
-                                CornerRadius="10"
-                                FontAttributes="Bold"
-                                HeightRequest="50"/>
-                    </StackLayout>
                 </StackLayout>
+
+                <!-- Giriş Yapıldıysa Görünecek Olan Kısım -->
+                <StackLayout Spacing="10"
+                             IsVisible="{Binding IsContentVisible}">
+                    <Label Text="Uygulama İçeriği"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="#333"/>
+
+                    <Button Text="Satıcı Bilgileri"
+                            Clicked="OpenSellerInfoPage"
+                            BackgroundColor="#c70039"  
+                            TextColor="White"
+                            CornerRadius="10"
+                            BorderColor="Black"
+                            FontAttributes="Bold"
+                            BorderWidth="1"
+                            HeightRequest="50"/>
+
+                    <Button Text="Kullanıcılar"
+                            Clicked="OpenUserListPage"
+                            BackgroundColor="#4a148c" 
+                            TextColor="White"
+                            CornerRadius="10"
+                            BorderWidth="1"
+                            BorderColor="Black"
+                            FontAttributes="Bold"
+                            HeightRequest="50"/>
+
+                    <Button Text="Grafik"
+                            Clicked="OpenChartPage"
+                            BackgroundColor="#ff8f00"  
+                              
+                            TextColor="White"
+                            BorderWidth="1"
+                            CornerRadius="10"
+                            BorderColor="Black"
+                            FontAttributes="Bold"
+                            HeightRequest="50"/>
+
+                    <Button Text="Kullanıcı Profili"
+                            Clicked="OpenProfilePage"
+                            BackgroundColor="#1e7e34"  
+                            TextColor="White"
+                            CornerRadius="10"
+                            BorderWidth="1"
+                            BorderColor="Black"
+                            FontAttributes="Bold"
+                            HeightRequest="50"/>
+                </StackLayout>
+            </StackLayout>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

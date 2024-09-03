@@ -3,22 +3,29 @@ using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
-using SellerInformationApps.Pages;
 using ServiceHelper.Authentication;
 using System.Text;
 using System.Windows.Input;
 
 namespace SellerInformationApps.ViewModel
 {
-	public partial class LoginPageViewModel : Authentication
+	public partial class LoginPageViewModel : ObservableObject
 	{
-		private Authentication authenticatin;
+		private readonly Authentication authentication;
 
 		[ObservableProperty]
 		private string userName;
 
 		[ObservableProperty]
 		private string password;
+
+		public ICommand RegisterCommand { get; }
+
+		public LoginPageViewModel()
+		{
+			authentication = Authentication.Instance;
+			RegisterCommand = new AsyncRelayCommand(NavigateToRegisterPageAsync);
+		}
 
 		[RelayCommand]
 		public async Task LoginAsync()
@@ -38,8 +45,8 @@ namespace SellerInformationApps.ViewModel
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://e669-37-130-115-34.ngrok-free.app");
-				string url = "https://e669-37-130-115-34.ngrok-free.app/LoginPage/LoginUserData";
+				var httpClient = HttpClientFactory.Create("https://0044-37-130-115-34.ngrok-free.app");
+				string url = "https://0044-37-130-115-34.ngrok-free.app/LoginPage/LoginUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -78,7 +85,7 @@ namespace SellerInformationApps.ViewModel
 				{
 					Preferences.Set("UserName", UserName);
 					Preferences.Set("Password", Password);
-					authenticatin.LogIn();
+					authentication.LogIn();
 					await Shell.Current.GoToAsync("//MainPage");
 				}
 				else
@@ -90,14 +97,6 @@ namespace SellerInformationApps.ViewModel
 			{
 				await App.Current.MainPage.DisplayAlert("Hata", $"HTTP isteği başarısız oldu: {response.StatusCode}", "Tamam");
 			}
-		}
-
-		public ICommand RegisterCommand { get; }
-
-		public LoginPageViewModel()
-		{
-			authenticatin = new Authentication();
-			RegisterCommand = new AsyncRelayCommand(NavigateToRegisterPageAsync);
 		}
 
 		private async Task NavigateToRegisterPageAsync()

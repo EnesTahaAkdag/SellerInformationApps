@@ -25,8 +25,8 @@ namespace SellerInformationApps.ViewModel
 		{
 			try
 			{
-				var httpClient = HttpClientFactory.Create("https://e669-37-130-115-34.ngrok-free.app");
-				string url = $"https://e669-37-130-115-34.ngrok-free.app/DataSendApp/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
+				var httpClient = HttpClientFactory.Create("https://0044-37-130-115-34.ngrok-free.app");
+				string url = $"https://0044-37-130-115-34.ngrok-free.app/DataSendApp/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
 
 				using (var response = await httpClient.GetAsync(url))
 				{

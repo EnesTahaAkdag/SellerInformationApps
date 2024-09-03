@@ -1,9 +1,27 @@
-namespace SellerInformationApps.Pages;
+using SellerInformationApps.ViewModel;
 
-public partial class ProfilePage : ContentPage
+namespace SellerInformationApps.Pages
 {
-	public ProfilePage()
+	public partial class ProfilePage : ContentPage
 	{
-		InitializeComponent();
+		private readonly ProfilePageViewModel _viewModel;
+
+		public ProfilePage()
+		{
+			InitializeComponent();
+			_viewModel = new ProfilePageViewModel();
+			BindingContext = _viewModel;
+		}
+
+		private async void OpenUpdateProfilePage(object sender, EventArgs e)
+		{
+			await Shell.Current.GoToAsync("//UpdateProfilePage");
+		}
+
+		protected override async void OnAppearing()
+		{
+			base.OnAppearing();
+			await _viewModel.Accessed();
+		}
 	}
 }

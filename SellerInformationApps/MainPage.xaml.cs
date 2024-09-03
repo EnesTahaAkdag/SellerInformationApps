@@ -1,8 +1,30 @@
-﻿namespace SellerInformationApps;
+﻿using SellerInformationApps.ViewModel;
+
+namespace SellerInformationApps;
 
 public partial class MainPage : ContentPage
 {
-	public MainPage() => InitializeComponent();
+	private readonly MainPageViewModel viewModel;
+
+	public MainPage()
+	{
+		InitializeComponent();
+		viewModel = new MainPageViewModel();
+		BindingContext = viewModel;
+	}
+
+	protected override void OnAppearing()
+	{
+		base.OnAppearing();
+		viewModel.LoadUserName();
+	}
+
+	protected override void OnDisappearing()
+	{
+		base.OnDisappearing();
+		viewModel.UsersName = string.Empty;
+		viewModel.Accessed = string.Empty;
+	}
 
 	private async void OpenChartPage(object sender, EventArgs e)
 	{
@@ -32,5 +54,10 @@ public partial class MainPage : ContentPage
 	private async void OpenProfilePage(object sender, EventArgs e)
 	{
 		await Shell.Current.GoToAsync("//ProfilePage");
+	}
+
+	private async void LogOutButton(object sender, EventArgs e)
+	{
+		await viewModel.LogOutAsync();
 	}
 }

@@ -66,8 +66,8 @@ namespace SellerInformationApps.Pages
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://e669-37-130-115-34.ngrok-free.app");
-				string url = "https://e669-37-130-115-34.ngrok-free.app/RegisterAPI/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://0044-37-130-115-34.ngrok-free.app");
+				string url = "https://0044-37-130-115-34.ngrok-free.app/RegisterAPI/RegisterUser";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -137,17 +137,10 @@ namespace SellerInformationApps.Pages
 		public RegisterViewModel()
 		{
 			CurrentDate = DateTime.Now;
-			LoginCommand = new AsyncRelayCommand(NavigateToLoginPageAsync);
+			LoginCommand = new AsyncRelayCommand(NavigateToRegisterPageAsync);
 		}
 
-		public event PropertyChangingEventHandler PropertyChanged;
-		protected virtual void OnPropertyChanged(string propertyName)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangingEventArgs(propertyName));
-		}
-
-		[RelayCommand]
-		private async Task NavigateToLoginPageAsync()
+		private async Task NavigateToRegisterPageAsync()
 		{
 			await Shell.Current.GoToAsync("//LoginPage");
 		}
