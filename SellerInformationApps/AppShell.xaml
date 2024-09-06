@@ -17,22 +17,26 @@
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
         </Tab>
 
-        <Tab Title="Satıcı Bilgileri" Icon="my_info.png">
+        <Tab Title="Satıcı Bilgileri" Icon="my_info.png" >
             <ShellContent ContentTemplate="{DataTemplate pages:SellerInfosPage}" Route="SellerInfosPage" />
         </Tab>
 
-        <Tab Title="Kullanıcı Listesi" Icon="usersicone.png">
+        <Tab Title="Kullanıcı Listesi" Icon="usersicone.png" >
             <ShellContent ContentTemplate="{DataTemplate pages:UserListPage}" Route="UserListPage" />
         </Tab>
-        
-        <Tab Title="Grafik Sayfası" Icon="vectorbarcharticon.png">
+
+        <Tab Title="Grafik Sayfası" Icon="vectorbarcharticon.png" >
             <ShellContent ContentTemplate="{DataTemplate pages:ChartPage}" Route="ChartPage" />
         </Tab>
 
-        <Tab Title="Profil Sayfası" Icon="profileicone.png">
+        <Tab Title="Profil Sayfası" Icon="profileicone.png" >
             <ShellContent ContentTemplate="{DataTemplate pages:ProfilePage}" Route="ProfilePage" />
         </Tab>
         
+        <Tab Title="Profil Güncelleme Sayfası" Icon="profileicone.png">
+            <ShellContent ContentTemplate="{DataTemplate pages:UpdateProfilePage}" Route="UpdateProfilePage" />
+        </Tab>
+
         <Tab Title="Giriş Sayfası" Icon="loginicon.png">
             <ShellContent ContentTemplate="{DataTemplate pages:LoginPage}" Route="LoginPage" />
         </Tab>

@@ -6,7 +6,6 @@ using SellerInformationApps.Models;
 using SellerInformationApps.ServiceHelper;
 using ServiceHelper.Authentication;
 using System.Text;
-using System.Windows.Input;
 
 namespace SellerInformationApps.Pages
 {
@@ -66,8 +65,8 @@ namespace SellerInformationApps.Pages
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://0044-37-130-115-34.ngrok-free.app");
-				string url = "https://0044-37-130-115-34.ngrok-free.app/RegisterAPI/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://f038-37-130-115-34.ngrok-free.app");
+				string url = "https://f038-37-130-115-34.ngrok-free.app/RegisterAPI/RegisterUser";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -142,7 +141,7 @@ namespace SellerInformationApps.Pages
 
 		private async Task NavigateToRegisterPageAsync()
 		{
-			await Shell.Current.GoToAsync("//LoginPage");
+			await Shell.Current.GoToAsync("//GirişSayfası");
 		}
 	}
 }

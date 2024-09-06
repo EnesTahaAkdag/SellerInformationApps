@@ -113,6 +113,7 @@ namespace SellerInformationApps.Models
 		public string ErrorMessage { get; set; }
 		public List<UpdateUser> Data { get; set; }
 	}
+
 	public class RegisterApiResponse
 	{
 		public bool Success { get; set; }

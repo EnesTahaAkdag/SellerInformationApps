@@ -3,7 +3,7 @@ using ServiceHelper.Authentication;
 
 namespace SellerInformationApps.ViewModel
 {
-	public partial class MainPageViewModel : ObservableObject
+	public partial class MainPageViewModel : Authentication
 	{
 		private readonly Authentication authentication;
 

@@ -19,13 +19,6 @@ public partial class MainPage : ContentPage
 		viewModel.LoadUserName();
 	}
 
-	protected override void OnDisappearing()
-	{
-		base.OnDisappearing();
-		viewModel.UsersName = string.Empty;
-		viewModel.Accessed = string.Empty;
-	}
-
 	private async void OpenChartPage(object sender, EventArgs e)
 	{
 		await Shell.Current.GoToAsync("//ChartPage");

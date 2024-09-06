@@ -39,9 +39,8 @@
                        TextColor="Black"/>
             </StackLayout>
 
-            <!-- Giriş Yapılmamışsa Görünecek Olan Kısım -->
             <StackLayout Spacing="20" Grid.Row="1" Padding="10"
-                         IsVisible="{Binding IsLoginVisible}">
+                         IsVisible="True">
 
                 <StackLayout Spacing="10">
                     <Label Text="Giriş Yap || Kayıt Ol"
@@ -72,9 +71,8 @@
 
                 </StackLayout>
 
-                <!-- Giriş Yapıldıysa Görünecek Olan Kısım -->
                 <StackLayout Spacing="10"
-                             IsVisible="{Binding IsContentVisible}">
+                             IsVisible="True">
                     <Label Text="Uygulama İçeriği"
                            FontSize="18"
                            FontAttributes="Bold"

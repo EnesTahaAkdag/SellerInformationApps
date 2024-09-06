@@ -1,8 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel;
 
 namespace ServiceHelper.Authentication
 {
-	public partial class Authentication : ObservableObject
+	public partial class Authentication : ObservableObject , INotifyPropertyChanged
 	{
 		private static Authentication instance;
 		private static readonly object lockObj = new object();

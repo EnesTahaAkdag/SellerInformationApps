@@ -91,7 +91,7 @@
                              Spacing="20">
 
                     <Button Text="Profili Güncelle" 
-                            Clicked="OpenUpdateProfilePage"
+                            Command="{Binding UpdateProfileCommand}"
                             BackgroundColor="#28a745" 
                             TextColor="White" 
                             CornerRadius="10"

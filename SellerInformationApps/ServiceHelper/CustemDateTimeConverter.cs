@@ -11,7 +11,7 @@ namespace SellerInformationApps.ServiceHelper
 	{
 		public CustemDateTimeConverter()
 		{
-			DateTimeFormat = "yyyy-MM-dd";
+			DateTimeFormat = "dd-MM-yyyy";
 		}
 	}
 }

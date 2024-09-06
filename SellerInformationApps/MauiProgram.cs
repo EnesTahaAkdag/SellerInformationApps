@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using SellerInformationApps.Models;
 using SellerInformationApps.Pages;
 using SellerInformationApps.ViewModel;
 using SkiaSharp.Views.Maui.Controls.Hosting;
@@ -35,6 +36,8 @@ namespace SellerInformationApps
 			builder.Services.AddSingleton<SellerInfosPage>();
 			builder.Services.AddSingleton<UpdateProfilePage>();
 			builder.Services.AddSingleton<UserListPage>();
+			builder.Services.AddSingleton<UserProfileData>();
+
 
 			builder.Services.AddTransient<ChartPageViewModel>();
 			builder.Services.AddTransient<LoginPageViewModel>();
@@ -44,6 +47,8 @@ namespace SellerInformationApps
 			builder.Services.AddTransient<UpdateProfileViewModel>();
 			builder.Services.AddTransient<UserListViewModel>();
 
+			builder.Services.AddTransient<UpdateProfilePage>();
+			builder.Services.AddTransient<UpdateProfileViewModel>();
 			return builder.Build();
 		}
 	}

@@ -22,7 +22,6 @@ namespace SellerInformationApps.Pages
 		{
 			base.OnAppearing();
 			viewModel.StoreInfos.Clear();
-			viewModel.CurrentPage = 1;
 			await viewModel.FetchDataFromAPIAsync();
 		}
 
@@ -35,7 +34,6 @@ namespace SellerInformationApps.Pages
 				double scrollingSpace = scrollView.ContentSize.Height - scrollView.Height;
 				if (scrollingSpace <= e.ScrollY)
 				{
-					viewModel.CurrentPage++;
 					await viewModel.FetchDataFromAPIAsync();
 				}
 			}

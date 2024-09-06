@@ -1,5 +1,5 @@
-﻿using Microsoft.Maui.Controls;
-using SellerInformationApps.Pages;
+﻿using SellerInformationApps.Pages;
+using ServiceHelper.Authentication;
 
 namespace SellerInformationApps
 {
@@ -8,6 +8,13 @@ namespace SellerInformationApps
 		public AppShell()
 		{
 			InitializeComponent();
+			RegisterRoutes();
+			ConfigureTabBar();
+			BindingContext = new Authentication();
+		}
+
+		private void RegisterRoutes()
+		{
 			Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
 			Routing.RegisterRoute(nameof(SellerInfosPage), typeof(SellerInfosPage));
 			Routing.RegisterRoute(nameof(ChartPage), typeof(ChartPage));
@@ -15,11 +22,15 @@ namespace SellerInformationApps
 			Routing.RegisterRoute(nameof(RegisterPage), typeof(RegisterPage));
 			Routing.RegisterRoute(nameof(UserListPage), typeof(UserListPage));
 			Routing.RegisterRoute(nameof(ProfilePage), typeof(ProfilePage));
+		}
 
-			// Styling Tab Bar
+		private void ConfigureTabBar()
+		{
 			Shell.SetTabBarBackgroundColor(this, Color.FromArgb("#333333"));
 			Shell.SetTabBarTitleColor(this, Colors.White);
 			Shell.SetTabBarUnselectedColor(this, Colors.LightGray);
+			Shell.SetTabBarForegroundColor(this, Colors.White);
+			Shell.SetTabBarDisabledColor(this, Colors.Gray);
 		}
 	}
 }

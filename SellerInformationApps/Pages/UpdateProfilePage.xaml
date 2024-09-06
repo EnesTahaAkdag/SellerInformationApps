@@ -1,132 +1,127 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SellerInformationApps.Pages.UpdateProfilePage"
              xmlns:a="clr-namespace:SellerInformationApps.Converter"
              xmlns:viewModel="clr-namespace:SellerInformationApps.ViewModel"             
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             Title="UpdateProfilePage"
-             BackgroundColor="#e0e0e0">
+             BackgroundColor="#f5f5f5"
+             Shell.BackgroundColor="#FFFFFF">
 
+    <!-- Kaynaklar -->
     <ContentPage.Resources>
         <ResourceDictionary>
             <a:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
+    <!-- Başlık Görünümü -->
     <Shell.TitleView>
-        <Grid BackgroundColor="LightGray" Padding="15">
-            <Label Text="Profil Sayfası"  
+        <Label Text="Profil Sayfası"  
                    HorizontalOptions="Center"  
                    VerticalOptions="Center"  
                    TextColor="Black"  
                    FontSize="24"  
                    FontAttributes="Bold"  
-                   FontFamily="Arial" 
                    HorizontalTextAlignment="Center" 
                    VerticalTextAlignment="Center"/>
-        </Grid>
     </Shell.TitleView>
 
-    <Grid RowDefinitions="Auto, *" ColumnDefinitions="*">
-        <!-- Yükleniyor Göstergesi -->
-        <ActivityIndicator IsRunning="{Binding IsLoading}" 
-                           IsVisible="{Binding IsLoading}" 
-                           VerticalOptions="Center"
-                           HorizontalOptions="Center" 
-                           Color="Blue" 
-                           Grid.Row="1" />
+    <!-- Ana Grid -->
+    <Grid RowDefinitions="Auto, *" ColumnDefinitions="*"
+          HorizontalOptions="FillAndExpand"
+          Padding="0"
+          Margin="0">
 
-        <!-- İçerik -->
         <ScrollView Grid.Row="1">
-            <StackLayout Padding="20" Spacing="20"
-                         IsVisible="{Binding IsLoading,Converter={StaticResource InverseBooleanConverter}}">
+            <StackLayout Padding="20" Spacing="15"
+                         IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+
+                <!-- Profil Fotoğrafı -->
                 <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
                     <Grid>
                         <Frame WidthRequest="120" HeightRequest="120"
                                CornerRadius="60" IsClippedToBounds="True"
-                               BorderColor="#ccc" BackgroundColor="White"
-                               HasShadow="True">
+                               BorderColor="#ddd" BackgroundColor="White"
+                               HasShadow="False">
                             <Image Source="dotnet_bot.png" Aspect="AspectFill"/>
                         </Frame>
-                        <ImageButton 
-                                 Source="cameraicon.png"
-                                 HeightRequest="40"
-                                 WidthRequest="40"
-                                 BackgroundColor="White"
-                                 BorderColor="Black"
-                                 BorderWidth="1"
-                                 CornerRadius="20"
-                                 HorizontalOptions="End"
-                                 VerticalOptions="End"
-                                 Margin="0,0,0,-20"
-                                 Padding="0"/>
+                        <ImageButton Source="cameraicon.png"
+                                     HeightRequest="35"
+                                     WidthRequest="35"
+                                     BackgroundColor="White"
+                                     BorderColor="Gray"
+                                     BorderWidth="1"
+                                     CornerRadius="18"
+                                     HorizontalOptions="End"
+                                     VerticalOptions="End"
+                                     Margin="0,0,0,-20"
+                                     Padding="5"/>
                     </Grid>
                 </StackLayout>
 
                 <!-- Kullanıcı Bilgileri -->
-                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="10" HasShadow="True">
                     <StackLayout Spacing="5">
-                        <Label Text="Ad" FontSize="12" TextColor="#7D7D7D"/>
-                        <Entry Text="{Binding FirstName}" FontSize="20" TextColor="Black" FontAttributes="Bold" Placeholder="Adınızı Giriniz"/>
+                        <Label Text="Ad" FontSize="14" TextColor="#6200EE"/>
+                        <Entry Text="{Binding FirstName}" FontSize="18" TextColor="Black" Placeholder="Adınızı Giriniz"/>
                     </StackLayout>
                 </Frame>
 
-                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="10" HasShadow="True">
                     <StackLayout Spacing="5">
-                        <Label Text="SoyAd" FontSize="12" TextColor="#7D7D7D"/>
-                        <Entry Text="{Binding LastName}" FontSize="20" TextColor="Black" FontAttributes="Bold" Placeholder="Soyadınızı Giriniz"/>
+                        <Label Text="SoyAd" FontSize="14" TextColor="#6200EE"/>
+                        <Entry Text="{Binding LastName}" FontSize="18" TextColor="Black" Placeholder="Soyadınızı Giriniz"/>
                     </StackLayout>
                 </Frame>
 
-                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="10" HasShadow="True">
                     <StackLayout Spacing="5">
-                        <Label Text="Kullanıcı Adı" FontSize="12" TextColor="#7D7D7D"/>
-                        <Entry Text="{Binding UserName}" FontSize="20" TextColor="Black" FontAttributes="Bold" Placeholder="Kullanıcı Adını Giriniz" IsEnabled="False"/>
+                        <Label Text="Kullanıcı Adı" FontSize="14" TextColor="#6200EE"/>
+                        <Entry Text="{Binding UserName}" FontSize="18" TextColor="Black" Placeholder="Kullanıcı Adını Giriniz" IsEnabled="False"/>
                     </StackLayout>
                 </Frame>
 
-                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="10" HasShadow="True">
                     <StackLayout Spacing="5">
-                        <Label Text="E-Mail" FontSize="12" TextColor="#7D7D7D"/>
-                        <Entry Text="{Binding Email}" FontSize="20" TextColor="Black" FontAttributes="Bold" Placeholder="Mail Adresini Giriniz" Keyboard="Email"/>
+                        <Label Text="E-Mail" FontSize="14" TextColor="#6200EE"/>
+                        <Entry Text="{Binding Email}" FontSize="18" TextColor="Black" Placeholder="Mail Adresini Giriniz" Keyboard="Email"/>
                     </StackLayout>
                 </Frame>
 
-                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="10" HasShadow="True">
                     <StackLayout Spacing="5">
-                        <Label Text="Doğum Tarihi" FontSize="12" TextColor="#7D7D7D"/>
-                        <DatePicker x:Name="AgeEntry" MinimumDate="1900-01-01" MaximumDate="{x:Static sys:DateTime.Now}" TextColor="Black" BackgroundColor="Transparent" Date="{Binding Age}"/>
+                        <Label Text="Doğum Tarihi" FontSize="14" TextColor="#6200EE"/>
+                        <DatePicker x:Name="AgeEntry" MinimumDate="1900-01-01" MaximumDate="{x:Static sys:DateTime.Now}"
+                                    TextColor="Black" BackgroundColor="Transparent" Date="{Binding Age}"/>
                     </StackLayout>
                 </Frame>
+
+                <!-- Butonlar -->
                 <StackLayout Orientation="Horizontal" 
                              HorizontalOptions="Center"
-                             Spacing="20">
+                             Spacing="15">
 
                     <Button Text="Kaydet" 
                             Command="{Binding SubmitCommand}" 
-                            BackgroundColor="ForestGreen" 
+                            BackgroundColor="#4CAF50" 
                             TextColor="White" 
-                            CornerRadius="25"
-                            HeightRequest="50"
+                            CornerRadius="20"
+                            HeightRequest="45"
                             FontSize="16" 
                             Padding="10"
-                            BorderColor="Black" 
-                            BorderWidth="1" 
-                            VerticalOptions="EndAndExpand"/>
+                            BorderColor="Transparent"
+                            WidthRequest="150"/>
 
                     <Button Text="İptal Et"
                             Command="{Binding UpdateCancelCommand}" 
                             BackgroundColor="#E74C3C" 
-                            TextColor="#FFFFFF"
-                            CornerRadius="10"
-                            HeightRequest="50" 
+                            TextColor="White"
+                            CornerRadius="20"
+                            HeightRequest="45" 
                             WidthRequest="150" 
                             FontSize="16"
-                            Padding="10" 
-                            BorderColor="Black" 
-                            BorderWidth="1"
-                            FontAttributes="Bold"/>
+                            Padding="10"
+                            BorderColor="Transparent"/>
                 </StackLayout>
             </StackLayout>
         </ScrollView>

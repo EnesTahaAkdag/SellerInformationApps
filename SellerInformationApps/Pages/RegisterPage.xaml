@@ -20,12 +20,13 @@
     </Shell.TitleView>
 
     <!-- İçerik -->
-        <Grid Padding="20">
+        <ScrollView>
+    <Grid Padding="20">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
             <Frame Grid.Row="1"
                    Padding="20"
@@ -43,67 +44,99 @@
                            FontAttributes="Bold"
                            FontSize="26"/>
 
+                    <Label Text="Bilgilerinizi Giriniz"
+                           TextColor="Gray"
+                           HorizontalOptions="Center"
+                           FontSize="14"/>
+
                     <!-- Girdi Alanları -->
                     <StackLayout Spacing="15">
 
                         <!-- Ad -->
-                        <Entry Placeholder="Ad"
+                        <Frame BackgroundColor="#E0E0E0"
+                           CornerRadius="10"
+                           Padding="10">
+                            <Entry Placeholder="Ad"
                                Text="{Binding FirstName}"
-                               BackgroundColor="#f0f0f0"
+                               BackgroundColor="#E0E0E0"
                                PlaceholderColor="Gray"
                                TextColor="Black"
                                Margin="0,5"/>
-
-                        <!-- Soyad -->
-                        <Entry Placeholder="Soyad"
+                        </Frame>
+                        <Frame BackgroundColor="#E0E0E0"
+                           CornerRadius="10"
+                           Padding="10">
+                            <!-- Soyad -->
+                            <Entry Placeholder="Soyad"
                                Text="{Binding LastName}"
-                               BackgroundColor="#f0f0f0"
+                               BackgroundColor="#E0E0E0"
                                PlaceholderColor="Gray"
                                TextColor="Black"
                                Margin="0,5"/>
+                        </Frame>
 
-                        <!-- Kullanıcı Adı -->
-                        <Entry Placeholder="Kullanıcı Adı"
+                        <Frame BackgroundColor="#E0E0E0"
+                           CornerRadius="10"
+                           Padding="10">
+                            <!-- Kullanıcı Adı -->
+                            <Entry Placeholder="Kullanıcı Adı"
                                Text="{Binding UserName}"
-                               BackgroundColor="#f0f0f0"
+                               BackgroundColor="#E0E0E0"
                                PlaceholderColor="Gray"
                                TextColor="Black"
                                Margin="0,5"/>
 
-                        <!-- E-posta -->
-                        <Entry Placeholder="E-posta"
+                        </Frame>
+                        <Frame BackgroundColor="#E0E0E0"
+                           CornerRadius="10"
+                           Padding="10">
+                            <!-- E-posta -->
+                            <Entry Placeholder="E-posta"
                                Keyboard="Email"
                                Text="{Binding Email}"
-                               BackgroundColor="#f0f0f0"
+                               BackgroundColor="#E0E0E0"
                                PlaceholderColor="Gray"
                                TextColor="Black"
                                Margin="0,5"/>
+                        </Frame>
 
-                        <!-- Doğum Tarihi -->
-                        <DatePicker Date="{Binding Age, Mode=TwoWay}"
+                        <Frame BackgroundColor="#E0E0E0"
+                           CornerRadius="10"
+                           Padding="10">
+                            <!-- Doğum Tarihi -->
+                            <DatePicker Date="{Binding Age, Mode=TwoWay}"
                                     MinimumDate="1900-01-01"
                                     MaximumDate="{Binding CurrentDate}"
-                                    BackgroundColor="#f0f0f0"
+                                    BackgroundColor="#E0E0E0"
                                     TextColor="Black"
                                     Margin="0,5"/>
+                        </Frame>
 
-                        <!-- Şifre -->
-                        <Entry Placeholder="Şifre"
+                        <Frame BackgroundColor="#E0E0E0"
+                           CornerRadius="10"
+                           Padding="10">
+                            <!-- Şifre -->
+                            <Entry Placeholder="Şifre"
                                IsPassword="True"
                                Text="{Binding Password}"
-                               BackgroundColor="#f0f0f0"
+                               BackgroundColor="#E0E0E0"
                                PlaceholderColor="Gray"
                                TextColor="Black"
                                Margin="0,5"/>
+                        </Frame>
 
-                        <!-- Şifreyi Doğrula -->
-                        <Entry Placeholder="Şifreyi Doğrula"
+                        <Frame BackgroundColor="#E0E0E0"
+                           CornerRadius="10"
+                           Padding="10">
+                            <!-- Şifreyi Doğrula -->
+                            <Entry Placeholder="Şifreyi Doğrula"
                                IsPassword="True"
                                Text="{Binding VerifyPassword}"
-                               BackgroundColor="#f0f0f0"
+                               BackgroundColor="#E0E0E0"
                                PlaceholderColor="Gray"
                                TextColor="Black"
                                Margin="0,5"/>
+                        </Frame>
                     </StackLayout>
 
                     <!-- Kayıt Ol Butonu -->
@@ -137,5 +170,6 @@
                     </StackLayout>
                 </StackLayout>
             </Frame>
-        </Grid>
+    </Grid>
+        </ScrollView>
 </ContentPage>
