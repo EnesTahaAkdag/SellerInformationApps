@@ -1,9 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
 
 namespace ServiceHelper.Authentication
 {
-	public partial class Authentication : ObservableObject , INotifyPropertyChanged
+	public partial class Authentication : ObservableObject
 	{
 		private static Authentication instance;
 		private static readonly object lockObj = new object();

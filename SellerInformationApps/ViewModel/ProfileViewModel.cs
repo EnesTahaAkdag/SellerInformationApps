@@ -7,129 +7,109 @@ using ServiceHelper.Authentication;
 using System.Net.Http.Headers;
 using System.Text;
 
-public partial class ProfilePageViewModel : Authentication
+namespace SellerInformationApps.ViewModel
 {
-	[ObservableProperty]
-	private string firstName;
-
-	[ObservableProperty]
-	private string lastName;
-
-	[ObservableProperty]
-	private string userName;
-
-	[ObservableProperty]
-	private string email;
-
-	[ObservableProperty]
-	private DateTime age;
-
-	[ObservableProperty]
-	private bool isLoading;
-
-	private readonly Authentication _authentication;
-
-	private UserProfileData userProfileData;
-
-	public ProfilePageViewModel()
+	public partial class ProfilePageViewModel : Authentication
 	{
-		_authentication = Authentication.Instance;
-	}
+		[ObservableProperty] private string firstName;
+		[ObservableProperty] private string lastName;
+		[ObservableProperty] private string userName;
+		[ObservableProperty] private string email;
+		[ObservableProperty] private DateTime age;
+		[ObservableProperty] private bool isLoading;
 
-	[RelayCommand]
-	public async Task Accessed()
-	{
-		if (!_authentication.IsLoggedIn)
+		private readonly Authentication _authentication;
+		public UserProfileData UserProfileData { get; private set; }
+
+		public ProfilePageViewModel()
 		{
-			await Shell.Current.DisplayAlert("Hata", "Lütfen Giriş Yapın", "Tamam");
-			await Shell.Current.GoToAsync("//LoginPage");
+			_authentication = Authentication.Instance;
 		}
-		else
+
+		[RelayCommand]
+		public async Task Accessed()
 		{
-			IsLoading = true;
-			await FetchProfileDataFromApiAsync();
-			IsLoading = false;
-		}
-	}
-
-	public async Task FetchProfileDataFromApiAsync()
-	{
-		try
-		{
-			var userName = Preferences.Get("UserName", string.Empty);
-			var password = Preferences.Get("Password", string.Empty);
-
-			string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-
-			var httpClient = HttpClientFactory.Create("https://f038-37-130-115-34.ngrok-free.app");
-			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
-
-			string url = $"/UserProfileData/DataSend?userName={userName}";
-
-			using (var response = await httpClient.GetAsync(url))
+			if (!_authentication.IsLoggedIn)
 			{
-				if (response.IsSuccessStatusCode)
-				{
-					string json = await response.Content.ReadAsStringAsync();
-					var profileData = JsonConvert.DeserializeObject<ProfileApiResponse>(json);
-					if (profileData.Success)
-					{
-						userProfileData = new UserProfileData
-						{
-							FirstName = profileData.Data.FirstName,
-							LastName = profileData.Data.LastName,
-							UserName = profileData.Data.UserName,
-							Email = profileData.Data.Email,
-							Age = profileData.Data.Age.HasValue ? profileData.Data.Age.Value : DateTime.MinValue
-						};
+				await Shell.Current.DisplayAlert("Hata", "Lütfen giriş yapın", "Tamam");
+				await Shell.Current.GoToAsync("//LoginPage");
+			}
+			else
+			{
+				IsLoading = true;
+				await FetchProfileDataFromApiAsync();
+				IsLoading = false;
+			}
+		}
 
-						FirstName = userProfileData.FirstName;
-						LastName = userProfileData.LastName;
-						UserName = userProfileData.UserName;
-						Email = userProfileData.Email;
-						Age = userProfileData.Age.Value;
+		private async Task FetchProfileDataFromApiAsync()
+		{
+			try
+			{
+				var userName = Preferences.Get("UserName", string.Empty);
+				var password = Preferences.Get("Password", string.Empty);
+
+				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
+
+				var httpClient = HttpClientFactory.Create("https://9d96-37-130-115-34.ngrok-free.app");
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+
+				string url = $"/UserProfileData/DataSend?userName={userName}";
+
+				using (var response = await httpClient.GetAsync(url))
+				{
+					if (response.IsSuccessStatusCode)
+					{
+						string json = await response.Content.ReadAsStringAsync();
+						var profileData = JsonConvert.DeserializeObject<ProfileApiResponse>(json);
+						if (profileData?.Success == true)
+						{
+							UserProfileData = new UserProfileData
+							{
+								FirstName = profileData.Data.FirstName,
+								LastName = profileData.Data.LastName,
+								UserName = profileData.Data.UserName,
+								Email = profileData.Data.Email,
+								Age = profileData.Data.Age ?? DateTime.MinValue
+							};
+
+							FirstName = UserProfileData.FirstName;
+							LastName = UserProfileData.LastName;
+							UserName = UserProfileData.UserName;
+							Email = UserProfileData.Email;
+							Age = UserProfileData.Age.Value;
+						}
+						else
+						{
+							await Shell.Current.DisplayAlert("Hata", $"API isteği başarısız: {profileData?.ErrorMessage}", "Tamam");
+						}
 					}
 					else
 					{
-						await Shell.Current.DisplayAlert("Hata", $"API İsteği Başarısız: {profileData.ErrorMessage}", "Tamam");
+						await Shell.Current.DisplayAlert("Hata", $"API isteği başarısız: {response.StatusCode}", "Tamam");
 					}
 				}
-				else
-				{
-					await Shell.Current.DisplayAlert("Hata", $"API İsteği Başarısız: {response.StatusCode}", "Tamam");
-				}
+			}
+			catch (Exception ex)
+			{
+				await Shell.Current.DisplayAlert("Hata", $"Hata oluştu: {ex.Message}", "Tamam");
+			}
+			finally
+			{
+				IsLoading = false;
 			}
 		}
-		catch (Exception ex)
-		{
-			await Shell.Current.DisplayAlert("Hata", $"Hata oluştu: {ex.Message}", "Tamam");
-		}
-		finally
-		{
-			IsLoading = false;
-		}
-	}
 
-
-	[RelayCommand]
-	public async Task LogOutAsync()
-	{
-		await _authentication.LogOut();
-	}
-
-	[RelayCommand]
-	public async Task UpdateProfileAsync()
-	{
-		if (userProfileData != null)
+		[RelayCommand]
+		public async Task LogOutAsync()
 		{
-			await Shell.Current.GoToAsync("//UpdateProfilePage", new Dictionary<string, object>
-			{
-				{ "UserProfileData", userProfileData }
-			});
+			await _authentication.LogOut();
 		}
-		else
+
+		public void ClearProfileData()
 		{
-			await Shell.Current.DisplayAlert("Hata", "Profil bilgileri yüklenemedi", "Tamam");
+			FirstName = LastName = UserName = Email = string.Empty;
+			Age = default;
 		}
 	}
 }

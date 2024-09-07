@@ -1,18 +1,21 @@
+using CommunityToolkit.Maui.Views;
+
+using SellerInformationApps.PopUps;
+using SellerInformationApps.UpdatesViewModel;
 using SellerInformationApps.ViewModel;
 
 namespace SellerInformationApps.Pages
 {
-	[QueryProperty(nameof(FirstName), "FirstName")]
 	public partial class ProfilePage : ContentPage
 	{
 		private readonly ProfilePageViewModel _viewModel;
 
 		public string FirstName { get; set; }
 
-		public ProfilePage()
+		public ProfilePage(ProfilePageViewModel viewModel)
 		{
 			InitializeComponent();
-			_viewModel = new ProfilePageViewModel();
+			_viewModel = viewModel;
 			BindingContext = _viewModel;
 		}
 
@@ -21,10 +24,40 @@ namespace SellerInformationApps.Pages
 			base.OnAppearing();
 			await _viewModel.Accessed();
 
-			// Parametreyi ViewModel'e aktar
 			if (!string.IsNullOrEmpty(FirstName))
 			{
-				((UpdateProfileViewModel)BindingContext).FirstName = FirstName;
+				_viewModel.FirstName = FirstName;
+			}
+		}
+
+		protected override void OnDisappearing()
+		{
+			base.OnDisappearing();
+			ClearData();
+		}
+
+		private void ClearData()
+		{
+			_viewModel.ClearProfileData();
+		}
+
+		private async void UpdateProfileAsync(object sender, EventArgs e)
+		{
+			if (_viewModel.UserProfileData != null)
+			{
+				var userProfileUpdate = new UpdateProfileViewModel();
+				await userProfileUpdate.WriteData(_viewModel.UserProfileData);
+
+				var result = await this.ShowPopupAsync(new UpdateProfilePopUp(userProfileUpdate));
+
+				if (result != null)
+				{
+					await _viewModel.Accessed();
+				}
+			}
+			else
+			{
+				await Shell.Current.DisplayAlert("Hata", "Profil bilgileri yüklenemedi", "Tamam");
 			}
 		}
 	}

@@ -57,6 +57,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\cameraicon.png" />
 	  <None Remove="Resources\Images\loginicon.png" />
 	  <None Remove="Resources\Images\moreicone.png" />
 	  <None Remove="Resources\Images\my_info.png" />
@@ -114,12 +115,21 @@
 	  <MauiXaml Update="Pages\SellerInfosPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\UpdateProfilePage.xaml">
+	  <MauiXaml Update="PopUps\UpdateProfilePopUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="PopUps\UpdateProfilePasswordPopUp.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\UserListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="PopUps\UpdateProfilePopUp.xaml.cs">
+	    <DependentUpon>UpdateProfilePopUp.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionSellerInformationAppsHideInfoBar="True" /></VisualStudio></ProjectExtensions>

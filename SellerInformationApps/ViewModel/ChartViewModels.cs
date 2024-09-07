@@ -20,8 +20,8 @@ namespace SellerInformationApps.ViewModel
 		{
 			try
 			{
-				var httpClient = HttpClientFactory.Create("https://f038-37-130-115-34.ngrok-free.app");
-				string url = "https://f038-37-130-115-34.ngrok-free.app/SendDataToChart/ChartData";
+				var httpClient = HttpClientFactory.Create("https://9d96-37-130-115-34.ngrok-free.app");
+				string url = "https://9d96-37-130-115-34.ngrok-free.app/SendDataToChart/ChartData";
 
 				var response = await httpClient.GetAsync(url);
 

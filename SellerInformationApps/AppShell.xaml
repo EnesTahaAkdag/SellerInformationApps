@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:SellerInformationApps"
     xmlns:pages="clr-namespace:SellerInformationApps.Pages"
+    xmlns:popups="clr-namespace:SellerInformationApps.PopUps"
     Title="SellerInformationApps"
     Shell.TabBarBackgroundColor="#333333"
     Shell.TabBarTitleColor="White"
@@ -31,10 +32,6 @@
 
         <Tab Title="Profil Sayfası" Icon="profileicone.png" >
             <ShellContent ContentTemplate="{DataTemplate pages:ProfilePage}" Route="ProfilePage" />
-        </Tab>
-        
-        <Tab Title="Profil Güncelleme Sayfası" Icon="profileicone.png">
-            <ShellContent ContentTemplate="{DataTemplate pages:UpdateProfilePage}" Route="UpdateProfilePage" />
         </Tab>
 
         <Tab Title="Giriş Sayfası" Icon="loginicon.png">

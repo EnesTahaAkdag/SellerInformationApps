@@ -24,98 +24,83 @@
                            Color="Blue" 
                            Grid.Row="1" />-->
 
-        <ScrollView Grid.Row="1">
-            <StackLayout Padding="20" Spacing="20">
+        <StackLayout Padding="20" Spacing="20">
 
-                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                    <Grid>
-                        <Frame WidthRequest="120" HeightRequest="120"
-                               CornerRadius="60" IsClippedToBounds="True"
-                               BorderColor="#ccc" BackgroundColor="White"
-                               HasShadow="True">
-                            <Image Source="dotnet_bot.png" Aspect="AspectFill"/>
-                        </Frame>
-                        <ImageButton 
-                            Source="cameraicon.png"
-                            HeightRequest="40"
-                            WidthRequest="40"
-                            BackgroundColor="White"
-                            BorderColor="Black"
-                            BorderWidth="1"
-                            CornerRadius="20"
-                            HorizontalOptions="End"
-                            VerticalOptions="End"
-                            Margin="0,0,0,-20"
-                            Padding="0"/>
-                    </Grid>
-                </StackLayout>
-
-                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
-                    <StackLayout Spacing="5">
-                        <Label Text="Ad" FontSize="12" TextColor="#7D7D7D"/>
-                        <Label Text="{Binding FirstName}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
-                    </StackLayout>
-                </Frame>
-
-                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
-                    <StackLayout Spacing="5">
-                        <Label Text="Soyad" FontSize="12" TextColor="#7D7D7D"/>
-                        <Label Text="{Binding LastName}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
-                    </StackLayout>
-                </Frame>
-
-                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
-                    <StackLayout Spacing="5">
-                        <Label Text="Kullanıcı Adı" FontSize="12" TextColor="#7D7D7D"/>
-                        <Label Text="{Binding UserName}" FontSize="20" TextColor="Black" FontAttributes="Bold" IsEnabled="False"/>
-                    </StackLayout>
-                </Frame>
-
-                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
-                    <StackLayout Spacing="5">
-                        <Label Text="E-Mail" FontSize="12" TextColor="#7D7D7D"/>
-                        <Label Text="{Binding Email}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
-                    </StackLayout>
-                </Frame>
-
-                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
-                    <StackLayout Spacing="5">
-                        <Label Text="Doğum Tarihi" FontSize="12" TextColor="#7D7D7D"/>
-                        <Label Text="{Binding Age ,  StringFormat='{}{0:dd/MM/yyyy}'}" x:Name="AgeEntry" 
-                               FontSize="20" TextColor="Black" BackgroundColor="Transparent"/>
-                    </StackLayout>
-                </Frame>
-
-                <StackLayout Orientation="Horizontal" 
-                             HorizontalOptions="FillAndExpand"
-                             Spacing="20">
-
-                    <Button Text="Profili Güncelle" 
-                            Command="{Binding UpdateProfileCommand}"
-                            BackgroundColor="#28a745" 
-                            TextColor="White" 
-                            CornerRadius="10"
-                            HeightRequest="50"
-                            FontSize="16" 
-                            Padding="10"
-                            BorderColor="Black" 
-                            BorderWidth="1"
-                            HorizontalOptions="FillAndExpand"/>
-
-                    <Button Text="Çıkış Yap" 
-                            Command="{Binding LogOutCommand}" 
-                            BackgroundColor="#dc3545"  
-                            TextColor="White" 
-                            CornerRadius="10"
-                            HeightRequest="50"
-                            FontSize="16" 
-                            Padding="10"
-                            BorderColor="Black" 
-                            BorderWidth="1"
-                            HorizontalOptions="FillAndExpand"/>
-
-                </StackLayout>
+            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                <Grid>
+                    <Frame WidthRequest="120" HeightRequest="120"
+                           CornerRadius="60" IsClippedToBounds="True"
+                           BorderColor="#ccc" BackgroundColor="White"
+                           HasShadow="True">
+                        <Image Source="dotnet_bot.png" Aspect="AspectFill"/>
+                    </Frame>
+                </Grid>
             </StackLayout>
-        </ScrollView>
+
+            <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                <StackLayout Spacing="5">
+                    <Label Text="Ad" FontSize="12" TextColor="#7D7D7D"/>
+                    <Label Text="{Binding FirstName}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                <StackLayout Spacing="5">
+                    <Label Text="Soyad" FontSize="12" TextColor="#7D7D7D"/>
+                    <Label Text="{Binding LastName}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                <StackLayout Spacing="5">
+                    <Label Text="Kullanıcı Adı" FontSize="12" TextColor="#7D7D7D"/>
+                    <Label Text="{Binding UserName}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                <StackLayout Spacing="5">
+                    <Label Text="E-Mail" FontSize="12" TextColor="#7D7D7D"/>
+                    <Label Text="{Binding Email}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                <StackLayout Spacing="5">
+                    <Label Text="Doğum Tarihi" FontSize="12" TextColor="#7D7D7D"/>
+                    <Label Text="{Binding Age ,  StringFormat='{}{0:dd/MM/yyyy}'}" FontAttributes="Bold" 
+                           x:Name="AgeEntry" FontSize="20" TextColor="Black" BackgroundColor="Transparent"/>
+                </StackLayout>
+            </Frame>
+
+            <StackLayout Orientation="Horizontal" 
+                         HorizontalOptions="FillAndExpand"
+                         Spacing="20">
+
+                <Button Text="Profili Güncelle" 
+                        Clicked="UpdateProfileAsync"
+                        BackgroundColor="#28a745" 
+                        TextColor="White" 
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        FontSize="16" 
+                        Padding="10"
+                        BorderColor="Black" 
+                        BorderWidth="1"
+                        HorizontalOptions="FillAndExpand"/>
+
+                <Button Text="Çıkış Yap" 
+                        Command="{Binding LogOutCommand}" 
+                        BackgroundColor="#dc3545"  
+                        TextColor="White" 
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        FontSize="16" 
+                        Padding="10"
+                        BorderColor="Black" 
+                        BorderWidth="1"
+                        HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+        </StackLayout>
     </Grid>
 </ContentPage>

@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Logging;
 using SellerInformationApps.Models;
 using SellerInformationApps.Pages;
+using SellerInformationApps.PopUps;
+using SellerInformationApps.UpdatesViewModel;
 using SellerInformationApps.ViewModel;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using Telerik.Maui.Controls.Compatibility;
@@ -34,7 +36,7 @@ namespace SellerInformationApps
 			builder.Services.AddSingleton<ProfilePage>();
 			builder.Services.AddSingleton<RegisterPage>();
 			builder.Services.AddSingleton<SellerInfosPage>();
-			builder.Services.AddSingleton<UpdateProfilePage>();
+			builder.Services.AddSingleton<UpdateProfilePopUp>();
 			builder.Services.AddSingleton<UserListPage>();
 			builder.Services.AddSingleton<UserProfileData>();
 
@@ -47,7 +49,7 @@ namespace SellerInformationApps
 			builder.Services.AddTransient<UpdateProfileViewModel>();
 			builder.Services.AddTransient<UserListViewModel>();
 
-			builder.Services.AddTransient<UpdateProfilePage>();
+			builder.Services.AddTransient<UpdateProfilePopUp>();
 			builder.Services.AddTransient<UpdateProfileViewModel>();
 			return builder.Build();
 		}
