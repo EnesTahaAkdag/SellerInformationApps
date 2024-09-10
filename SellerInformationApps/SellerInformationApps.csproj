@@ -63,6 +63,7 @@
 	  <None Remove="Resources\Images\my_info.png" />
 	  <None Remove="Resources\Images\pngwingcom.png" />
 	  <None Remove="Resources\Images\profileicone.png" />
+	  <None Remove="Resources\Images\profilephotots.png" />
 	  <None Remove="Resources\Images\register.png" />
 	  <None Remove="Resources\Images\usersicone.png" />
 	  <None Remove="Resources\Images\vectorbarcharticon.png" />

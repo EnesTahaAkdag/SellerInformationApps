@@ -1,12 +1,12 @@
 using CommunityToolkit.Maui.Views;
 using SellerInformationApps.UpdatesViewModel;
-using SellerInformationApps.ViewModel;
 
 namespace SellerInformationApps.PopUps
 {
 	public partial class UpdateProfilePopUp : Popup
 	{
 		private readonly UpdateProfileViewModel _viewModel;
+		private readonly UpdateProfilePassword profilePassword;
 
 		public UpdateProfilePopUp(UpdateProfileViewModel viewModel)
 		{
@@ -14,10 +14,9 @@ namespace SellerInformationApps.PopUps
 			_viewModel = viewModel;
 			BindingContext = _viewModel;
 
-			LoadUserData();
 		}
 
-		private async void LoadUserData()
+		private async void SubmitButton(object sender,EventArgs e)
 		{
 			if (_viewModel.UserProfile != null)
 			{
@@ -25,19 +24,15 @@ namespace SellerInformationApps.PopUps
 			}
 		}
 
-		private async void SubmitButton(object sender, EventArgs e)
+		private void ClosePopUpButton(object sender, EventArgs e)
 		{
-			await _viewModel.SubmitAsync();
 			Close();
 		}
 
-		private async void ClosePopUpButton(object sender, EventArgs e)
+		private void OpenUpdateProfilePasswordPupUp(object sender, EventArgs e)
 		{
-			Close();
-		}
-		private async void OpenUpdateProfilePasswordPupUp()
-		{
-			
+			var popup = new UpdateProfilePasswordPopUp(new UpdateProfilePassword());
+			Application.Current.MainPage.ShowPopup(popup);
 		}
 	}
 }

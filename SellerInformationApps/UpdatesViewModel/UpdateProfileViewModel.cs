@@ -114,10 +114,5 @@ namespace SellerInformationApps.UpdatesViewModel
 				await Shell.Current.DisplayAlert("Hata", $"Http isteği başarısız: {response.StatusCode}", "Tamam");
 			}
 		}
-		[RelayCommand]
-		public async Task UpdatePasswordPopUpAsync()
-		{
-
-		}
 	}
 }

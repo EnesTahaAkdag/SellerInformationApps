@@ -1,18 +1,103 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Newtonsoft.Json;
+using PraPazar.ServiceHelper;
+using SellerInformationApps.Models;
 using ServiceHelper.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SellerInformationApps.UpdatesViewModel
 {
-    public partial class UpdateProfilePassword : Authentication
-    {
-        [ObservableProperty] private string oldPassword;
-        [ObservableProperty] private string newPassword;
-        [ObservableProperty] private string verifyNewPassword;
+	public partial class UpdateProfilePassword : Authentication
+	{
+		[ObservableProperty]
+		private string userName = Preferences.Get("UserName", string.Empty);
 
-    }
+		[ObservableProperty]
+		private string oldPassword;
+
+		[ObservableProperty]
+		private string newPassword;
+
+		[ObservableProperty]
+		private string verifyNewPassword;
+
+		[RelayCommand]
+		public async Task SubmitPasswordAsync()
+		{
+			if (!IsFormValid())
+			{
+				await Shell.Current.DisplayAlert("Hata", "Tüm alanları doldurunuz ve şifreler eşleşmelidir", "Tamam");
+				return;
+			}
+
+			try
+			{
+				var user = ReadData();
+				if (user == null)
+				{
+					await Shell.Current.DisplayAlert("Hata", "Kullanıcı bilgileri güncellenirken bir hata oluştu", "Tamam");
+					return;
+				}
+
+				var httpClient = HttpClientFactory.Create("https://9d96-37-130-115-34.ngrok-free.app");
+				string url = "https://9d96-37-130-115-34.ngrok-free.app/UserPasswordApi/UpdatePassword";
+				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+
+				using (var response = await httpClient.PostAsync(url, content))
+				{
+					Preferences.Remove("Password", string.Empty);
+					await HandleResponseAsync(response);
+					await Shell.Current.DisplayAlert("Başarılı", "Şifre Güncelleme İşlemi Başarılı", "Tamam");
+				}
+			}
+			catch (Exception ex)
+			{
+				await Shell.Current.DisplayAlert("Hata", $"Hata oluştu: {ex.Message}", "Tamam");
+			}
+		}
+
+		private bool IsFormValid()
+		{
+			return !(
+				string.IsNullOrWhiteSpace(UserName) ||
+				string.IsNullOrWhiteSpace(OldPassword) ||
+				string.IsNullOrWhiteSpace(NewPassword) ||
+				string.IsNullOrWhiteSpace(VerifyNewPassword) ||
+				NewPassword != VerifyNewPassword
+			);
+		}
+
+		private UpdateUserPassword ReadData()
+		{
+			return new UpdateUserPassword
+			{
+				UserName = UserName,
+				Password = NewPassword,
+			};
+		}
+
+		private async Task HandleResponseAsync(HttpResponseMessage response)
+		{
+			if (response.IsSuccessStatusCode)
+			{
+				string json = await response.Content.ReadAsStringAsync();
+				var apiResponse = JsonConvert.DeserializeObject<UpdatePasswordApiResponse>(json);
+				if (apiResponse.Success)
+				{
+					await Shell.Current.DisplayAlert("Başarı", "Şifre başarıyla güncellendi", "Tamam");
+					Preferences.Set("Password", string.Empty);
+					await Shell.Current.GoToAsync("//ProfilePage");
+				}
+				else
+				{
+					await Shell.Current.DisplayAlert("Hata", "Şifre güncelleme başarısız oldu", "Tamam");
+				}
+			}
+			else
+			{
+				await Shell.Current.DisplayAlert("Hata", $"Http isteği başarısız oldu: {response.StatusCode}", "Tamam");
+			}
+		}
+	}
 }

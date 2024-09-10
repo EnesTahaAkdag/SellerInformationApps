@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SellerInformationApps.Pages.LoginPage"
              Title="Giriş Yap"
-             BackgroundColor="#FFFFFF"
+             BackgroundColor="#F5F5F5"
              Shell.BackgroundColor="#007AFF">
 
     <Shell.TitleView>
@@ -83,7 +83,7 @@
                 <StackLayout Orientation="Horizontal"
                              HorizontalOptions="Center"
                              Spacing="5">
-                    
+
                     <Label Text="Hesabınız yok mu?"
                            TextColor="Gray"
                            FontSize="Small"/>
@@ -92,13 +92,12 @@
                            TextColor="#007AFF"
                            FontSize="Small"
                            FontAttributes="Bold">
-                        
+
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding RegisterCommand}" />
                         </Label.GestureRecognizers>
                     </Label>
                 </StackLayout>
-
             </StackLayout>
         </Frame>
     </Grid>

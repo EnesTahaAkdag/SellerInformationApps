@@ -32,7 +32,7 @@
                            CornerRadius="60" IsClippedToBounds="True"
                            BorderColor="#ccc" BackgroundColor="White"
                            HasShadow="True">
-                        <Image Source="dotnet_bot.png" Aspect="AspectFill"/>
+                        <Image Source="profilephotots.png" Aspect="AspectFill"/>
                     </Frame>
                 </Grid>
             </StackLayout>

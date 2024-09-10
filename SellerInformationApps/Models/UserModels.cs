@@ -32,8 +32,18 @@ namespace SellerInformationApps.Models
 		[Required(ErrorMessage = "Lütfen Şifre Giriniz")]
 		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d]{8,}$", ErrorMessage = "En az 8 karakterlik bir parola büyük ve küçük harflerin bir kombinasyonunu içermelidir.")]
 		public string Password { get; set; }
+	}
 
+	public class UpdateUserPassword
+	{
+		[StringLength(50, ErrorMessage = "50 Karakterden Fazla Giriş Yapılamaz")]
+		[Required(ErrorMessage = "Kullanıcı Adı Boş Bırakılamaz")]
+		public string UserName { get; set; }
 
+		[DataType(DataType.Password)]
+		[Required(ErrorMessage = "Lütfen Şifre Giriniz")]
+		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d]{8,}$", ErrorMessage = "En az 8 karakterlik bir parola büyük ve küçük harflerin bir kombinasyonunu içermelidir.")]
+		public string Password { get; set; }
 	}
 
 	public class LoginUser
@@ -119,5 +129,12 @@ namespace SellerInformationApps.Models
 		public bool Success { get; set; }
 		public string ErrorMessage { get; set; }
 		public List<User> Data { get; set; }
+	}
+
+	public class UpdatePasswordApiResponse
+	{
+		public bool Success { get; set; }
+		public string ErrorMessage { get; set; }
+		public UpdateUserPassword Data { get; set; }
 	}
 }

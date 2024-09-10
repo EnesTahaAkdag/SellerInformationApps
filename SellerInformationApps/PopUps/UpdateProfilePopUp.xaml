@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
            x:Class="SellerInformationApps.PopUps.UpdateProfilePopUp"
@@ -21,17 +22,17 @@
             <StackLayout Padding="10" Spacing="17" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <StackLayout Padding="10" Spacing="17" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
-                        <StackLayout Orientation="Horizontal" Padding="20" 
+                    <StackLayout Orientation="Horizontal" Padding="20" 
                                  Spacing="20" HorizontalOptions="Center">
-                            <Frame WidthRequest="120" HeightRequest="120"
+                        <Frame WidthRequest="120" HeightRequest="120"
                                CornerRadius="60" IsClippedToBounds="True"
-                               BorderColor="#ddd" BackgroundColor="White"
+                               BorderColor="#ddd" BackgroundColor="#F5F5F5"
                                HasShadow="False">
-                                <Image Source="dotnet_bot.png" Aspect="AspectFill"/>
-                            </Frame>
+                            <Image Source="profilephotots.png" Aspect="AspectFill" />
+                        </Frame>
 
-                            <StackLayout VerticalOptions="Center" Spacing="10">
-                                <Button Text="Resimi Ekle / Değiştir"
+                        <StackLayout VerticalOptions="Center" Spacing="10">
+                            <Button Text="Resimi Ekle / Değiştir"
                                     BackgroundColor="#4CAF50"
                                     TextColor="White"
                                     CornerRadius="20"
@@ -40,64 +41,64 @@
                                     FontSize="16"
                                     FontAttributes="Bold"/>
 
-                                <Button Text="Şifreyi Değiştir"
-                                    BackgroundColor="BlueViolet" 
-                                        Clicked="OpenUpdateProfilePasswordPupUp"
+                            <Button Text="Sifreyi Degistir"
+                                    BackgroundColor="BlueViolet"    
+                                    Clicked="OpenUpdateProfilePasswordPupUp"
                                     TextColor="White"
                                     CornerRadius="20"
                                     HeightRequest="45"
                                     WidthRequest="200"
                                     FontSize="16"
                                     FontAttributes="Bold"/>
-                            </StackLayout>
                         </StackLayout>
+                    </StackLayout>
 
-                        <Frame Padding="10" BackgroundColor="#F0F0F0"
+                    <Frame Padding="10" BackgroundColor="#F0F0F0"
                            CornerRadius="15" HasShadow="True">
-                            <StackLayout Spacing="5">
-                                <Label Text="Ad" FontSize="14" TextColor="#6200EE"/>
-                                <Entry Text="{Binding FirstName}" FontSize="20" TextColor="Black"
+                        <StackLayout Spacing="5">
+                            <Label Text="Ad" FontSize="14" TextColor="#6200EE"/>
+                            <Entry Text="{Binding FirstName}" FontSize="20" TextColor="Black"
                                Placeholder="Adınızı Giriniz" FontAttributes="Bold"/>
-                            </StackLayout>
-                        </Frame>
+                        </StackLayout>
+                    </Frame>
 
-                        <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
-                            <StackLayout Spacing="5">
-                                <Label Text="SoyAd" FontSize="14" TextColor="#6200EE"/>
-                                <Entry Text="{Binding LastName}" FontSize="20" TextColor="Black" 
+                    <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
+                        <StackLayout Spacing="5">
+                            <Label Text="SoyAd" FontSize="14" TextColor="#6200EE"/>
+                            <Entry Text="{Binding LastName}" FontSize="20" TextColor="Black" 
                                    Placeholder="Soyadınızı Giriniz" FontAttributes="Bold"/>
-                            </StackLayout>
-                        </Frame>
+                        </StackLayout>
+                    </Frame>
 
-                        <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
-                            <StackLayout Spacing="5">
-                                <Label Text="Kullanıcı Adı" FontSize="14" TextColor="#6200EE"/>
-                                <Label Text="Kullanıcı Adı Değiştirilemez" FontSize="12" TextColor="#911704" />
-                                <Entry Text="{Binding UserName}" FontSize="20" TextColor="Black" 
+                    <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
+                        <StackLayout Spacing="5">
+                            <Label Text="Kullanıcı Adı" FontSize="14" TextColor="#6200EE"/>
+                            <Label Text="Kullanıcı Adı Değiştirilemez" FontSize="12" TextColor="#911704" />
+                            <Entry Text="{Binding UserName}" FontSize="20" TextColor="Black" 
                                Placeholder="Kullanıcı Adını Giriniz" IsEnabled="False" FontAttributes="Bold"/>
-                            </StackLayout>
-                        </Frame>
+                        </StackLayout>
+                    </Frame>
 
-                        <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
-                            <StackLayout Spacing="5">
-                                <Label Text="E-Mail" FontSize="14" TextColor="#6200EE"/>
-                                <Entry Text="{Binding Email}" FontSize="20" TextColor="Black"
+                    <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
+                        <StackLayout Spacing="5">
+                            <Label Text="E-Mail" FontSize="14" TextColor="#6200EE"/>
+                            <Entry Text="{Binding Email}" FontSize="20" TextColor="Black"
                                    Placeholder="Mail Adresini Giriniz" Keyboard="Email" FontAttributes="Bold"/>
-                            </StackLayout>
-                        </Frame>
+                        </StackLayout>
+                    </Frame>
 
-                        <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
-                            <StackLayout Spacing="5">
-                                <Label Text="Doğum Tarihi" FontSize="14" TextColor="#6200EE"/>
-                                <DatePicker x:Name="AgeEntry" MinimumDate="1900-01-01" 
+                    <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
+                        <StackLayout Spacing="5">
+                            <Label Text="Doğum Tarihi" FontSize="14" TextColor="#6200EE"/>
+                            <DatePicker x:Name="AgeEntry" MinimumDate="1900-01-01" 
                                         MaximumDate="{x:Static sys:DateTime.Now}" FontSize="20"
                                         TextColor="Black" BackgroundColor="Transparent"
                                         Date="{Binding Age}" FontAttributes="Bold"/>
-                            </StackLayout>
-                        </Frame>
+                        </StackLayout>
+                    </Frame>
 
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="20">
-                            <Button Text="Kaydet"
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="20">
+                        <Button Text="Kaydet"
                                 Clicked="SubmitButton"
                                 BackgroundColor="#4CAF50"
                                 TextColor="White"
@@ -106,7 +107,7 @@
                                 WidthRequest="150"
                                 FontSize="16"/>
 
-                            <Button Text="İptal Et"                            
+                        <Button Text="İptal Et"                            
                                 Clicked="ClosePopUpButton"
                                 BackgroundColor="#E74C3C"
                                 TextColor="White"
@@ -114,9 +115,9 @@
                                 HeightRequest="45"
                                 WidthRequest="150"
                                 FontSize="16"/>
-                        </StackLayout>
                     </StackLayout>
                 </StackLayout>
-            </ScrollView>
-        </Grid>
+            </StackLayout>
+        </ScrollView>
+    </Grid>
 </mct:Popup>
