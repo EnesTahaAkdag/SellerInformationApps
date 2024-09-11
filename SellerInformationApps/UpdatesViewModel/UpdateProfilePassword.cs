@@ -14,6 +14,9 @@ namespace SellerInformationApps.UpdatesViewModel
 		private string userName = Preferences.Get("UserName", string.Empty);
 
 		[ObservableProperty]
+		private string usedPassword = Preferences.Get("Password", string.Empty);
+
+		[ObservableProperty]
 		private string oldPassword;
 
 		[ObservableProperty]
@@ -31,6 +34,12 @@ namespace SellerInformationApps.UpdatesViewModel
 				return;
 			}
 
+			if (!IsVerifyPassword())
+			{
+				await Shell.Current.DisplayAlert("Hata", "Mevcut şifreniz yanlış", "Tamam");
+				return;
+			}
+
 			try
 			{
 				var user = ReadData();
@@ -40,15 +49,13 @@ namespace SellerInformationApps.UpdatesViewModel
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://9d96-37-130-115-34.ngrok-free.app");
-				string url = "https://9d96-37-130-115-34.ngrok-free.app/UserPasswordApi/UpdatePassword";
+				var httpClient = HttpClientFactory.Create("https://4b42-37-130-115-34.ngrok-free.app");
+				string url = "https://4b42-37-130-115-34.ngrok-free.app/UserPasswordApi/UpdatePassword";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
 				{
-					Preferences.Remove("Password", string.Empty);
 					await HandleResponseAsync(response);
-					await Shell.Current.DisplayAlert("Başarılı", "Şifre Güncelleme İşlemi Başarılı", "Tamam");
 				}
 			}
 			catch (Exception ex)
@@ -66,6 +73,11 @@ namespace SellerInformationApps.UpdatesViewModel
 				string.IsNullOrWhiteSpace(VerifyNewPassword) ||
 				NewPassword != VerifyNewPassword
 			);
+		}
+
+		private bool IsVerifyPassword()
+		{
+			return UsedPassword == OldPassword;
 		}
 
 		private UpdateUserPassword ReadData()
@@ -86,7 +98,7 @@ namespace SellerInformationApps.UpdatesViewModel
 				if (apiResponse.Success)
 				{
 					await Shell.Current.DisplayAlert("Başarı", "Şifre başarıyla güncellendi", "Tamam");
-					Preferences.Set("Password", string.Empty);
+					Preferences.Set("Password", NewPassword);
 					await Shell.Current.GoToAsync("//ProfilePage");
 				}
 				else

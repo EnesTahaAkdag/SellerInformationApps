@@ -8,13 +8,13 @@ namespace SellerInformationApps.Pages
 	{
 		public ObservableCollection<StoreInfo> StoreInfos { get; private set; }
 		private SellerInfosViewModel viewModel;
+		private bool isFetching = false;
 
-		public SellerInfosPage()
+		public SellerInfosPage(SellerInfosViewModel viewModel)
 		{
 			InitializeComponent();
 			StoreInfos = new ObservableCollection<StoreInfo>();
-
-			viewModel = new SellerInfosViewModel();
+			this.viewModel = viewModel;
 			BindingContext = viewModel;
 		}
 
@@ -24,8 +24,6 @@ namespace SellerInformationApps.Pages
 			viewModel.StoreInfos.Clear();
 			await viewModel.FetchDataFromAPIAsync();
 		}
-
-		
 
 		private async void OnScrollViewScrolled(object sender, ScrolledEventArgs e)
 		{

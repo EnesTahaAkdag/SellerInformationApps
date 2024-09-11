@@ -30,6 +30,7 @@ namespace SellerInformationApps
 			builder.Logging.AddDebug();
 #endif
 
+			builder.Services.AddSingleton<HttpClient>(sp => new HttpClient());
 
 			builder.Services.AddSingleton<ChartPage>();
 			builder.Services.AddSingleton<LoginPage>();
@@ -40,7 +41,6 @@ namespace SellerInformationApps
 			builder.Services.AddSingleton<UserListPage>();
 			builder.Services.AddSingleton<UserProfileData>();
 
-
 			builder.Services.AddTransient<ChartPageViewModel>();
 			builder.Services.AddTransient<LoginPageViewModel>();
 			builder.Services.AddTransient<ProfilePageViewModel>();
@@ -49,8 +49,6 @@ namespace SellerInformationApps
 			builder.Services.AddTransient<UpdateProfileViewModel>();
 			builder.Services.AddTransient<UserListViewModel>();
 
-			builder.Services.AddTransient<UpdateProfilePopUp>();
-			builder.Services.AddTransient<UpdateProfileViewModel>();
 			return builder.Build();
 		}
 	}

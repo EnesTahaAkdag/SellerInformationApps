@@ -10,7 +10,7 @@ namespace SellerInformationApps.Converter
 			{
 				return !boolValue;
 			}
-			return false;
+			return Binding.DoNothing;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -19,7 +19,7 @@ namespace SellerInformationApps.Converter
 			{
 				return !boolValue;
 			}
-			return false;
+			return Binding.DoNothing;
 		}
 	}
 }

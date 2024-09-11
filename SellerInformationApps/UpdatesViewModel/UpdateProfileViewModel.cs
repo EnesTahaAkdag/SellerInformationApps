@@ -56,7 +56,7 @@ namespace SellerInformationApps.UpdatesViewModel
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://9d96-37-130-115-34.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://4b42-37-130-115-34.ngrok-free.app");
 				string url = "/UserEditApi/EditUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 

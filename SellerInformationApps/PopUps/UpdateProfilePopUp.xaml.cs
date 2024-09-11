@@ -6,7 +6,6 @@ namespace SellerInformationApps.PopUps
 	public partial class UpdateProfilePopUp : Popup
 	{
 		private readonly UpdateProfileViewModel _viewModel;
-		private readonly UpdateProfilePassword profilePassword;
 
 		public UpdateProfilePopUp(UpdateProfileViewModel viewModel)
 		{

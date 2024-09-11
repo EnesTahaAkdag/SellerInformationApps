@@ -3,8 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SellerInformationApps.Pages.ProfilePage"
              Title="Profil Sayfası"
+             xmlns:a="clr-namespace:SellerInformationApps.Converter"
              BackgroundColor="#f5f5f5"
              Shell.BackgroundColor="#FFFFFF">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <a:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Shell.TitleView>
         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
@@ -16,68 +23,67 @@
         </StackLayout>
     </Shell.TitleView>
 
-    <Grid RowDefinitions="Auto, *" ColumnDefinitions="*">
-        <!--<ActivityIndicator IsRunning="{Binding IsLoading}" 
+    <Grid>
+        <ActivityIndicator IsRunning="{Binding IsLoading}" 
                            IsVisible="{Binding IsLoading}" 
-                           VerticalOptions="Center"
-                           HorizontalOptions="Center" 
-                           Color="Blue" 
-                           Grid.Row="1" />-->
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="CenterAndExpand" 
+                           Color="Blue" />
 
-        <StackLayout Padding="20" Spacing="20">
-
-            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                <Grid>
-                    <Frame WidthRequest="120" HeightRequest="120"
-                           CornerRadius="60" IsClippedToBounds="True"
-                           BorderColor="#ccc" BackgroundColor="White"
-                           HasShadow="True">
-                        <Image Source="profilephotots.png" Aspect="AspectFill"/>
-                    </Frame>
-                </Grid>
-            </StackLayout>
-
-            <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
-                <StackLayout Spacing="5">
-                    <Label Text="Ad" FontSize="12" TextColor="#7D7D7D"/>
-                    <Label Text="{Binding FirstName}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
+        <Grid RowDefinitions="Auto, *" ColumnDefinitions="*" IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+            <StackLayout Padding="20" Spacing="20">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                    <Grid>
+                        <Frame WidthRequest="120" HeightRequest="120"
+                               CornerRadius="60" IsClippedToBounds="True"
+                               BorderColor="#ccc" BackgroundColor="White"
+                               HasShadow="True">
+                            <Image Source="profilephotots.png" Aspect="AspectFill"/>
+                        </Frame>
+                    </Grid>
                 </StackLayout>
-            </Frame>
 
-            <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
-                <StackLayout Spacing="5">
-                    <Label Text="Soyad" FontSize="12" TextColor="#7D7D7D"/>
-                    <Label Text="{Binding LastName}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
-                </StackLayout>
-            </Frame>
+                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                    <StackLayout Spacing="5">
+                        <Label Text="Ad" FontSize="12" TextColor="#7D7D7D"/>
+                        <Label Text="{Binding FirstName}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
+                    </StackLayout>
+                </Frame>
 
-            <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
-                <StackLayout Spacing="5">
-                    <Label Text="Kullanıcı Adı" FontSize="12" TextColor="#7D7D7D"/>
-                    <Label Text="{Binding UserName}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
-                </StackLayout>
-            </Frame>
+                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                    <StackLayout Spacing="5">
+                        <Label Text="Soyad" FontSize="12" TextColor="#7D7D7D"/>
+                        <Label Text="{Binding LastName}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
+                    </StackLayout>
+                </Frame>
 
-            <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
-                <StackLayout Spacing="5">
-                    <Label Text="E-Mail" FontSize="12" TextColor="#7D7D7D"/>
-                    <Label Text="{Binding Email}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
-                </StackLayout>
-            </Frame>
+                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                    <StackLayout Spacing="5">
+                        <Label Text="Kullanıcı Adı" FontSize="12" TextColor="#7D7D7D"/>
+                        <Label Text="{Binding UserName}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
+                    </StackLayout>
+                </Frame>
 
-            <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
-                <StackLayout Spacing="5">
-                    <Label Text="Doğum Tarihi" FontSize="12" TextColor="#7D7D7D"/>
-                    <Label Text="{Binding Age ,  StringFormat='{}{0:dd/MM/yyyy}'}" FontAttributes="Bold" 
+                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                    <StackLayout Spacing="5">
+                        <Label Text="E-Mail" FontSize="12" TextColor="#7D7D7D"/>
+                        <Label Text="{Binding Email}" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
+                    </StackLayout>
+                </Frame>
+
+                <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
+                    <StackLayout Spacing="5">
+                        <Label Text="Doğum Tarihi" FontSize="12" TextColor="#7D7D7D"/>
+                        <Label Text="{Binding Age ,  StringFormat='{}{0:dd/MM/yyyy}'}" FontAttributes="Bold" 
                            x:Name="AgeEntry" FontSize="20" TextColor="Black" BackgroundColor="Transparent"/>
-                </StackLayout>
-            </Frame>
+                    </StackLayout>
+                </Frame>
 
-            <StackLayout Orientation="Horizontal" 
+                <StackLayout Orientation="Horizontal" 
                          HorizontalOptions="FillAndExpand"
                          Spacing="20">
 
-                <Button Text="Profili Güncelle" 
+                    <Button Text="Profili Güncelle" 
                         Clicked="UpdateProfileAsync"
                         BackgroundColor="#28a745" 
                         TextColor="White" 
@@ -89,7 +95,7 @@
                         BorderWidth="1"
                         HorizontalOptions="FillAndExpand"/>
 
-                <Button Text="Çıkış Yap" 
+                    <Button Text="Çıkış Yap" 
                         Command="{Binding LogOutCommand}" 
                         BackgroundColor="#dc3545"  
                         TextColor="White" 
@@ -100,7 +106,8 @@
                         BorderColor="Black" 
                         BorderWidth="1"
                         HorizontalOptions="FillAndExpand"/>
+                </StackLayout>
             </StackLayout>
-        </StackLayout>
+        </Grid>
     </Grid>
 </ContentPage>

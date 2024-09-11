@@ -46,12 +46,14 @@ namespace SellerInformationApps.ViewModel
 		{
 			try
 			{
+				 // Yükleme başladığında true yapıyoruz.
+
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://9d96-37-130-115-34.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://4b42-37-130-115-34.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				string url = $"/UserProfileData/DataSend?userName={userName}";
@@ -93,10 +95,6 @@ namespace SellerInformationApps.ViewModel
 			catch (Exception ex)
 			{
 				await Shell.Current.DisplayAlert("Hata", $"Hata oluştu: {ex.Message}", "Tamam");
-			}
-			finally
-			{
-				IsLoading = false;
 			}
 		}
 

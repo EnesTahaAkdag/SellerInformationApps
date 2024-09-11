@@ -1,79 +1,91 @@
-﻿using Newtonsoft.Json;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
-using System;
+using ServiceHelper.Authentication;
 using System.Collections.ObjectModel;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace SellerInformationApps.ViewModel
 {
-	public class SellerInfosViewModel
+	public partial class SellerInfosViewModel : Authentication
 	{
+		[ObservableProperty]
+		private bool isLoading;
+
 		public ObservableCollection<StoreInfo> StoreInfos { get; private set; }
 
 		public int CurrentPage { get; private set; } = 1;
 
 		private const int PageSize = 50;
 
-		private static SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1); 
+		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-		public SellerInfosViewModel()
+		private readonly HttpClient _httpClient;
+
+		public SellerInfosViewModel(HttpClient httpClient)
 		{
+			_httpClient = httpClient;
 			StoreInfos = new ObservableCollection<StoreInfo>();
 		}
 
 		public async Task FetchDataFromAPIAsync()
 		{
 			await _semaphore.WaitAsync();
-
 			try
 			{
-				var httpClient = HttpClientFactory.Create("https://9d96-37-130-115-34.ngrok-free.app");
-				string url = $"https://9d96-37-130-115-34.ngrok-free.app/DataSendApp/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
+				IsLoading = true;
 
-				using (var response = await httpClient.GetAsync(url))
+				var userName = Preferences.Get("UserName", string.Empty);
+				var password = Preferences.Get("Password", string.Empty);
+
+				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
+				_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+
+				string url = $"https://4b42-37-130-115-34.ngrok-free.app/DataSendApp/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
+
+				using (var response = await _httpClient.GetAsync(url))
 				{
 					if (response.IsSuccessStatusCode)
 					{
 						string json = await response.Content.ReadAsStringAsync();
 						var apiResponse = JsonConvert.DeserializeObject<ApiResponsess>(json);
+
 						if (apiResponse != null && apiResponse.Success)
 						{
 							foreach (var item in apiResponse.Data)
 							{
 								StoreInfos.Add(item);
 							}
-							CurrentPage++; 
+							CurrentPage++;
 						}
 						else
 						{
-							await ShowAlertAsync("HATA", $"API İsteği Başarısız: {apiResponse?.ErrorMessage}");
+							await ShowAlertAsync("Hata", "Veri alınamadı.");
 						}
 					}
 					else
 					{
-						await ShowAlertAsync("HATA", $"HTTP İsteği Başarısız: {response.StatusCode}");
+						await ShowAlertAsync("Hata", "API isteği başarısız oldu.");
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await ShowAlertAsync("HATA", $"Hata Oluştu Apiye İstek Atılamadı: {ex.Message}");
+				await ShowAlertAsync("Hata", $"API isteği sırasında bir hata oluştu: {ex.Message}");
 			}
 			finally
 			{
 				_semaphore.Release();
+				IsLoading = false;
 			}
 		}
 
 		private async Task ShowAlertAsync(string title, string message)
 		{
-			await MainThread.InvokeOnMainThreadAsync(async () =>
-			{
-				await App.Current.MainPage.DisplayAlert(title, message, "Tamam");
-			});
+			await MainThread.InvokeOnMainThreadAsync(() =>
+				App.Current.MainPage.DisplayAlert(title, message, "Tamam"));
 		}
 	}
 }
