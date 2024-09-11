@@ -6,6 +6,8 @@ using ServiceHelper.Authentication;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SellerInformationApps.ViewModel
 {
@@ -16,7 +18,7 @@ namespace SellerInformationApps.ViewModel
 
 		public ObservableCollection<StoreInfo> StoreInfos { get; private set; }
 
-		public int CurrentPage { get; private set; } = 1;
+		public int CurrentPage { get; set; } = 1;
 
 		private const int PageSize = 50;
 
@@ -30,13 +32,24 @@ namespace SellerInformationApps.ViewModel
 			StoreInfos = new ObservableCollection<StoreInfo>();
 		}
 
-		public async Task FetchDataFromAPIAsync()
+		public async Task FetchDataOnScrollAsync()
+		{
+			if (IsLoading) return;
+			await FetchDataFromAPIAsync();
+		}
+
+		public async Task FetchInitialDataAsync()
+		{
+			IsLoading = true;
+			await FetchDataFromAPIAsync();
+			IsLoading = false;
+		}
+
+		private async Task FetchDataFromAPIAsync()
 		{
 			await _semaphore.WaitAsync();
 			try
 			{
-				IsLoading = true;
-
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
@@ -78,7 +91,6 @@ namespace SellerInformationApps.ViewModel
 			finally
 			{
 				_semaphore.Release();
-				IsLoading = false;
 			}
 		}
 

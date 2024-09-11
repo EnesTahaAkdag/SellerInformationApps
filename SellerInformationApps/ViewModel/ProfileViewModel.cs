@@ -46,7 +46,6 @@ namespace SellerInformationApps.ViewModel
 		{
 			try
 			{
-				 // Yükleme başladığında true yapıyoruz.
 
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);

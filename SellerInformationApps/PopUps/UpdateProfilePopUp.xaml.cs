@@ -12,10 +12,9 @@ namespace SellerInformationApps.PopUps
 			InitializeComponent();
 			_viewModel = viewModel;
 			BindingContext = _viewModel;
-
 		}
 
-		private async void SubmitButton(object sender,EventArgs e)
+		private async void SubmitButton(object sender, EventArgs e)
 		{
 			if (_viewModel.UserProfile != null)
 			{

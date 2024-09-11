@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using ServiceHelper.Authentication;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace SellerInformationApps.UpdatesViewModel
@@ -35,7 +36,7 @@ namespace SellerInformationApps.UpdatesViewModel
 			LastName = userProfileData.LastName;
 			UserName = userProfileData.UserName;
 			Email = userProfileData.Email;
-			Age = userProfileData.Age ?? default;
+			Age = userProfileData.Age.Value;
 		}
 
 		[RelayCommand]
@@ -56,7 +57,14 @@ namespace SellerInformationApps.UpdatesViewModel
 					return;
 				}
 
+				var userName = Preferences.Get("UserName", string.Empty);
+				var password = Preferences.Get("Password", string.Empty);
+
+				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
+
 				var httpClient = HttpClientFactory.Create("https://4b42-37-130-115-34.ngrok-free.app");
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+
 				string url = "/UserEditApi/EditUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 

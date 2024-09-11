@@ -21,18 +21,24 @@ namespace SellerInformationApps.Pages
 		protected override async void OnAppearing()
 		{
 			base.OnAppearing();
+
+			viewModel.CurrentPage = 1;
 			viewModel.StoreInfos.Clear();
-			await viewModel.FetchDataFromAPIAsync();
+
+			await viewModel.FetchInitialDataAsync();
 		}
 
 		private async void OnScrollViewScrolled(object sender, ScrolledEventArgs e)
 		{
+			if (isFetching) return;
 			if (sender is ScrollView scrollView)
 			{
 				double scrollingSpace = scrollView.ContentSize.Height - scrollView.Height;
 				if (scrollingSpace <= e.ScrollY)
 				{
-					await viewModel.FetchDataFromAPIAsync();
+					isFetching = true;
+					await viewModel.FetchDataOnScrollAsync();
+					isFetching = false;
 				}
 			}
 		}

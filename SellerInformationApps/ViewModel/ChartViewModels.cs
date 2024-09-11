@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
+using System.Text;
+using System.Net.Http.Headers;
 
 namespace SellerInformationApps.ViewModel
 {
@@ -10,6 +12,9 @@ namespace SellerInformationApps.ViewModel
 	{
 		[ObservableProperty]
 		private ObservableCollection<SellerRaitingScore> data = new ObservableCollection<SellerRaitingScore>();
+
+		[ObservableProperty]
+		private bool isLoading;
 
 		public ChartPageViewModel()
 		{
@@ -20,7 +25,16 @@ namespace SellerInformationApps.ViewModel
 		{
 			try
 			{
+				IsLoading = true;
+
+				var userName = Preferences.Get("UserName", string.Empty);
+				var password = Preferences.Get("Password", string.Empty);
+
+				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
+
 				var httpClient = HttpClientFactory.Create("https://4b42-37-130-115-34.ngrok-free.app");
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",authHeaderValue);
+
 				string url = "https://4b42-37-130-115-34.ngrok-free.app/SendDataToChart/ChartData";
 
 				var response = await httpClient.GetAsync(url);
@@ -69,6 +83,7 @@ namespace SellerInformationApps.ViewModel
 			{
 				await ShowAlertAsync("Hata Oluştu", $"Apiye İstek Atılamadı: {ex.Message}");
 			}
+			finally { IsLoading = false; }
 		}
 
 		private async Task ShowAlertAsync(string title, string message)

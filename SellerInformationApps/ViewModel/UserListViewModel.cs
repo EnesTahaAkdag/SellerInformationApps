@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
+using ServiceHelper.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,15 +12,28 @@ using System.Threading.Tasks;
 
 namespace SellerInformationApps.ViewModel
 {
-	public partial class UserListViewModel
+	public partial class UserListViewModel : Authentication
 	{
+		[ObservableProperty]
+		private bool isLoading;
+
 		public ObservableCollection<UserList> UserLists { get; set; } = new ObservableCollection<UserList>();
 
 		public async Task UserListDataFromAPI()
 		{
 			try
 			{
+				IsLoading = true;
+
+				var userName = Preferences.Get("UserName", string.Empty);
+				var password = Preferences.Get("Password", string.Empty);
+
+				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
+				
+
 				var httpClient = HttpClientFactory.Create("https://4b42-37-130-115-34.ngrok-free.app");
+				httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeaderValue);
+
 				string url = "https://4b42-37-130-115-34.ngrok-free.app/UserListAPI/UserList";
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
@@ -51,6 +66,7 @@ namespace SellerInformationApps.ViewModel
 			{
 				await App.Current.MainPage.DisplayAlert("HATA", $"Hata Oluştu Apiye İstek Atılamadı: {ex.Message}", "Tamam");
 			}
+			finally { IsLoading = false; }
 		}
 	}
 }
