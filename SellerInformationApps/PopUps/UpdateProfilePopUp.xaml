@@ -8,9 +8,7 @@
            xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
            CanBeDismissedByTappingOutsideOfPopup="True">
 
-    <Grid BackgroundColor="#FFFFFF"
-      VerticalOptions="FillAndExpand"
-      HorizontalOptions="FillAndExpand">
+    <Grid BackgroundColor="#FFFFFF" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -18,7 +16,6 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ScrollView Grid.Row="0" Grid.Column="0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <StackLayout Padding="10" Spacing="17" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <StackLayout Padding="10" Spacing="17" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
@@ -118,6 +115,5 @@
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
-        </ScrollView>
     </Grid>
 </mct:Popup>

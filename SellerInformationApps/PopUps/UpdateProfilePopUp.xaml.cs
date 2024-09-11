@@ -1,4 +1,5 @@
 using CommunityToolkit.Maui.Views;
+using SellerInformationApps.Models;
 using SellerInformationApps.UpdatesViewModel;
 
 namespace SellerInformationApps.PopUps
@@ -16,10 +17,8 @@ namespace SellerInformationApps.PopUps
 
 		private async void SubmitButton(object sender, EventArgs e)
 		{
-			if (_viewModel.UserProfile != null)
-			{
-				await _viewModel.WriteData(_viewModel.UserProfile);
-			}
+			await _viewModel.SubmitAsync();
+			Close();
 		}
 
 		private void ClosePopUpButton(object sender, EventArgs e)

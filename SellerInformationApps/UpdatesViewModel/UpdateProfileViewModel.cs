@@ -110,7 +110,6 @@ namespace SellerInformationApps.UpdatesViewModel
 				if (apiResponse?.Success == true)
 				{
 					await Shell.Current.DisplayAlert("Başarılı", "Güncelleme başarılı", "Tamam");
-					await Shell.Current.GoToAsync("//ProfilePage");
 				}
 				else
 				{
