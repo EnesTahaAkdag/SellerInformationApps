@@ -1,5 +1,4 @@
 using CommunityToolkit.Maui.Views;
-
 using SellerInformationApps.PopUps;
 using SellerInformationApps.UpdatesViewModel;
 using SellerInformationApps.ViewModel;
@@ -46,9 +45,11 @@ namespace SellerInformationApps.Pages
 			if (_viewModel.UserProfileData != null)
 			{
 				var userProfileUpdate = new UpdateProfileViewModel();
+				var profilePhotosViewModel = new AddOrUpdateProfilePhotosViewModel();
+
 				await userProfileUpdate.WriteData(_viewModel.UserProfileData);
 
-				var result = await this.ShowPopupAsync(new UpdateProfilePopUp(userProfileUpdate));
+				var result = await this.ShowPopupAsync(new UpdateProfilePopUp(userProfileUpdate, profilePhotosViewModel));
 
 				if (result != null)
 				{

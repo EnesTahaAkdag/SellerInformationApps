@@ -1,40 +1,44 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace PraPazar.ServiceHelper
 {
 	public static class HttpClientFactory
 	{
-		private static ConcurrentDictionary<string, HttpClient> cache = new ConcurrentDictionary<string, HttpClient>();
+		private static readonly ConcurrentDictionary<string, HttpClient> cache = new ConcurrentDictionary<string, HttpClient>();
+
+		private static readonly Lazy<HttpClientHandler> handler = new Lazy<HttpClientHandler>(CreateHandler);
 
 		public static HttpClient Create(string endpoint)
 		{
-
-			var handler = ClientHandler();
-
-			HttpClient client = cache.GetOrAdd(endpoint,
-				new HttpClient(handler, false)
+			return cache.GetOrAdd(endpoint, (key) =>
+			{
+				return new HttpClient(handler.Value, disposeHandler: false)
 				{
 					BaseAddress = new Uri(endpoint),
 					Timeout = TimeSpan.FromSeconds(10),
-				}
-			);
-			return client;
+				};
+			});
 		}
-		public static HttpClientHandler ClientHandler()
+
+		private static HttpClientHandler CreateHandler()
 		{
-			HttpClientHandler handler = new HttpClientHandler() { UseCookies = false };
-			handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
+			var handler = new HttpClientHandler
 			{
-				if (cert.Issuer.Equals("CN=localhost"))
-					return true;
-				return errors == System.Net.Security.SslPolicyErrors.None;
+				UseCookies = false
 			};
 
+			handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
+			{
+				if (cert.Issuer.Equals("CN=localhost", StringComparison.OrdinalIgnoreCase))
+				{
+					return true;
+				}
+
+				return errors == System.Net.Security.SslPolicyErrors.None;
+			};
 
 			return handler;
 		}

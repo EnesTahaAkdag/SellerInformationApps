@@ -28,5 +28,11 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+
+	<key>NSCameraUsageDescription</key>
+	<string>Bu uygulama kamerayı kullanarak fotoğraf çekmenizi sağlar.</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Bu uygulama, galerinizden fotoğraf seçmenizi sağlar.</string>
 </dict>
 </plist>

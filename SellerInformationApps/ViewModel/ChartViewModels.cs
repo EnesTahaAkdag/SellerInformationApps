@@ -32,10 +32,10 @@ namespace SellerInformationApps.ViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://4b42-37-130-115-34.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://8b27-37-130-115-34.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",authHeaderValue);
 
-				string url = "https://4b42-37-130-115-34.ngrok-free.app/SendDataToChart/ChartData";
+				string url = "https://8b27-37-130-115-34.ngrok-free.app/SendDataToChart/ChartData";
 
 				var response = await httpClient.GetAsync(url);
 

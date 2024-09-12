@@ -3,15 +3,6 @@
 	<PropertyGroup>
 		<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
-
-		<!-- Note for MacCatalyst:
-		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
-		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
-		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
-		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>SellerInformationApps</RootNamespace>
@@ -57,16 +48,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Images\cameraicon.png" />
-	  <None Remove="Resources\Images\loginicon.png" />
-	  <None Remove="Resources\Images\moreicone.png" />
-	  <None Remove="Resources\Images\my_info.png" />
-	  <None Remove="Resources\Images\pngwingcom.png" />
-	  <None Remove="Resources\Images\profileicone.png" />
-	  <None Remove="Resources\Images\profilephotots.png" />
-	  <None Remove="Resources\Images\register.png" />
-	  <None Remove="Resources\Images\usersicone.png" />
-	  <None Remove="Resources\Images\vectorbarcharticon.png" />
+		<None Remove="Resources\Images\cameraicon.png" />
+		<None Remove="Resources\Images\loginicon.png" />
+		<None Remove="Resources\Images\moreicone.png" />
+		<None Remove="Resources\Images\my_info.png" />
+		<None Remove="Resources\Images\pngwingcom.png" />
+		<None Remove="Resources\Images\profileicone.png" />
+		<None Remove="Resources\Images\profilephotots.png" />
+		<None Remove="Resources\Images\register.png" />
+		<None Remove="Resources\Images\usersicone.png" />
+		<None Remove="Resources\Images\vectorbarcharticon.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -76,8 +67,8 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.82" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" />
@@ -95,44 +86,46 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Reference Include="Telerik.Maui.Core">
-	    <HintPath>lib\Android\Telerik.Maui.Core.dll</HintPath>
-	  </Reference>
+		<MauiXaml Update="Pages\ChartPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\LoginPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\ProfilePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\RegisterPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\SellerInfosPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="PopUps\UpdateProfilePopUp.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="PopUps\UpdateProfilePasswordPopUp.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\UserListPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Pages\ChartPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\LoginPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\ProfilePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\RegisterPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\SellerInfosPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="PopUps\UpdateProfilePopUp.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="PopUps\UpdateProfilePasswordPopUp.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\UserListPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+		<Compile Update="PopUps\UpdateProfilePopUp.xaml.cs">
+			<DependentUpon>UpdateProfilePopUp.xaml</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="PopUps\UpdateProfilePopUp.xaml.cs">
-	    <DependentUpon>UpdateProfilePopUp.xaml</DependentUpon>
-	  </Compile>
+		<Folder Include="lib\" />
 	</ItemGroup>
 
-	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionSellerInformationAppsHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+	<ProjectExtensions>
+		<VisualStudio>
+			<UserProperties XamarinHotReloadDebuggerTimeoutExceptionSellerInformationAppsHideInfoBar="True" />
+		</VisualStudio>
+	</ProjectExtensions>
 
 </Project>
