@@ -38,7 +38,7 @@
                                CornerRadius="60" IsClippedToBounds="True"
                                BorderColor="#ccc" BackgroundColor="White"
                                HasShadow="True">
-                            <Image Source="profilephotots.png" Aspect="AspectFill"/>
+                            <Image Source="{Binding ProfileImage}" WidthRequest="100" HeightRequest="100" Aspect="AspectFill"/>
                         </Frame>
                     </Grid>
                 </StackLayout>

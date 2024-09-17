@@ -14,6 +14,7 @@ namespace SellerInformationApps.UpdatesViewModel
 	[QueryProperty(nameof(UserName), nameof(UserName))]
 	[QueryProperty(nameof(Email), nameof(Email))]
 	[QueryProperty(nameof(Age), nameof(Age))]
+	[QueryProperty(nameof(ProfileImage),nameof(ProfileImage))]
 	public partial class UpdateProfileViewModel : Authentication
 	{
 		[ObservableProperty] private string firstName;
@@ -21,6 +22,7 @@ namespace SellerInformationApps.UpdatesViewModel
 		[ObservableProperty] private string userName;
 		[ObservableProperty] private string email;
 		[ObservableProperty] private DateTime age;
+		[ObservableProperty] private Stream profileImage;
 
 		public UserProfileData UserProfile { get; internal set; }
 
@@ -37,6 +39,7 @@ namespace SellerInformationApps.UpdatesViewModel
 			UserName = userProfileData.UserName;
 			Email = userProfileData.Email;
 			Age = userProfileData.Age.Value;
+			ProfileImage = userProfileData.ProfileImage;
 		}
 
 		[RelayCommand]
@@ -62,10 +65,10 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://8b27-37-130-115-34.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://782a-37-130-115-34.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "/UserEditApi/EditUserData";
+				string url = "/UserUpdateApis/EditUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))

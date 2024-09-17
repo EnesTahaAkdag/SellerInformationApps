@@ -65,8 +65,8 @@ namespace SellerInformationApps.Pages
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://8b27-37-130-115-34.ngrok-free.app");
-				string url = "https://8b27-37-130-115-34.ngrok-free.app/RegisterAPI/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://782a-37-130-115-34.ngrok-free.app");
+				string url = "https://782a-37-130-115-34.ngrok-free.app/RegisterAPI/RegisterUser";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))

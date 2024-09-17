@@ -60,7 +60,7 @@ namespace SellerInformationApps.Models
 	public class UpdateProfilePhoto
 	{
 		public string UserName { get; set; }
-		public string ProfilePhotos { get; set; }
+		public Stream ProfileImage { get; set; }
 	}
 
 	public class UpdateUser : UserProfileData
@@ -87,6 +87,8 @@ namespace SellerInformationApps.Models
 		public string Email { get; set; }
 
 		public DateTime? Age { get; set; }
+
+		public Stream ProfileImage { get; set; }
 	}
 
 	public class ProfilePohotosApiResponse

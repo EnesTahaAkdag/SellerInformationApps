@@ -16,6 +16,7 @@ namespace SellerInformationApps.ViewModel
 		[ObservableProperty] private string userName;
 		[ObservableProperty] private string email;
 		[ObservableProperty] private DateTime age;
+		[ObservableProperty] private Stream profileImage;
 		[ObservableProperty] private bool isLoading;
 
 		private readonly Authentication _authentication;
@@ -52,10 +53,10 @@ namespace SellerInformationApps.ViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://8b27-37-130-115-34.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://782a-37-130-115-34.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = $"/UserProfileData/DataSend?userName={userName}";
+				string url = $"/UserDataSendApis/DataSend?userName={userName}";
 
 				using (var response = await httpClient.GetAsync(url))
 				{
@@ -71,7 +72,8 @@ namespace SellerInformationApps.ViewModel
 								LastName = profileData.Data.LastName,
 								UserName = profileData.Data.UserName,
 								Email = profileData.Data.Email,
-								Age = profileData.Data.Age ?? DateTime.MinValue
+								Age = profileData.Data.Age ?? DateTime.MinValue,
+								ProfileImage = profileData.Data.ProfileImage
 							};
 
 							FirstName = UserProfileData.FirstName;
@@ -79,7 +81,9 @@ namespace SellerInformationApps.ViewModel
 							UserName = UserProfileData.UserName;
 							Email = UserProfileData.Email;
 							Age = UserProfileData.Age.Value;
+							ProfileImage = UserProfileData.ProfileImage;
 						}
+
 						else
 						{
 							await Shell.Current.DisplayAlert("Hata", $"API isteği başarısız: {profileData?.ErrorMessage}", "Tamam");

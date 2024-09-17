@@ -101,6 +101,9 @@
 		<MauiXaml Update="Pages\SellerInfosPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="PopUps\UpdateOrAddProfilePhotoPopUp.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="PopUps\UpdateProfilePopUp.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

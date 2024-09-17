@@ -10,6 +10,11 @@ namespace SellerInformationApps.ViewModel
 {
 	public partial class ChartPageViewModel : ObservableObject
 	{
+		private static readonly HttpClient httpClient = new HttpClient
+		{
+			BaseAddress = new Uri("https://782a-37-130-115-34.ngrok-free.app")
+		};
+
 		[ObservableProperty]
 		private ObservableCollection<SellerRaitingScore> data = new ObservableCollection<SellerRaitingScore>();
 
@@ -31,12 +36,9 @@ namespace SellerInformationApps.ViewModel
 				var password = Preferences.Get("Password", string.Empty);
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				var httpClient = HttpClientFactory.Create("https://8b27-37-130-115-34.ngrok-free.app");
-				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",authHeaderValue);
-
-				string url = "https://8b27-37-130-115-34.ngrok-free.app/SendDataToChart/ChartData";
-
+				string url = "/ApplicationContentApis/ChartData";
 				var response = await httpClient.GetAsync(url);
 
 				if (response.IsSuccessStatusCode)
@@ -47,10 +49,20 @@ namespace SellerInformationApps.ViewModel
 					{
 						var apiData = JsonConvert.DeserializeObject<List<SellerRaitingScore>>(apiResponses.Data.ToString());
 
-						var ratingCounts = apiData
-							.Where(item => item.RatingScore.HasValue && item.RatingScore.Value != 0.00m)
-							.GroupBy(item => (int)Math.Floor(item.RatingScore.Value))
-							.ToDictionary(g => g.Key, g => g.Count());
+						var ratingCounts = new Dictionary<int, int>();
+
+						foreach (var item in apiData.Where(item => item.RatingScore.HasValue && item.RatingScore.Value != 0.00m))
+						{
+							int scoreKey = (int)Math.Floor(item.RatingScore.Value);
+							if (ratingCounts.ContainsKey(scoreKey))
+							{
+								ratingCounts[scoreKey]++;
+							}
+							else
+							{
+								ratingCounts[scoreKey] = 1;
+							}
+						}
 
 						var result = Enumerable.Range(1, 5).Select(i => new SellerRaitingScore
 						{
@@ -60,6 +72,7 @@ namespace SellerInformationApps.ViewModel
 
 						MainThread.BeginInvokeOnMainThread(() =>
 						{
+							Data.Clear();
 							Data.Add(new SellerRaitingScore { StoreName = "Boş", RatingScore = 2898 });
 							Data.Add(new SellerRaitingScore { StoreName = "0", RatingScore = 2411 });
 
@@ -83,7 +96,10 @@ namespace SellerInformationApps.ViewModel
 			{
 				await ShowAlertAsync("Hata Oluştu", $"Apiye İstek Atılamadı: {ex.Message}");
 			}
-			finally { IsLoading = false; }
+			finally
+			{
+				IsLoading = false;
+			}
 		}
 
 		private async Task ShowAlertAsync(string title, string message)

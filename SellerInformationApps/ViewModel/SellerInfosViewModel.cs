@@ -56,7 +56,7 @@ namespace SellerInformationApps.ViewModel
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 				_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = $"https://8b27-37-130-115-34.ngrok-free.app/DataSendApp/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://782a-37-130-115-34.ngrok-free.app/ApplicationContentApis/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
 
 				using (var response = await _httpClient.GetAsync(url))
 				{

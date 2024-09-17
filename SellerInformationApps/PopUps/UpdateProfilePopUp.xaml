@@ -15,6 +15,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <StackLayout Grid.Row="0" Grid.Column="0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
             <StackLayout Padding="10" Spacing="17" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <StackLayout Padding="10" Spacing="17" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
@@ -25,11 +26,11 @@
                                CornerRadius="60" IsClippedToBounds="True"
                                BorderColor="#ddd" BackgroundColor="#F5F5F5"
                                HasShadow="False">
-                            <Image Source="profilephotots.png" Aspect="AspectFill" />
+                            <Image Source="{Binding ProfileImage}" Aspect="AspectFill" />
                         </Frame>
 
                         <StackLayout VerticalOptions="Center" Spacing="10">
-                        <Button Text="Resimi Ekle / Değiştir"
+                            <Button Text="Resimi Ekle / Değiştir"
                                 BackgroundColor="#4CAF50"
                                 TextColor="White"
                                 CornerRadius="20"
@@ -38,7 +39,7 @@
                                 FontSize="16"
                                 FontAttributes="Bold"
                                 Clicked="OnAddOrChangeImageClicked"/>
-                            
+
                             <Button Text="Sifreyi Degistir"
                                     BackgroundColor="BlueViolet"    
                                     Clicked="OpenUpdateProfilePasswordPupUp"
@@ -116,5 +117,6 @@
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
+        </StackLayout>
     </Grid>
 </mct:Popup>
