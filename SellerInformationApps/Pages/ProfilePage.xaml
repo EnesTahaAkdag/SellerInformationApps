@@ -79,7 +79,7 @@
                     <Button Text="Profili Güncelle" Clicked="UpdateProfileAsync" BackgroundColor="#28a745" TextColor="White" CornerRadius="10" HeightRequest="50" FontSize="16" Padding="10" BorderColor="Black" BorderWidth="1" HorizontalOptions="FillAndExpand"/>
 
                     <!-- Çıkış Yap Butonu -->
-                    <Button Text="Çıkış Yap" Command="{Binding LogOutCommand}" BackgroundColor="#dc3545"  TextColor="White" CornerRadius="10" HeightRequest="50" FontSize="16" Padding="10" BorderColor="Black" BorderWidth="1" şHorizontalOptions="FillAndExpand"/>
+                    <Button Text="Çıkış Yap" Command="{Binding LogOutCommand}" BackgroundColor="#dc3545"  TextColor="White" CornerRadius="10" HeightRequest="50" FontSize="16" Padding="10" BorderColor="Black" BorderWidth="1" HorizontalOptions="FillAndExpand"/>
                 </StackLayout>
             </StackLayout>
         </Grid>
