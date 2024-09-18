@@ -23,75 +23,33 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Frame Grid.Row="1"
-               Padding="30"
-               CornerRadius="15"
-               BackgroundColor="#F5F5F5"
-               HasShadow="True"
-               VerticalOptions="CenterAndExpand">
+        <Frame Grid.Row="1" Padding="30" CornerRadius="15" BackgroundColor="#F5F5F5" HasShadow="True" VerticalOptions="CenterAndExpand">
 
             <StackLayout Spacing="20">
 
-                <Label Text="Hoşgeldiniz"
-                       TextColor="Black"
-                       HorizontalOptions="Center"
-                       FontAttributes="Bold"
-                       FontSize="28"/>
+                <Label Text="Hoşgeldiniz" TextColor="Black" HorizontalOptions="Center" FontAttributes="Bold" FontSize="28"/>
 
-                <Label Text="Lütfen hesabınıza giriş yapın"
-                       TextColor="Gray"
-                       HorizontalOptions="Center"
-                       FontSize="14"/>
+                <Label Text="Lütfen hesabınıza giriş yapın" TextColor="Gray" HorizontalOptions="Center" FontSize="14"/>
 
-                <Label Text="Kullanıcı Adı"
-                       TextColor="Black"
-                       FontSize="Medium"/>
+                <Label Text="Kullanıcı Adı" TextColor="Black" FontSize="Medium"/>
 
-                <Frame BackgroundColor="#E0E0E0"
-                       CornerRadius="10"
-                       Padding="10">
-                    <Entry x:Name="UserNameEntry"
-                           Placeholder="Kullanıcı adınızı girin"
-                           BackgroundColor="Transparent"
-                           Text="{Binding UserName}"
-                           TextColor="Black"/>
+                <Frame BackgroundColor="#E0E0E0" CornerRadius="10" Padding="10">
+                    <Entry x:Name="UserNameEntry" Placeholder="Kullanıcı adınızı girin" BackgroundColor="Transparent" Text="{Binding UserName}" TextColor="Black"/>
                 </Frame>
 
-                <Label Text="Şifre"
-                       TextColor="Black"
-                       FontSize="Medium"/>
+                <Label Text="Şifre" TextColor="Black" FontSize="Medium"/>
 
-                <Frame BackgroundColor="#E0E0E0"
-                       CornerRadius="10"
-                       Padding="10">
-                    <Entry x:Name="PasswordEntry"
-                           Placeholder="Şifrenizi girin"
-                           IsPassword="True"
-                           BackgroundColor="Transparent"
-                           Text="{Binding Password}"
-                           TextColor="Black"/>
+                <Frame BackgroundColor="#E0E0E0" CornerRadius="10" Padding="10">
+                    <Entry x:Name="PasswordEntry" Placeholder="Şifrenizi girin" IsPassword="True" BackgroundColor="Transparent" Text="{Binding Password}" TextColor="Black"/>
                 </Frame>
 
-                <Button Text="Giriş Yap"
-                        BackgroundColor="#007AFF"
-                        TextColor="White"
-                        CornerRadius="25"
-                        HeightRequest="50"
-                        VerticalOptions="EndAndExpand"
-                        Command="{Binding LoginCommand}"/>
+                <Button Text="Giriş Yap" BackgroundColor="#007AFF" TextColor="White" CornerRadius="25" HeightRequest="50" VerticalOptions="EndAndExpand" Command="{Binding LoginCommand}"/>
 
-                <StackLayout Orientation="Horizontal"
-                             HorizontalOptions="Center"
-                             Spacing="5">
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="5">
 
-                    <Label Text="Hesabınız yok mu?"
-                           TextColor="Gray"
-                           FontSize="Small"/>
+                    <Label Text="Hesabınız yok mu?" TextColor="Gray" FontSize="Small"/>
 
-                    <Label Text="Kayıt Ol"
-                           TextColor="#007AFF"
-                           FontSize="Small"
-                           FontAttributes="Bold">
+                    <Label Text="Kayıt Ol" TextColor="#007AFF" FontSize="Small" FontAttributes="Bold">
 
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding RegisterCommand}" />

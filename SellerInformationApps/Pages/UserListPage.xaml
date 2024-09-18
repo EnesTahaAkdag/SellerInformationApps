@@ -16,19 +16,11 @@
 
     <Shell.TitleView>
         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-            <Label Text="Kullanıcı Listesi"
-               FontSize="30"
-               FontAttributes="Bold"
-               TextColor="Black"
-               VerticalOptions="Center"/>
+            <Label Text="Kullanıcı Listesi" FontSize="30" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
         </StackLayout>
     </Shell.TitleView>
     <Grid>
-        <ActivityIndicator IsRunning="{Binding IsLoading}" 
-                    IsVisible="{Binding IsLoading}" 
-                    VerticalOptions="CenterAndExpand"
-                    HorizontalOptions="CenterAndExpand" 
-                    Color="Blue" />
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Color="Blue" />
         <Grid IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -36,18 +28,9 @@
             </Grid.RowDefinitions>
 
             <!-- Başlıklar -->
-            <ScrollView Grid.Row="0"
-                    IsClippedToBounds="False"
-                    Orientation="Horizontal"
-                    HorizontalScrollBarVisibility="Never"
-                    x:Name="headerScroll"
-                    InputTransparent="True">
-                <StackLayout Orientation="Vertical"
-                         BackgroundColor="White"
-                         Padding="5"
-                         Spacing="5">
-                    <Grid BackgroundColor="#333"
-                      Padding="5">
+            <ScrollView Grid.Row="0" IsClippedToBounds="False" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" x:Name="headerScroll" InputTransparent="True">
+                <StackLayout Orientation="Vertical" BackgroundColor="White" Padding="5" Spacing="5">
+                    <Grid BackgroundColor="#333" Padding="5">
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="80"/>
@@ -58,95 +41,30 @@
                             <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0"
-                           Text="Id" 
-                           HorizontalOptions="Center"       
-                           VerticalOptions="Center"
-                           TextColor="White"
-                           FontAttributes="Bold"/>
-                        <Label Grid.Column="1"
-                           Text="İsim"                       
-                           HorizontalOptions="Center"             
-                           VerticalOptions="Center"                   
-                           TextColor="White"
-                           FontAttributes="Bold"/>
-                        <Label Grid.Column="2"
-                           Text="Soyisim"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"
-                           TextColor="White"
-                           FontAttributes="Bold"/>
-                        <Label Grid.Column="3"
-                           Text="Kullanıcı Adı" 
-                           HorizontalOptions="Center" 
-                           VerticalOptions="Center" 
-                           TextColor="White"
-                           FontAttributes="Bold"/>
-                        <Label Grid.Column="4" 
-                           Text="Email" 
-                           HorizontalOptions="Center" 
-                           VerticalOptions="Center" 
-                           TextColor="White"
-                           FontAttributes="Bold"/>
-                        <Label Grid.Column="5"
-                           Text="Doğum Tarihi"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"
-                           TextColor="White"
-                           FontAttributes="Bold"/>
+                        <Label Grid.Column="0" Text="Id" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="İsim" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
+                        <Label Grid.Column="2" Text="Soyisim" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
+                        <Label Grid.Column="3" Text="Kullanıcı Adı" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
+                        <Label Grid.Column="4" Text="Email" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
+                        <Label Grid.Column="5" Text="Doğum Tarihi" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
                     </Grid>
                 </StackLayout>
             </ScrollView>
 
             <!-- İçerik -->
-            <ScrollView Grid.Row="1"
-                    Orientation="Vertical"
-                    Margin="0,10,0,0">
-                <ScrollView Grid.Row="1" 
-                        Orientation="Horizontal"
-                        Scrolled="OnScrolled"
-                        x:Name="s">
-                    <StackLayout Orientation="Vertical"
-                             BackgroundColor="White"
-                             Padding="5"
-                             Spacing="5">
+            <ScrollView Grid.Row="1" Orientation="Vertical" Margin="0,10,0,0">
+                <ScrollView Grid.Row="1" Orientation="Horizontal" Scrolled="OnScrolled" x:Name="s">
+                    <StackLayout Orientation="Vertical" BackgroundColor="White" Padding="5" Spacing="5">
                         <StackLayout BindableLayout.ItemsSource="{Binding UserLists}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid ColumnDefinitions="80,150,150,200,200,150"
-                                      Padding="10"
-                                      Margin="0,5"
-                                      BackgroundColor="#e0e0e0">
-                                        <Label Grid.Column="0"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"
-                                           Text="{Binding Id}"
-                                           TextColor="#333"/>
-                                        <Label Grid.Column="1"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"
-                                           Text="{Binding FirstName}"
-                                           TextColor="#333"/>
-                                        <Label Grid.Column="2"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"
-                                           Text="{Binding LastName}"
-                                           TextColor="#333"/>
-                                        <Label Grid.Column="3"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"
-                                           Text="{Binding UserName}"
-                                           TextColor="#333"/>
-                                        <Label Grid.Column="4"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"
-                                           Text="{Binding Email}"
-                                           TextColor="#333"/>
-                                        <Label Grid.Column="5"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"
-                                           Text="{Binding Age,StringFormat='{0:dd/MM/yyyy}'}"
-                                           TextColor="#333"/>
+                                    <Grid ColumnDefinitions="80,150,150,200,200,150" Padding="10" Margin="0,5" BackgroundColor="#e0e0e0">
+                                        <Label Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding Id}" TextColor="#333"/>
+                                        <Label Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding FirstName}" TextColor="#333"/>
+                                        <Label Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding LastName}" TextColor="#333"/>
+                                        <Label Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding UserName}" TextColor="#333"/>
+                                        <Label Grid.Column="4" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding Email}" TextColor="#333"/>
+                                        <Label Grid.Column="5" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding Age,StringFormat='{0:dd/MM/yyyy}'}" TextColor="#333"/>
                                     </Grid>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>

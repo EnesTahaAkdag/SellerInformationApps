@@ -58,7 +58,7 @@
                         <StackLayout BindableLayout.ItemsSource="{Binding StoreInfos}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Padding="10" BackgroundColor="#f5f5f5" Margin="0,0,0,10">
+                                    <Grid Padding="10" BackgroundColor="#e0e0e0" Margin="0,0,0,10">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="80"/>
                                             <ColumnDefinition Width="150"/>

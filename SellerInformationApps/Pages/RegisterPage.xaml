@@ -11,11 +11,7 @@
     <Shell.TitleView>
         <StackLayout Orientation="Horizontal" 
                      HorizontalOptions="CenterAndExpand">
-            <Label Text="Kayıt Ol"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   TextColor="White"
-                   VerticalOptions="Center"/>
+            <Label Text="Kayıt Ol" FontSize="24" FontAttributes="Bold" TextColor="White" VerticalOptions="Center"/>
         </StackLayout>
     </Shell.TitleView>
 
@@ -28,141 +24,53 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-            <Frame Grid.Row="1"
-                   Padding="20"
-                   CornerRadius="15"
-                   BackgroundColor="#f9f9f9"
-                   HasShadow="True"
-                   Margin="0,0,0,0">
-
+            <Frame Grid.Row="1" Padding="20" CornerRadius="15" BackgroundColor="#f9f9f9" HasShadow="True" Margin="0,0,0,0">
                 <StackLayout Spacing="20" Orientation="Vertical">
-
                     <!-- Hesap Oluştur Başlığı -->
-                    <Label Text="Hesap Oluştur"
-                           TextColor="Black"
-                           HorizontalOptions="Center"
-                           FontAttributes="Bold"
-                           FontSize="26"/>
-
-                    <Label Text="Bilgilerinizi Giriniz"
-                           TextColor="Gray"
-                           HorizontalOptions="Center"
-                           FontSize="14"/>
-
+                    <Label Text="Hesap Oluştur" TextColor="Black" HorizontalOptions="Center" FontAttributes="Bold" FontSize="26"/>
+                    <Label Text="Bilgilerinizi Giriniz" TextColor="Gray" HorizontalOptions="Center" FontSize="14"/>
                     <!-- Girdi Alanları -->
                     <StackLayout Spacing="15">
-
                         <!-- Ad -->
-                        <Frame BackgroundColor="#E0E0E0"
-                           CornerRadius="10"
-                           Padding="10">
-                            <Entry Placeholder="Ad"
-                               Text="{Binding FirstName}"
-                               BackgroundColor="#E0E0E0"
-                               PlaceholderColor="Gray"
-                               TextColor="Black"
-                               Margin="0,5"/>
+                        <Frame BackgroundColor="#E0E0E0" CornerRadius="10" Padding="10">
+                            <Entry Placeholder="Ad" Text="{Binding FirstName}" BackgroundColor="#E0E0E0" PlaceholderColor="Gray" TextColor="Black" Margin="0,5"/>
                         </Frame>
-                        <Frame BackgroundColor="#E0E0E0"
-                           CornerRadius="10"
-                           Padding="10">
+                        <Frame BackgroundColor="#E0E0E0" CornerRadius="10" Padding="10">
                             <!-- Soyad -->
-                            <Entry Placeholder="Soyad"
-                               Text="{Binding LastName}"
-                               BackgroundColor="#E0E0E0"
-                               PlaceholderColor="Gray"
-                               TextColor="Black"
-                               Margin="0,5"/>
+                            <Entry Placeholder="Soyad" Text="{Binding LastName}" BackgroundColor="#E0E0E0" PlaceholderColor="Gray" TextColor="Black" Margin="0,5"/>
                         </Frame>
 
-                        <Frame BackgroundColor="#E0E0E0"
-                           CornerRadius="10"
-                           Padding="10">
+                        <Frame BackgroundColor="#E0E0E0" CornerRadius="10" Padding="10">
                             <!-- Kullanıcı Adı -->
-                            <Entry Placeholder="Kullanıcı Adı"
-                               Text="{Binding UserName}"
-                               BackgroundColor="#E0E0E0"
-                               PlaceholderColor="Gray"
-                               TextColor="Black"
-                               Margin="0,5"/>
+                            <Entry Placeholder="Kullanıcı Adı" Text="{Binding UserName}" BackgroundColor="#E0E0E0" PlaceholderColor="Gray" TextColor="Black" Margin="0,5"/>
 
                         </Frame>
-                        <Frame BackgroundColor="#E0E0E0"
-                           CornerRadius="10"
-                           Padding="10">
+                        <Frame BackgroundColor="#E0E0E0" CornerRadius="10" Padding="10">
                             <!-- E-posta -->
-                            <Entry Placeholder="E-posta"
-                               Keyboard="Email"
-                               Text="{Binding Email}"
-                               BackgroundColor="#E0E0E0"
-                               PlaceholderColor="Gray"
-                               TextColor="Black"
-                               Margin="0,5"/>
+                            <Entry Placeholder="E-posta" Keyboard="Email" Text="{Binding Email}" BackgroundColor="#E0E0E0" PlaceholderColor="Gray" TextColor="Black" Margin="0,5"/>
                         </Frame>
 
-                        <Frame BackgroundColor="#E0E0E0"
-                           CornerRadius="10"
-                           Padding="10">
+                        <Frame BackgroundColor="#E0E0E0" CornerRadius="10" Padding="10">
                             <!-- Doğum Tarihi -->
-                            <DatePicker Date="{Binding Age, Mode=TwoWay}"
-                                    MinimumDate="1900-01-01"
-                                    MaximumDate="{Binding CurrentDate}"
-                                    BackgroundColor="#E0E0E0"
-                                    TextColor="Black"
-                                    Margin="0,5"/>
+                            <DatePicker Date="{Binding Age, Mode=TwoWay}" MinimumDate="1900-01-01" MaximumDate="{Binding CurrentDate}" BackgroundColor="#E0E0E0" TextColor="Black" Margin="0,5"/>
                         </Frame>
 
-                        <Frame BackgroundColor="#E0E0E0"
-                           CornerRadius="10"
-                           Padding="10">
+                        <Frame BackgroundColor="#E0E0E0" CornerRadius="10" Padding="10">
                             <!-- Şifre -->
-                            <Entry Placeholder="Şifre"
-                               IsPassword="True"
-                               Text="{Binding Password}"
-                               BackgroundColor="#E0E0E0"
-                               PlaceholderColor="Gray"
-                               TextColor="Black"
-                               Margin="0,5"/>
+                            <Entry Placeholder="Şifre" IsPassword="True" Text="{Binding Password}" BackgroundColor="#E0E0E0" PlaceholderColor="Gray" TextColor="Black" Margin="0,5"/>
                         </Frame>
 
-                        <Frame BackgroundColor="#E0E0E0"
-                           CornerRadius="10"
-                           Padding="10">
+                        <Frame BackgroundColor="#E0E0E0" CornerRadius="10" Padding="10">
                             <!-- Şifreyi Doğrula -->
-                            <Entry Placeholder="Şifreyi Doğrula"
-                               IsPassword="True"
-                               Text="{Binding VerifyPassword}"
-                               BackgroundColor="#E0E0E0"
-                               PlaceholderColor="Gray"
-                               TextColor="Black"
-                               Margin="0,5"/>
+                            <Entry Placeholder="Şifreyi Doğrula" IsPassword="True" Text="{Binding VerifyPassword}" BackgroundColor="#E0E0E0" PlaceholderColor="Gray" TextColor="Black" Margin="0,5"/>
                         </Frame>
                     </StackLayout>
-
                     <!-- Kayıt Ol Butonu -->
-                    <Button Text="Kayıt Ol"
-                            BackgroundColor="#007AFF"
-                            TextColor="White"
-                            CornerRadius="10"
-                            FontSize="Medium"
-                            Padding="10"
-                            Command="{Binding RegisterCommand}"
-                            Margin="0,4"/>
-
+                    <Button Text="Kayıt Ol" BackgroundColor="#007AFF" TextColor="White" CornerRadius="10" FontSize="Medium" Padding="10" Command="{Binding RegisterCommand}" Margin="0,4"/>
                     <!-- Hesabınız Var mı? Giriş Yap -->
-                    <StackLayout Orientation="Horizontal"
-                                 HorizontalOptions="Center"
-                                 Spacing="5">
-
-                        <Label Text="Hesabınız Var mı?"
-                               TextColor="Gray"
-                               FontSize="Small"/>
-
-                        <Label Text="Giriş Yap"
-                               TextColor="#007AFF"
-                               FontSize="Small"
-                               FontAttributes="Bold">
-
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="5">
+                        <Label Text="Hesabınız Var mı?" TextColor="Gray" FontSize="Small"/>
+                        <Label Text="Giriş Yap" TextColor="#007AFF" FontSize="Small" FontAttributes="Bold">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding LoginCommand}" />
                             </Label.GestureRecognizers>

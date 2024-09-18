@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SellerInformationApps.Pages.ProfilePage"
              Title="Profil Sayfası"
-             xmlns:a="clr-namespace:SellerInformationApps.Converter"
              BackgroundColor="#f5f5f5"
+             xmlns:a="clr-namespace:SellerInformationApps.Converter"
              Shell.BackgroundColor="#FFFFFF">
 
     <ContentPage.Resources>
@@ -15,34 +15,24 @@
 
     <Shell.TitleView>
         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-            <Label Text="Profil Sayfası"
-                   FontSize="30"
-                   FontAttributes="Bold"
-                   TextColor="Black"
-                   VerticalOptions="Center"/>
+            <Label Text="Profil Sayfası" FontSize="30" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
         </StackLayout>
     </Shell.TitleView>
 
     <Grid>
-        <ActivityIndicator IsRunning="{Binding IsLoading}" 
-                           IsVisible="{Binding IsLoading}" 
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="CenterAndExpand" 
-                           Color="Blue" />
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Color="Blue" />
 
         <Grid RowDefinitions="Auto, *" ColumnDefinitions="*" IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
             <StackLayout Padding="20" Spacing="20">
                 <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
                     <Grid>
-                        <Frame WidthRequest="120" HeightRequest="120"
-                               CornerRadius="60" IsClippedToBounds="True"
-                               BorderColor="#ccc" BackgroundColor="White"
-                               HasShadow="True">
-                            <Image Source="{Binding ProfileImage}" WidthRequest="100" HeightRequest="100" Aspect="AspectFill"/>
+                        <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" IsClippedToBounds="True" BorderColor="#ccc" BackgroundColor="White" HasShadow="True">
+                            <Image Source="profilephotots.png" WidthRequest="100" HeightRequest="100" Aspect="AspectFill"/>
                         </Frame>
                     </Grid>
                 </StackLayout>
 
+                <!-- Adı -->
                 <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
                     <StackLayout Spacing="5">
                         <Label Text="Ad" FontSize="12" TextColor="#7D7D7D"/>
@@ -50,6 +40,7 @@
                     </StackLayout>
                 </Frame>
 
+                <!-- Soyadı -->
                 <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
                     <StackLayout Spacing="5">
                         <Label Text="Soyad" FontSize="12" TextColor="#7D7D7D"/>
@@ -57,6 +48,7 @@
                     </StackLayout>
                 </Frame>
 
+                <!-- Kullanıcı Adı -->
                 <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
                     <StackLayout Spacing="5">
                         <Label Text="Kullanıcı Adı" FontSize="12" TextColor="#7D7D7D"/>
@@ -64,6 +56,7 @@
                     </StackLayout>
                 </Frame>
 
+                <!-- E-Mail -->
                 <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
                     <StackLayout Spacing="5">
                         <Label Text="E-Mail" FontSize="12" TextColor="#7D7D7D"/>
@@ -71,41 +64,22 @@
                     </StackLayout>
                 </Frame>
 
+                <!-- Doğum Tarihi -->
                 <Frame Padding="15" BackgroundColor="White" CornerRadius="15" HasShadow="True">
                     <StackLayout Spacing="5">
                         <Label Text="Doğum Tarihi" FontSize="12" TextColor="#7D7D7D"/>
-                        <Label Text="{Binding Age ,  StringFormat='{}{0:dd/MM/yyyy}'}" FontAttributes="Bold" 
-                           x:Name="AgeEntry" FontSize="20" TextColor="Black" BackgroundColor="Transparent"/>
+                        <Label Text="{Binding Age, StringFormat='{0:dd/MM/yyyy}'}" FontAttributes="Bold" FontSize="20" TextColor="Black" BackgroundColor="Transparent"/>
                     </StackLayout>
                 </Frame>
 
-                <StackLayout Orientation="Horizontal" 
-                         HorizontalOptions="FillAndExpand"
-                         Spacing="20">
+                <!-- Butonlar -->
+                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="20">
 
-                    <Button Text="Profili Güncelle" 
-                        Clicked="UpdateProfileAsync"
-                        BackgroundColor="#28a745" 
-                        TextColor="White" 
-                        CornerRadius="10"
-                        HeightRequest="50"
-                        FontSize="16" 
-                        Padding="10"
-                        BorderColor="Black" 
-                        BorderWidth="1"
-                        HorizontalOptions="FillAndExpand"/>
+                    <!-- Profili Güncelle Butonu -->
+                    <Button Text="Profili Güncelle" Clicked="UpdateProfileAsync" BackgroundColor="#28a745" TextColor="White" CornerRadius="10" HeightRequest="50" FontSize="16" Padding="10" BorderColor="Black" BorderWidth="1" HorizontalOptions="FillAndExpand"/>
 
-                    <Button Text="Çıkış Yap" 
-                        Command="{Binding LogOutCommand}" 
-                        BackgroundColor="#dc3545"  
-                        TextColor="White" 
-                        CornerRadius="10"
-                        HeightRequest="50"
-                        FontSize="16" 
-                        Padding="10"
-                        BorderColor="Black" 
-                        BorderWidth="1"
-                        HorizontalOptions="FillAndExpand"/>
+                    <!-- Çıkış Yap Butonu -->
+                    <Button Text="Çıkış Yap" Command="{Binding LogOutCommand}" BackgroundColor="#dc3545"  TextColor="White" CornerRadius="10" HeightRequest="50" FontSize="16" Padding="10" BorderColor="Black" BorderWidth="1" şHorizontalOptions="FillAndExpand"/>
                 </StackLayout>
             </StackLayout>
         </Grid>

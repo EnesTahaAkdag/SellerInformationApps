@@ -18,11 +18,7 @@
 
     <Shell.TitleView>
         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-            <Label Text="Grafik Sayfası"
-               FontSize="28"
-               FontAttributes="Bold"
-               TextColor="Black"
-               VerticalOptions="Center"/>
+            <Label Text="Grafik Sayfası" FontSize="28" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
         </StackLayout>
     </Shell.TitleView>
 
@@ -32,79 +28,40 @@
 
     <Grid Padding="15">
         <!-- Yüklenme Animasyonu -->
-        <ActivityIndicator IsRunning="{Binding IsLoading}" 
-                    IsVisible="{Binding IsLoading}" 
-                    VerticalOptions="CenterAndExpand"
-                    HorizontalOptions="CenterAndExpand" 
-                    Color="Blue" 
-                    WidthRequest="60"
-                    HeightRequest="60"/>
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Color="Blue" WidthRequest="60" HeightRequest="60"/>
 
         <!-- Ana İçerik -->
-        <Frame IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" 
-               CornerRadius="10" 
-               Padding="10" 
-               HasShadow="True" 
-               BackgroundColor="White">
+        <Frame IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" CornerRadius="10" Padding="10" HasShadow="True" BackgroundColor="White">
             <Grid RowDefinitions="Auto, Auto, *" Margin="0,20,0,0">
 
                 <!-- Grafik Başlığı -->
-                <Label Text="📊 Mağaza Puanı Grafiği"
-                       TextColor="#333333"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Start"
-                       FontAttributes="Bold"
-                       FontSize="20"
-                       Padding="10"
-                       BackgroundColor="#f0f0f0"
-                       HorizontalTextAlignment="Center"
-                       VerticalTextAlignment="Center" 
-                       Margin="0,10,0,10" />
+                <Label Text="📊 Mağaza Puanı Grafiği" TextColor="#333333" HorizontalOptions="Center" VerticalOptions="Start" FontAttributes="Bold" FontSize="20" Padding="10" BackgroundColor="#f0f0f0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Margin="0,10,0,10" />
 
                 <!-- Telerik Chart -->
-                <telerik:RadCartesianChart x:Name="chart"  
-                                           AutomationId="chart"  
-                                           Grid.Row="2"
-                                           HeightRequest="350"
-                                           BackgroundColor="White">
+                <telerik:RadCartesianChart x:Name="chart" AutomationId="chart" Grid.Row="2" HeightRequest="350" BackgroundColor="White">
                     <telerik:RadCartesianChart.ChartBehaviors>
-                        <telerik:ChartSelectionBehavior DataPointSelectionMode="None"
-                                                        SeriesSelectionMode="None" />
+                        <telerik:ChartSelectionBehavior DataPointSelectionMode="None" SeriesSelectionMode="None" />
                         <telerik:ChartTooltipBehavior TriggerMode="Tap" />
                     </telerik:RadCartesianChart.ChartBehaviors>
 
                     <!-- X Eksen -->
                     <telerik:RadCartesianChart.HorizontalAxis>
-                        <telerik:CategoricalAxis LineColor="#A9A9A9" 
-                                                 MajorTickThickness="2" 
-                                                 PlotMode="BetweenTicks" 
-                                                 ShowLabels="True"
-                                                 LabelTextColor="Black"
-                                                 MajorTickBackgroundColor="#A9A9A9" />
+                        <telerik:CategoricalAxis LineColor="#A9A9A9" MajorTickThickness="2" PlotMode="BetweenTicks" ShowLabels="True" LabelTextColor="Black" MajorTickBackgroundColor="#A9A9A9" />
                     </telerik:RadCartesianChart.HorizontalAxis>
 
                     <!-- Y Eksen -->
                     <telerik:RadCartesianChart.VerticalAxis>
-                        <telerik:NumericalAxis LineColor="#A9A9A9"
-                                               ShowLabels="True"
-                                               LabelFormat="0"
-                                               LabelTextColor="Black"
-                                               LabelFitMode="Rotate"
-                                               MajorTickBackgroundColor="#A9A9A9" />
+                        <telerik:NumericalAxis LineColor="#A9A9A9" ShowLabels="True" LabelFormat="0" LabelTextColor="Black" LabelFitMode="Rotate" MajorTickBackgroundColor="#A9A9A9" />
                     </telerik:RadCartesianChart.VerticalAxis>
 
                     <!-- Grid -->
                     <telerik:RadCartesianChart.Grid>
-                        <telerik:CartesianChartGrid MajorLinesVisibility="Y" 
-                                                    MajorLineThickness="1"
-                                                    MajorLineColor="#D3D3D3" />
+                        <telerik:CartesianChartGrid MajorLinesVisibility="Y" MajorLineThickness="1" MajorLineColor="#D3D3D3" />
                     </telerik:RadCartesianChart.Grid>
 
                     <!-- Bar Serisi -->
                     <telerik:RadCartesianChart.Series>
-                        <telerik:BarSeries CategoryBinding="StoreName"
-                                           ValueBinding="RatingScore"
-                                           ItemsSource="{Binding Data}"/>
+                        <telerik:BarSeries CategoryBinding="StoreName" ValueBinding="RatingScore" ItemsSource="{Binding Data}"/>
                     </telerik:RadCartesianChart.Series>
 
                 </telerik:RadCartesianChart>

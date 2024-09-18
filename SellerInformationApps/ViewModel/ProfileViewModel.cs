@@ -15,8 +15,8 @@ namespace SellerInformationApps.ViewModel
 		[ObservableProperty] private string lastName;
 		[ObservableProperty] private string userName;
 		[ObservableProperty] private string email;
-		[ObservableProperty] private DateTime age;
-		[ObservableProperty] private Stream profileImage;
+		[ObservableProperty] private DateTime? age;
+		[ObservableProperty] private ImageSource profileImage;
 		[ObservableProperty] private bool isLoading;
 
 		private readonly Authentication _authentication;
@@ -47,13 +47,12 @@ namespace SellerInformationApps.ViewModel
 		{
 			try
 			{
-
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://782a-37-130-115-34.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://4fc2-37-130-115-34.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				string url = $"/UserDataSendApis/DataSend?userName={userName}";
@@ -72,18 +71,19 @@ namespace SellerInformationApps.ViewModel
 								LastName = profileData.Data.LastName,
 								UserName = profileData.Data.UserName,
 								Email = profileData.Data.Email,
-								Age = profileData.Data.Age ?? DateTime.MinValue,
-								ProfileImage = profileData.Data.ProfileImage
+								Age = profileData.Data.Age,
+								ProfileImage = profileData.Data.ProfileImage 
 							};
 
 							FirstName = UserProfileData.FirstName;
 							LastName = UserProfileData.LastName;
 							UserName = UserProfileData.UserName;
 							Email = UserProfileData.Email;
-							Age = UserProfileData.Age.Value;
-							ProfileImage = UserProfileData.ProfileImage;
-						}
+							Age = UserProfileData.Age;
 
+							var imageUrl = $"https://4fc2-37-130-115-34.ngrok-free.app/images/{UserProfileData.ProfileImage}";
+							ProfileImage = ImageSource.FromUri(new Uri(imageUrl));
+						}
 						else
 						{
 							await Shell.Current.DisplayAlert("Hata", $"API isteği başarısız: {profileData?.ErrorMessage}", "Tamam");
@@ -110,7 +110,8 @@ namespace SellerInformationApps.ViewModel
 		public void ClearProfileData()
 		{
 			FirstName = LastName = UserName = Email = string.Empty;
-			Age = default;
+			Age = null;
+			ProfileImage = null;
 		}
 	}
 }

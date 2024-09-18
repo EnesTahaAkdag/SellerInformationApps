@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using SellerInformationApps.UpdatesViewModel;
+using System.Runtime.CompilerServices;
 
 namespace SellerInformationApps.PopUps
 {
@@ -7,6 +8,7 @@ namespace SellerInformationApps.PopUps
 	{
 		private readonly AddOrUpdateProfilePhotosViewModel _profilePhotosViewModel;
 
+		private bool isPopupOpen = false;
 		public UpdateOrAddProfilePhotoPopUp(AddOrUpdateProfilePhotosViewModel profilePhotosViewModel)
 		{
 			InitializeComponent();
@@ -15,17 +17,47 @@ namespace SellerInformationApps.PopUps
 
 		private void ClosePopUpButton(object sender, EventArgs e)
 		{
-			Close();
+			if (!isPopupOpen)
+			{
+				isPopupOpen = true;
+				var button = sender as Button;
+				button.IsEnabled = false;
+
+				Close();
+
+				isPopupOpen = false;
+				button.IsEnabled = true;
+			}
 		}
 
 		private async void OnPickImageClicked(object sender, EventArgs e)
 		{
-			await PickOrCaptureImageAsync(isPickPhoto: true);
+			if (!isPopupOpen)
+			{
+				isPopupOpen = true;
+				var button = sender as Button;
+				button.IsEnabled = false;
+
+				await PickOrCaptureImageAsync(isPickPhoto: true);
+
+				isPopupOpen = false;
+				button.IsEnabled = true;
+			}
 		}
 
 		private async void OnCaptureImageClicked(object sender, EventArgs e)
 		{
-			await PickOrCaptureImageAsync(isPickPhoto: false);
+			if (!isPopupOpen)
+			{
+				isPopupOpen = true;
+				var button = sender as Button;
+				button.IsEnabled = false;
+
+				await PickOrCaptureImageAsync(isPickPhoto: false);
+
+				isPopupOpen = false;
+				button.IsEnabled = true;
+			}
 		}
 
 		private async Task PickOrCaptureImageAsync(bool isPickPhoto)

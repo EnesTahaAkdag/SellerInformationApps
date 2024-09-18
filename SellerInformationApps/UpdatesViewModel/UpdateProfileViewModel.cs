@@ -14,7 +14,8 @@ namespace SellerInformationApps.UpdatesViewModel
 	[QueryProperty(nameof(UserName), nameof(UserName))]
 	[QueryProperty(nameof(Email), nameof(Email))]
 	[QueryProperty(nameof(Age), nameof(Age))]
-	[QueryProperty(nameof(ProfileImage),nameof(ProfileImage))]
+	[QueryProperty(nameof(ProfileImage), nameof(ProfileImage))]
+
 	public partial class UpdateProfileViewModel : Authentication
 	{
 		[ObservableProperty] private string firstName;
@@ -65,7 +66,7 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://782a-37-130-115-34.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://4fc2-37-130-115-34.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				string url = "/UserUpdateApis/EditUserData";
