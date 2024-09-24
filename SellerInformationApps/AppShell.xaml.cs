@@ -10,7 +10,9 @@ namespace SellerInformationApps
 			InitializeComponent();
 			RegisterRoutes();
 			ConfigureTabBar();
-			BindingContext = new Authentication();
+
+			// Authentication.Instance kullanımı
+			BindingContext = Authentication.Instance;
 		}
 
 		private void RegisterRoutes()

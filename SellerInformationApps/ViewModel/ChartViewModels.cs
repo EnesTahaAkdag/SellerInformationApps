@@ -12,7 +12,7 @@ namespace SellerInformationApps.ViewModel
 	{
 		private static readonly HttpClient httpClient = new HttpClient
 		{
-			BaseAddress = new Uri("https://4fc2-37-130-115-34.ngrok-free.app")
+			BaseAddress = new Uri("https://778d-37-130-115-34.ngrok-free.app")
 		};
 
 		[ObservableProperty]
@@ -38,7 +38,7 @@ namespace SellerInformationApps.ViewModel
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "/ApplicationContentApis/ChartData";
+				string url = "/ApplicationContentApi/ChartData";
 				var response = await httpClient.GetAsync(url);
 
 				if (response.IsSuccessStatusCode)

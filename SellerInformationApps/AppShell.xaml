@@ -5,42 +5,45 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:SellerInformationApps"
     xmlns:pages="clr-namespace:SellerInformationApps.Pages"
-    xmlns:popups="clr-namespace:SellerInformationApps.PopUps"
+    xmlns:a="clr-namespace:ServiceHelper.Authentication"
     Title="SellerInformationApps"
     Shell.TabBarBackgroundColor="#333333"
     Shell.TabBarTitleColor="White"
     Shell.TabBarUnselectedColor="LightGray"
     Shell.TabBarForegroundColor="White"
-    Shell.TabBarDisabledColor="Gray">
-
+    Shell.TabBarDisabledColor="Gray"
+    BindingContext="{x:Static a:Authentication.Instance}">
+    
+    
     <TabBar>
-        <Tab Title="Ana Sayfa" Icon="pngwingcom.png">
+        <Tab Title="Ana Sayfa" Icon="pngwingcom.png" >
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
         </Tab>
 
-        <Tab Title="Satıcı Bilgileri" Icon="my_info.png" >
+        <!-- Giriş yapılmışsa görünen sayfalar -->
+        <Tab Title="Satıcı Bilgileri" Icon="my_info.png" IsVisible="{Binding IsContentVisible}">
             <ShellContent ContentTemplate="{DataTemplate pages:SellerInfosPage}" Route="SellerInfosPage" />
         </Tab>
 
-        <Tab Title="Kullanıcı Listesi" Icon="usersicone.png" >
+        <Tab Title="Kullanıcı Listesi" Icon="usersicone.png" IsVisible="{Binding IsContentVisible}">
             <ShellContent ContentTemplate="{DataTemplate pages:UserListPage}" Route="UserListPage" />
         </Tab>
 
-        <Tab Title="Grafik Sayfası" Icon="vectorbarcharticon.png" >
+        <Tab Title="Grafik Sayfası" Icon="vectorbarcharticon.png" IsVisible="{Binding IsContentVisible}">
             <ShellContent ContentTemplate="{DataTemplate pages:ChartPage}" Route="ChartPage" />
         </Tab>
 
-        <Tab Title="Profil Sayfası" Icon="profileicone.png" >
+        <Tab Title="Profil Sayfası" Icon="profileicone.png" IsVisible="{Binding IsContentVisible}">
             <ShellContent ContentTemplate="{DataTemplate pages:ProfilePage}" Route="ProfilePage" />
         </Tab>
 
-        <Tab Title="Giriş Sayfası" Icon="loginicon.png">
+        <!-- Giriş yapılmamışsa görünen sayfalar -->
+        <Tab Title="Giriş Sayfası" Icon="loginicon.png" IsVisible="{Binding IsLoginVisible}">
             <ShellContent ContentTemplate="{DataTemplate pages:LoginPage}" Route="LoginPage" />
         </Tab>
 
-        <Tab Title="Kayıt Sayfası" Icon="register.png">
+        <Tab Title="Kayıt Sayfası" Icon="register.png" IsVisible="{Binding IsLoginVisible}">
             <ShellContent ContentTemplate="{DataTemplate pages:RegisterPage}" Route="RegisterPage" />
         </Tab>
-
     </TabBar>
 </Shell>

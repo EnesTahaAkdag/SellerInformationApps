@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
 using SellerInformationApps.Models;
 using SellerInformationApps.Pages;
@@ -48,6 +49,10 @@ namespace SellerInformationApps
 			builder.Services.AddTransient<SellerInfosViewModel>();
 			builder.Services.AddTransient<UpdateProfileViewModel>();
 			builder.Services.AddTransient<UserListViewModel>();
+
+
+
+
 
 			return builder.Build();
 		}

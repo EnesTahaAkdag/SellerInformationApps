@@ -14,10 +14,13 @@ namespace SellerInformationApps.PopUps
 			BindingContext = _viewModel;
 		}
 
-		private async void SubmitPassword(object sender,EventArgs e)
+		private async void SubmitPassword(object sender, EventArgs e)
 		{
 			await _viewModel.SubmitPasswordAsync();
-			Close();
+			if (_viewModel.IsPasswordUpdated == true)
+			{
+				Close();
+			}
 		}
 
 		private void ClosePopUpButton(object sender, EventArgs e)

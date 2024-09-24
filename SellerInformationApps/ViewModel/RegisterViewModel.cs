@@ -2,12 +2,14 @@
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
+using SellerInformationApps;
 using SellerInformationApps.Models;
 using SellerInformationApps.ServiceHelper;
 using ServiceHelper.Authentication;
+using System.Net.Http.Headers;
 using System.Text;
 
-namespace SellerInformationApps.Pages
+namespace SellerInformationApps.ViewModel
 {
 	public partial class RegisterViewModel : Authentication
 	{
@@ -30,6 +32,9 @@ namespace SellerInformationApps.Pages
 		private string verifyPassword;
 
 		[ObservableProperty]
+		private Stream profileImageStream;
+
+		[ObservableProperty]
 		[JsonConverter(typeof(CustemDateTimeConverter))]
 		private DateTime? age = DateTime.Now;
 
@@ -38,6 +43,15 @@ namespace SellerInformationApps.Pages
 		{
 			get => _currentDate;
 			set => SetProperty(ref _currentDate, value);
+		}
+
+		public IRelayCommand RegisterUserCommand { get; }
+
+		public RegisterViewModel()
+		{
+			CurrentDate = DateTime.Now;
+			RegisterUserCommand = new AsyncRelayCommand(RegisterAsync);
+			LoginCommand = new AsyncRelayCommand(NavigateToLoginPageAsync);
 		}
 
 		[RelayCommand]
@@ -65,9 +79,28 @@ namespace SellerInformationApps.Pages
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://4fc2-37-130-115-34.ngrok-free.app");
-				string url = "https://4fc2-37-130-115-34.ngrok-free.app/RegisterAPI/RegisterUser";
-				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+				if (ProfileImageStream == null)
+				{
+					var assembly = typeof(RegisterViewModel).Assembly;
+					ProfileImageStream = assembly.GetManifestResourceStream("profilephotots.png");
+
+					if (ProfileImageStream == null)
+					{
+						await App.Current.MainPage.DisplayAlert("Hata", "Default resim yüklenemedi.", "Tamam");
+						return;
+					}
+				}
+
+				var content = new MultipartFormDataContent();
+				var userContent = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+				content.Add(userContent, "user");
+
+				var streamContent = new StreamContent(ProfileImageStream);
+				streamContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+				content.Add(streamContent, "ProfileImage", "profileImage.jpg");
+
+				var httpClient = HttpClientFactory.Create("https://778d-37-130-115-34.ngrok-free.app");
+				string url = "https://778d-37-130-115-34.ngrok-free.app/RegisterOrLoginApi/RegisterUser";
 
 				using (var response = await httpClient.PostAsync(url, content))
 				{
@@ -77,6 +110,10 @@ namespace SellerInformationApps.Pages
 			catch (Exception ex)
 			{
 				await App.Current.MainPage.DisplayAlert("Hata", $"Hata Oluştu: {ex.Message}", "Tamam");
+			}
+			finally
+			{
+				ProfileImageStream?.Dispose();
 			}
 		}
 
@@ -133,15 +170,9 @@ namespace SellerInformationApps.Pages
 
 		public IRelayCommand LoginCommand { get; }
 
-		public RegisterViewModel()
+		private async Task NavigateToLoginPageAsync()
 		{
-			CurrentDate = DateTime.Now;
-			LoginCommand = new AsyncRelayCommand(NavigateToRegisterPageAsync);
-		}
-
-		private async Task NavigateToRegisterPageAsync()
-		{
-			await Shell.Current.GoToAsync("//GirişSayfası");
+			await Shell.Current.GoToAsync("//LoginPage");
 		}
 	}
 }

@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System.ComponentModel;
 
 namespace ServiceHelper.Authentication
 {
@@ -9,7 +8,10 @@ namespace ServiceHelper.Authentication
 		private static Authentication instance;
 		private static readonly object lockObj = new object();
 
-		public Authentication() { }
+		public Authentication()
+		{
+			CheckUserLogin();
+		}
 
 		public static Authentication Instance
 		{
@@ -41,6 +43,21 @@ namespace ServiceHelper.Authentication
 
 		public bool IsLoginVisible => !IsLoggedIn;
 		public bool IsContentVisible => IsLoggedIn;
+
+		private void CheckUserLogin()
+		{
+			var userName = Preferences.Get("UserName", string.Empty);
+			var password = Preferences.Get("Password", string.Empty);
+
+			if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
+			{
+				IsLoggedIn = true;
+			}
+			else
+			{
+				IsLoggedIn = false;
+			}
+		}
 
 		public async Task LogOut()
 		{

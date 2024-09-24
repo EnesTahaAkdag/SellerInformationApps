@@ -1,11 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using ServiceHelper.Authentication;
+using System.Threading.Tasks;
 
 namespace SellerInformationApps.ViewModel
 {
-	public partial class MainPageViewModel : Authentication
+	public partial class MainPageViewModel : ObservableObject
 	{
-		private readonly Authentication authentication;
+		public Authentication AuthService => Authentication.Instance;
 
 		[ObservableProperty]
 		private string usersName;
@@ -15,16 +16,15 @@ namespace SellerInformationApps.ViewModel
 
 		public MainPageViewModel()
 		{
-			authentication = Authentication.Instance;
 			LoadUserName();
 		}
 
 		public void LoadUserName()
 		{
-			if (authentication.IsLoggedIn)
+			if (AuthService.IsLoggedIn)
 			{
 				UsersName = Preferences.Get("UserName", string.Empty);
-				Accessed = "Hoşgeldiniz: ";
+				Accessed = "Hoşgeldin: ";
 			}
 			else
 			{
@@ -32,9 +32,10 @@ namespace SellerInformationApps.ViewModel
 				UsersName = string.Empty;
 			}
 		}
+
 		public async Task LogOutAsync()
 		{
-			await Authentication.Instance.LogOut();
+			await AuthService.LogOut();
 		}
 	}
 }

@@ -1,126 +1,153 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="SellerInformationApps.MainPage"
              Title="Ana Sayfa"
-             BackgroundColor="#EFEFEF"
-             Shell.BackgroundColor="#FFFFFF">
+             Shell.BackgroundColor="#FFFFFF"
+             BackgroundColor="#F5F5F5">
 
     <Shell.TitleView>
-        <StackLayout Orientation="Horizontal"
+        <StackLayout Orientation="Horizontal" 
                      HorizontalOptions="CenterAndExpand">
-            <Label Text="Ana Sayfa"
-                   FontSize="30"
-                   FontAttributes="Bold"
-                   TextColor="Black"
+            <Label Text="Ana Sayfa" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   TextColor="Black" 
                    VerticalOptions="Center"/>
         </StackLayout>
     </Shell.TitleView>
 
     <ContentPage.Content>
-        <Grid Padding="20">
-
+        <Grid Padding="40" RowSpacing="30" ColumnSpacing="20">
+            <!-- Satır Tanımları -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <StackLayout Grid.Row="0" Padding="10" Orientation="Horizontal" 
-                         HorizontalOptions="Center" Margin="0,0,0,70">
-                <Label Text="{Binding Accessed}"
-                       FontSize="22"
-                       FontAttributes="Bold"
-                       VerticalOptions="Center"
-                       TextColor="Black"/>
-                <Label Text="{Binding UsersName}" 
-                       FontSize="22"
-                       FontAttributes="Bold"
-                       VerticalOptions="Center"
-                       TextColor="Black"/>
+            <!-- Başlık ve Hoşgeldiniz Mesajı -->
+            <StackLayout Grid.Row="0" HorizontalOptions="Center" Orientation="Horizontal">
+                <Label Text="{Binding Accessed}" FontSize="30" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#333"/>
+                <Label Text="{Binding UsersName}" FontSize="30" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#333"/>
             </StackLayout>
 
-            <StackLayout Spacing="20" Grid.Row="1" Padding="10"
-                         IsVisible="True">
+            <!-- Ana İşlemler -->
+            <StackLayout Grid.Row="1" VerticalOptions="CenterAndExpand" HorizontalOptions="Center" Spacing="30">
+                <!-- Satıcı Bilgileri Butonu -->
+                <Frame HasShadow="True" Padding="20" CornerRadius="20" BackgroundColor="#FFFFFF" WidthRequest="300" HeightRequest="120" IsVisible="{Binding AuthService.IsContentVisible}">
+                    <StackLayout VerticalOptions="Center">
+                        <Label Text="Satıcı Bilgileri" 
+                               FontSize="22" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" 
+                               TextColor="#FF5722"/>
+                        <Button Text="Sayfaya Git" 
+                                BackgroundColor="#FF5722" 
+                                TextColor="White"
+                                FontSize="16"
+                                CornerRadius="10"
+                                WidthRequest="150"
+                                Clicked="OpenSellerInfoPage"/>
+                    </StackLayout>
+                </Frame>
 
-                <StackLayout Spacing="10">
-                    <Label Text="Giriş Yap || Kayıt Ol"
-                           FontSize="18"
-                           FontAttributes="Bold"
-                           HorizontalOptions="Center"
-                           TextColor="#333"/>
+                <!-- Kullanıcılar Butonu -->
+                <Frame HasShadow="True" Padding="20" CornerRadius="20" BackgroundColor="#FFFFFF" WidthRequest="300" HeightRequest="120" IsVisible="{Binding AuthService.IsContentVisible}">
+                    <StackLayout VerticalOptions="Center">
+                        <Label Text="Kullanıcılar" 
+                               FontSize="22" 
+                               FontAttributes="Bold" 
+                               HorizontalOptions="Center" 
+                               TextColor="#3F51B5"/>
+                        <Button Text="Sayfaya Git" 
+                                BackgroundColor="#3F51B5" 
+                                TextColor="White"
+                                FontSize="16"
+                                CornerRadius="10"
+                                WidthRequest="150"
+                                Clicked="OpenUserListPage"/>
+                    </StackLayout>
+                </Frame>
 
-                    <Button Text="Giriş Yap"
-                            Clicked="OpenLoginPage"
-                            BackgroundColor="#0056b3" 
-                            TextColor="White"
-                            BorderColor="Black"
-                            CornerRadius="10"
-                            BorderWidth="1"
-                            FontAttributes="Bold"
-                            HeightRequest="50"/>
+                <!-- Grafik Butonu -->
+                <Frame HasShadow="True" Padding="20" CornerRadius="20" BackgroundColor="#FFFFFF" WidthRequest="300" HeightRequest="120" IsVisible="{Binding AuthService.IsContentVisible}">
+                    <StackLayout VerticalOptions="Center">
+                        <Label Text="Grafik" 
+                               FontSize="22" 
+                               FontAttributes="Bold" 
+                               HorizontalOptions="Center" 
+                               TextColor="#4CAF50"/>
+                        <Button Text="Sayfaya Git" 
+                                BackgroundColor="#4CAF50" 
+                                TextColor="White"
+                                FontSize="16"
+                                CornerRadius="10"
+                                WidthRequest="150"
+                                Clicked="OpenChartPage"/>
+                    </StackLayout>
+                </Frame>
 
-                    <Button Text="Kayıt Ol"
-                            Clicked="OpenRegisterPage"
-                            BackgroundColor="#1e7e34"  
-                            TextColor="White"
-                            CornerRadius="10"
-                            BorderWidth="1"
-                            FontAttributes="Bold"
-                            BorderColor="Black"
-                            HeightRequest="50" />
+                <!-- Profil Butonu -->
+                <Frame HasShadow="True" Padding="20" CornerRadius="20" BackgroundColor="#FFFFFF" WidthRequest="300" HeightRequest="120" IsVisible="{Binding AuthService.IsContentVisible}">
+                    <StackLayout VerticalOptions="Center">
+                        <Label Text="Profil" 
+                               FontSize="22" 
+                               FontAttributes="Bold" 
+                               HorizontalOptions="Center" 
+                               TextColor="#2196F3"/>
+                        <Button Text="Sayfaya Git" 
+                                BackgroundColor="#2196F3" 
+                                TextColor="White"
+                                FontSize="16"
+                                CornerRadius="10"
+                                WidthRequest="150"
+                                Clicked="OpenProfilePage"/>
+                    </StackLayout>
+                </Frame>
 
-                </StackLayout>
+                <!-- Giriş Yap Butonu -->
+                <Frame HasShadow="True" Padding="20" CornerRadius="20" BackgroundColor="#FFFFFF" WidthRequest="300" HeightRequest="120" IsVisible="{Binding AuthService.IsLoginVisible}">
+                    <StackLayout VerticalOptions="Center">
+                        <Label Text="Giriş Yap" 
+                               FontSize="22" 
+                               FontAttributes="Bold" 
+                               HorizontalOptions="Center" 
+                               TextColor="#FF9800"/>
+                        <Button Text="Sayfaya Git" 
+                                BackgroundColor="#FF9800" 
+                                TextColor="White"
+                                FontSize="16"
+                                CornerRadius="10"
+                                WidthRequest="150"
+                                Clicked="OpenLoginPage"/>
+                    </StackLayout>
+                </Frame>
 
-                <StackLayout Spacing="10"
-                             IsVisible="True">
-                    <Label Text="Uygulama İçeriği"
-                           FontSize="18"
-                           FontAttributes="Bold"
-                           HorizontalOptions="Center"
-                           TextColor="#333"/>
+                <!-- Kayıt Ol Butonu -->
+                <Frame HasShadow="True" Padding="20" CornerRadius="20" BackgroundColor="#FFFFFF" WidthRequest="300" HeightRequest="120" IsVisible="{Binding AuthService.IsLoginVisible}">
+                    <StackLayout VerticalOptions="Center">
+                        <Label Text="Kayıt Ol" 
+                               FontSize="22" 
+                               FontAttributes="Bold" 
+                               HorizontalOptions="Center" 
+                               TextColor="#009688"/>
+                        <Button Text="Sayfaya Git" 
+                                BackgroundColor="#009688" 
+                                TextColor="White"
+                                FontSize="16"
+                                CornerRadius="10"
+                                WidthRequest="150"
+                                Clicked="OpenRegisterPage"/>
+                    </StackLayout>
+                </Frame>
 
-                    <Button Text="Satıcı Bilgileri"
-                            Clicked="OpenSellerInfoPage"
-                            BackgroundColor="#c70039"  
-                            TextColor="White"
-                            CornerRadius="10"
-                            BorderColor="Black"
-                            FontAttributes="Bold"
-                            BorderWidth="1"
-                            HeightRequest="50"/>
-
-                    <Button Text="Kullanıcılar"
-                            Clicked="OpenUserListPage"
-                            BackgroundColor="#4a148c" 
-                            TextColor="White"
-                            CornerRadius="10"
-                            BorderWidth="1"
-                            BorderColor="Black"
-                            FontAttributes="Bold"
-                            HeightRequest="50"/>
-
-                    <Button Text="Grafik"
-                            Clicked="OpenChartPage"
-                            BackgroundColor="#ff8f00"  
-                              
-                            TextColor="White"
-                            BorderWidth="1"
-                            CornerRadius="10"
-                            BorderColor="Black"
-                            FontAttributes="Bold"
-                            HeightRequest="50"/>
-
-                    <Button Text="Kullanıcı Profili"
-                            Clicked="OpenProfilePage"
-                            BackgroundColor="#1e7e34"  
-                            TextColor="White"
-                            CornerRadius="10"
-                            BorderWidth="1"
-                            BorderColor="Black"
-                            FontAttributes="Bold"
-                            HeightRequest="50"/>
-                </StackLayout>
             </StackLayout>
         </Grid>
     </ContentPage.Content>
+
+    <ContentPage.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="#333333" StatusBarStyle="LightContent" />
+    </ContentPage.Behaviors>
+
 </ContentPage>

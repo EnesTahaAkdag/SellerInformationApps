@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using SellerInformationApps.ServiceHelper;
 using System.ComponentModel.DataAnnotations;
 
@@ -31,6 +32,8 @@ namespace SellerInformationApps.Models
 		[Required(ErrorMessage = "Lütfen şifre giriniz.")]
 		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d]{8,}$", ErrorMessage = "En az 8 karakterlik bir parola büyük ve küçük harflerin kombinasyonunu içermelidir.")]
 		public string Password { get; set; }
+		public IFormFile ProfileImage { get; set; }
+
 	}
 
 	public class UpdateUserPassword
@@ -57,10 +60,10 @@ namespace SellerInformationApps.Models
 		public string Password { get; set; }
 	}
 
-	public class UpdateProfilePhoto
+	public class ProfilePhotoModel
 	{
 		public string UserName { get; set; }
-		public Stream ProfileImage { get; set; }
+		public IFormFile ProfileImage { get; set; }
 	}
 
 	public class UpdateUser : UserProfileData
@@ -88,14 +91,14 @@ namespace SellerInformationApps.Models
 
 		public DateTime? Age { get; set; }
 
-		public Stream ProfileImage { get; set; }
+		public IFormFile ProfileImage { get; set; }
 	}
 
 	public class ProfilePohotosApiResponse
 	{
 		public bool Success { get; set; }
 		public string ErrorMessage { get; set; }
-		public UpdateProfilePhoto Data { get; set; }
+		public ProfilePhotoModel Data { get; set; }
 	}
 
 	public class UserList : User

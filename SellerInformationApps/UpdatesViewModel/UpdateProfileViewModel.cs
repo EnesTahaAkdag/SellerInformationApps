@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
@@ -23,7 +24,7 @@ namespace SellerInformationApps.UpdatesViewModel
 		[ObservableProperty] private string userName;
 		[ObservableProperty] private string email;
 		[ObservableProperty] private DateTime age;
-		[ObservableProperty] private Stream profileImage;
+		[ObservableProperty] private IFormFile profileImage;
 
 		public UserProfileData UserProfile { get; internal set; }
 
@@ -66,10 +67,10 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://4fc2-37-130-115-34.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://778d-37-130-115-34.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "/UserUpdateApis/EditUserData";
+				string url = "/UserUpdateApi/EditUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))

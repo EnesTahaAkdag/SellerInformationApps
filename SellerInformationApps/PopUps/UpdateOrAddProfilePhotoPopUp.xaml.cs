@@ -1,14 +1,17 @@
 using CommunityToolkit.Maui.Views;
 using SellerInformationApps.UpdatesViewModel;
-using System.Runtime.CompilerServices;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.Maui.Media;
 
 namespace SellerInformationApps.PopUps
 {
 	public partial class UpdateOrAddProfilePhotoPopUp : Popup
 	{
 		private readonly AddOrUpdateProfilePhotosViewModel _profilePhotosViewModel;
-
 		private bool isPopupOpen = false;
+		private Stream stream;
+
 		public UpdateOrAddProfilePhotoPopUp(AddOrUpdateProfilePhotosViewModel profilePhotosViewModel)
 		{
 			InitializeComponent();
@@ -30,33 +33,40 @@ namespace SellerInformationApps.PopUps
 			}
 		}
 
-		private async void OnPickImageClicked(object sender, EventArgs e)
+		private async void OnCaptureImageClicked(object sender, EventArgs e)
 		{
-			if (!isPopupOpen)
+			var currentPage = Application.Current.MainPage;
+
+			string action = await currentPage.DisplayActionSheet("Resim Kaynaðýný Seç", "Ýptal", null, "Galeriden Seç", "Kamera ile Çek");
+
+			if (action == "Galeriden Seç")
 			{
-				isPopupOpen = true;
-				var button = sender as Button;
-				button.IsEnabled = false;
-
 				await PickOrCaptureImageAsync(isPickPhoto: true);
-
-				isPopupOpen = false;
-				button.IsEnabled = true;
+			}
+			else if (action == "Kamera ile Çek")
+			{
+				await PickOrCaptureImageAsync(isPickPhoto: false);
 			}
 		}
 
-		private async void OnCaptureImageClicked(object sender, EventArgs e)
+		private async void SubmitButton(object sender, EventArgs e)
 		{
-			if (!isPopupOpen)
+			if (!isPopupOpen && stream != null)
 			{
 				isPopupOpen = true;
 				var button = sender as Button;
 				button.IsEnabled = false;
 
-				await PickOrCaptureImageAsync(isPickPhoto: false);
+				await _profilePhotosViewModel.AddOrUpdateProfilePhotosAsync(stream);
 
 				isPopupOpen = false;
 				button.IsEnabled = true;
+
+				Close();
+			}
+			else
+			{
+				await ShowAlertAsync("Uyarý", "Lütfen bir resim seçin veya çekin.");
 			}
 		}
 
@@ -83,9 +93,7 @@ namespace SellerInformationApps.PopUps
 
 				if (result != null)
 				{
-					var stream = await result.OpenReadAsync();
-					await _profilePhotosViewModel.AddOrUpdateProfilePhotosAsync(stream);
-					Close();
+					stream = await result.OpenReadAsync();
 				}
 				else
 				{

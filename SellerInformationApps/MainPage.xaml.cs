@@ -19,38 +19,51 @@ public partial class MainPage : ContentPage
 		viewModel.LoadUserName();
 	}
 
+
 	private async void OpenChartPage(object sender, EventArgs e)
 	{
-		await Shell.Current.GoToAsync("//ChartPage");
+		await NavigateToPage("//ChartPage");
 	}
 
 	private async void OpenSellerInfoPage(object sender, EventArgs e)
 	{
-		await Shell.Current.GoToAsync("//SellerInfosPage");
+		await NavigateToPage("//SellerInfosPage");
 	}
 
 	private async void OpenLoginPage(object sender, EventArgs e)
 	{
-		await Shell.Current.GoToAsync("//LoginPage");
+		await NavigateToPage("//LoginPage");
 	}
 
 	private async void OpenRegisterPage(object sender, EventArgs e)
 	{
-		await Shell.Current.GoToAsync("//RegisterPage");
+		await NavigateToPage("//RegisterPage");
 	}
 
 	private async void OpenUserListPage(object sender, EventArgs e)
 	{
-		await Shell.Current.GoToAsync("//UserListPage");
+		await NavigateToPage("//UserListPage");
 	}
 
 	private async void OpenProfilePage(object sender, EventArgs e)
 	{
-		await Shell.Current.GoToAsync("//ProfilePage");
+		await NavigateToPage("//ProfilePage");
 	}
 
 	private async void LogOutButton(object sender, EventArgs e)
 	{
 		await viewModel.LogOutAsync();
+	}
+
+	private async Task NavigateToPage(string route)
+	{
+		try
+		{
+			await Shell.Current.GoToAsync(route);
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Navigation error: {ex.Message}");
+		}
 	}
 }

@@ -15,7 +15,46 @@ namespace SellerInformationApps.UpdatesViewModel
 
 		public async Task AddOrUpdateProfilePhotosAsync(Stream imageStream)
 		{
+			try
+			{
+				if (imageStream.CanSeek)
+				{
+					imageStream.Position = 0;
+				}
 
+				var password = Preferences.Get("Password", string.Empty);
+				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{password}"));
+
+				string endpoint = "https://778d-37-130-115-34.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
+
+				var client = HttpClientFactory.Create(endpoint);
+				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+
+				using (var content = new MultipartFormDataContent())
+				{
+					var streamContent = new StreamContent(imageStream);
+					streamContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+
+					content.Add(streamContent, "ProfileImage", "profileImage.jpg");
+					content.Add(new StringContent(UserName), "UserName");
+
+					using (var response = await client.PostAsync(endpoint, content))
+					{
+						if (!response.IsSuccessStatusCode)
+						{
+							await Shell.Current.DisplayAlert("Hata", $"Sunucu hatası: {response.StatusCode}", "Tamam");
+							return;
+						}
+
+						string responseContent = await response.Content.ReadAsStringAsync();
+						await HandleResponseAsync(responseContent);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				await Shell.Current.DisplayAlert("Hata", $"Bir hata oluştu: {ex.Message}", "Tamam");
+			}
 		}
 
 		private async Task HandleResponseAsync(string responseContent)

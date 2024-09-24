@@ -11,6 +11,8 @@ namespace SellerInformationApps.UpdatesViewModel
 {
 	public partial class UpdateProfilePassword : Authentication
 	{
+		public bool IsPasswordUpdated;
+
 		[ObservableProperty]
 		private string userName = Preferences.Get("UserName", string.Empty);
 
@@ -29,13 +31,19 @@ namespace SellerInformationApps.UpdatesViewModel
 		[RelayCommand]
 		public async Task SubmitPasswordAsync()
 		{
+			if (IsOldPasswordUsed())
+			{
+				await Shell.Current.DisplayAlert("Hata", "Eski Şifre ile Yeni Şifre Aynı Olamaz", "Tamam");
+				return;
+			}
+
 			if (!IsFormValid())
 			{
 				await Shell.Current.DisplayAlert("Hata", "Tüm alanları doldurunuz ve şifreler eşleşmelidir", "Tamam");
 				return;
 			}
 
-			if (!IsVerifyPassword())
+			if (!IsCorrectOldPassword())
 			{
 				await Shell.Current.DisplayAlert("Hata", "Mevcut şifreniz yanlış", "Tamam");
 				return;
@@ -43,21 +51,19 @@ namespace SellerInformationApps.UpdatesViewModel
 
 			try
 			{
-				var user = ReadData();
+				var user = PrepareUserData();
 				if (user == null)
 				{
 					await Shell.Current.DisplayAlert("Hata", "Kullanıcı bilgileri güncellenirken bir hata oluştu", "Tamam");
 					return;
 				}
 
-				var userNames = Preferences.Get("UserName", string.Empty);
-				var password = Preferences.Get("Password", string.Empty);
+				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{UsedPassword}"));
 
-				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userNames}:{password}"));
+				var httpClient = HttpClientFactory.Create("https://778d-37-130-115-34.ngrok-free.app");
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				var httpClient = HttpClientFactory.Create("https://4fc2-37-130-115-34.ngrok-free.app");
-				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",authHeaderValue);
-				string url = "https://4fc2-37-130-115-34.ngrok-free.app/UserUpdateApis/UpdatePassword";
+				string url = "https://778d-37-130-115-34.ngrok-free.app/UserUpdateApi/UpdatePassword";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -82,12 +88,17 @@ namespace SellerInformationApps.UpdatesViewModel
 			);
 		}
 
-		private bool IsVerifyPassword()
+		private bool IsOldPasswordUsed()
+		{
+			return UsedPassword == NewPassword;
+		}
+
+		private bool IsCorrectOldPassword()
 		{
 			return UsedPassword == OldPassword;
 		}
 
-		private UpdateUserPassword ReadData()
+		private UpdateUserPassword PrepareUserData()
 		{
 			return new UpdateUserPassword
 			{
@@ -102,15 +113,18 @@ namespace SellerInformationApps.UpdatesViewModel
 			{
 				string json = await response.Content.ReadAsStringAsync();
 				var apiResponse = JsonConvert.DeserializeObject<UpdatePasswordApiResponse>(json);
+
 				if (apiResponse.Success)
 				{
 					await Shell.Current.DisplayAlert("Başarı", "Şifre başarıyla güncellendi", "Tamam");
 					Preferences.Set("Password", NewPassword);
+					IsPasswordUpdated = true;
 					await Shell.Current.GoToAsync("//ProfilePage");
 				}
 				else
 				{
 					await Shell.Current.DisplayAlert("Hata", "Şifre güncelleme başarısız oldu", "Tamam");
+					IsPasswordUpdated = false;
 				}
 			}
 			else
