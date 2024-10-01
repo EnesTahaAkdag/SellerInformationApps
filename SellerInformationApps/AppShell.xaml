@@ -37,7 +37,7 @@
             <ShellContent ContentTemplate="{DataTemplate pages:ProfilePage}" Route="ProfilePage" />
         </Tab>
 
-        <!-- Giriş yapılmamışsa görünen sayfalar -->
+
         <Tab Title="Giriş Sayfası" Icon="loginicon.png" IsVisible="{Binding IsLoginVisible}">
             <ShellContent ContentTemplate="{DataTemplate pages:LoginPage}" Route="LoginPage" />
         </Tab>

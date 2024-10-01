@@ -6,9 +6,7 @@
              xmlns:a="clr-namespace:SellerInformationApps.Converter"
              xmlns:viewModel="clr-namespace:SellerInformationApps.ViewModel"
              xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
-             Title="Grafik Sayfası"
-             BackgroundColor="#f5f5f5"
-             Shell.BackgroundColor="#FFFFFF">
+             BackgroundColor="#f5f5f5">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -16,11 +14,6 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Shell.TitleView>
-        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-            <Label Text="Grafik Sayfası" FontSize="28" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-        </StackLayout>
-    </Shell.TitleView>
 
     <ContentPage.BindingContext>
         <viewModel:ChartPageViewModel/>

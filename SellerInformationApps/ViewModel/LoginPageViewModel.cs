@@ -1,8 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
+using SellerInformationApps.PopUps;
 using ServiceHelper.Authentication;
 using System.Text;
 using System.Windows.Input;
@@ -20,11 +22,15 @@ namespace SellerInformationApps.ViewModel
 		private string password;
 
 		public ICommand RegisterCommand { get; }
+		public IRelayCommand RememberYourPassword { get; }
+
 
 		public LoginPageViewModel()
 		{
 			authentication = Authentication.Instance;
 			RegisterCommand = new AsyncRelayCommand(NavigateToRegisterPageAsync);
+			RememberYourPassword = new AsyncRelayCommand(RememberPasswordAsync);
+
 		}
 
 		[RelayCommand]
@@ -45,8 +51,8 @@ namespace SellerInformationApps.ViewModel
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://778d-37-130-115-34.ngrok-free.app");
-				string url = "https://778d-37-130-115-34.ngrok-free.app/RegisterOrLoginApi/LoginUserData";
+				var httpClient = HttpClientFactory.Create("https://560d-37-130-115-91.ngrok-free.app/");
+				string url = "https://560d-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -102,6 +108,12 @@ namespace SellerInformationApps.ViewModel
 		private async Task NavigateToRegisterPageAsync()
 		{
 			await Shell.Current.GoToAsync("//RegisterPage");
+		}
+		private static Task RememberPasswordAsync()
+		{
+			var popup = new RememberPasswordPupUp();
+			Application.Current.MainPage.ShowPopup(popup);
+			return Task.CompletedTask;
 		}
 	}
 }

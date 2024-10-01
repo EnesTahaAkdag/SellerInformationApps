@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using SellerInformationApps.Models;
 using SellerInformationApps.ViewModel;
+using Microsoft.Maui.Controls;
 
 namespace SellerInformationApps.Pages
 {
@@ -31,13 +32,14 @@ namespace SellerInformationApps.Pages
 		private async void OnScrollViewScrolled(object sender, ScrolledEventArgs e)
 		{
 			if (isFetching) return;
+
 			if (sender is ScrollView scrollView)
 			{
 				double scrollingSpace = scrollView.ContentSize.Height - scrollView.Height;
 				if (scrollingSpace <= e.ScrollY)
 				{
 					isFetching = true;
-					await viewModel.FetchDataOnScrollAsync();
+					await viewModel.FetchDataOnScrollAsync(); 
 					isFetching = false;
 				}
 			}

@@ -16,7 +16,7 @@ namespace SellerInformationApps.ViewModel
 		[ObservableProperty] private string userName;
 		[ObservableProperty] private string email;
 		[ObservableProperty] private DateTime? age;
-		[ObservableProperty] private ImageSource profileImage;
+		[ObservableProperty] private string profileImage;
 		[ObservableProperty] private bool isLoading;
 
 		private readonly Authentication _authentication;
@@ -52,7 +52,7 @@ namespace SellerInformationApps.ViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://778d-37-130-115-34.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://560d-37-130-115-91.ngrok-free.app/");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				string url = $"/UserDataSendApi/DataSend?userName={userName}";
@@ -81,8 +81,8 @@ namespace SellerInformationApps.ViewModel
 							Email = UserProfileData.Email;
 							Age = UserProfileData.Age;
 
-							var imageUrl = $"https://778d-37-130-115-34.ngrok-free.app/images/{UserProfileData.ProfileImage}";
-							ProfileImage = ImageSource.FromUri(new Uri(imageUrl));
+							var imageUrl = $"https://560d-37-130-115-91.ngrok-free.app//images/{UserProfileData.ProfileImage}";
+							ProfileImage = imageUrl;
 						}
 						else
 						{

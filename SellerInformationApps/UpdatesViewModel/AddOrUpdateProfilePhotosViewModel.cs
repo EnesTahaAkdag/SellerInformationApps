@@ -25,7 +25,7 @@ namespace SellerInformationApps.UpdatesViewModel
 				var password = Preferences.Get("Password", string.Empty);
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{password}"));
 
-				string endpoint = "https://778d-37-130-115-34.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
+				string endpoint = "https://560d-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
 
 				var client = HttpClientFactory.Create(endpoint);
 				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);

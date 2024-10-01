@@ -9,9 +9,9 @@
     <Frame BackgroundColor="#FFFFFF" HasShadow="True" Padding="20" CornerRadius="15" VerticalOptions="CenterAndExpand">
         <StackLayout Spacing="20" HorizontalOptions="Center">
             <Label Text="Profil Fotoğrafını Güncelle" FontSize="Large" HorizontalOptions="Center" TextColor="#333" FontAttributes="Bold"/>
-            <StackLayout Orientation="Horizontal" Padding="10" Spacing="15" HorizontalOptions="Center">
-                <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" IsClippedToBounds="True" BorderColor="#ddd" BackgroundColor="#FFFFFF" HasShadow="False">
-                    <Image Source="profilephotots.png" Aspect="AspectFill" />
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="15" HorizontalOptions="Center">
+                <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" IsClippedToBounds="True" BorderColor="#ccc" BackgroundColor="White" HasShadow="True">
+                    <Image Source="profilephotots.png" WidthRequest="100" HeightRequest="100" Aspect="AspectFill"/>
                 </Frame>
             </StackLayout>
             <Button Text="Fotoğraf Çek/Galeriden Seç" Clicked="OnCaptureImageClicked" BackgroundColor="#2196F3" TextColor="White" CornerRadius="25" HeightRequest="45" WidthRequest="250" FontSize="16" HorizontalOptions="Center"/>

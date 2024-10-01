@@ -11,7 +11,6 @@ namespace SellerInformationApps
 			RegisterRoutes();
 			ConfigureTabBar();
 
-			// Authentication.Instance kullanımı
 			BindingContext = Authentication.Instance;
 		}
 

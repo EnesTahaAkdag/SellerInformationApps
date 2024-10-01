@@ -2,22 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SellerInformationApps.Pages.LoginPage"
-             Title="Giriş Yap"
-             BackgroundColor="White"
-             Shell.BackgroundColor="#007AFF">
-
-    <Shell.TitleView>
-        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-            <Label Text="Giriş Yap"
-                   FontSize="26"
-                   FontAttributes="Bold"
-                   TextColor="White"
-                   VerticalOptions="Center"/>
-        </StackLayout>
-    </Shell.TitleView>
+             BackgroundColor="White">
 
     <!-- Dış Çerçeve -->
-    <Frame BorderColor="Black" CornerRadius="30" Padding="20,30" HasShadow="True" Margin="20" BackgroundColor="#FFFFFF">
         <StackLayout>
             <!-- Başlık Kısmı -->
             <StackLayout Padding="20,50,20,0" HorizontalOptions="Center">
@@ -43,9 +30,13 @@
                 <!-- Giriş Yap Butonu -->
                 <Button Text="Giriş Yap" BackgroundColor="#007AFF" TextColor="White" CornerRadius="12" FontSize="18" 
                     HeightRequest="55" Command="{Binding LoginCommand}" FontAttributes="Bold"/>
+            <Label Text="Şifrenizi mi Unuttunuz?" TextColor="#888888" FontSize="14" FontAttributes="Bold">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RememberYourPassword}"/>
+                </Label.GestureRecognizers>
+            </Label>
             </StackLayout>
 
-            <!-- Alternatif Giriş -->
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="5" Padding="0,20">
                 <Label Text="Hesabınız yok mu?" TextColor="#888888" FontSize="14"/>
                 <Label Text="Kayıt Ol" TextColor="#007AFF" FontSize="14" FontAttributes="Bold">
@@ -55,5 +46,4 @@
                 </Label>
             </StackLayout>
         </StackLayout>
-    </Frame>
 </ContentPage>

@@ -12,7 +12,7 @@ namespace SellerInformationApps.ViewModel
 	{
 		private static readonly HttpClient httpClient = new HttpClient
 		{
-			BaseAddress = new Uri("https://778d-37-130-115-34.ngrok-free.app")
+			BaseAddress = new Uri("https://560d-37-130-115-91.ngrok-free.app/")
 		};
 
 		[ObservableProperty]

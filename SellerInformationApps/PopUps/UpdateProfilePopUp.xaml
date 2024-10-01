@@ -14,11 +14,10 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ScrollView>
-            <StackLayout Padding="20" Spacing="20">
+            <StackLayout Padding="20" Spacing="25">
                 <StackLayout Orientation="Horizontal" Spacing="20" HorizontalOptions="Center">
-                    <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" IsClippedToBounds="True" BorderColor="#ddd" BackgroundColor="#F5F5F5" HasShadow="False">
-                        <Image Source="profilephotots.png" Aspect="AspectFill" />
+                    <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" IsClippedToBounds="True" BorderColor="#ccc" BackgroundColor="White" HasShadow="True">
+                        <Image Source="profilephotots.png" WidthRequest="100" HeightRequest="100" Aspect="AspectFill"/>
                     </Frame>
                     <StackLayout VerticalOptions="Center" Spacing="10">
                         <Button Text="Resimi Ekle / Değiştir" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="16" FontAttributes="Bold" Clicked="OnAddOrChangeImageClicked"/>
@@ -61,6 +60,5 @@
                     <Button Text="İptal Et" Clicked="ClosePopUpButton" BackgroundColor="#E74C3C" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="150" FontSize="16"/>
                 </StackLayout>
             </StackLayout>
-        </ScrollView>
     </Grid>
 </mct:Popup>

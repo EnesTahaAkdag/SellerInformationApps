@@ -102,6 +102,9 @@
 		<MauiXaml Update="Pages\SellerInfosPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="PopUps\RememberPasswordPupUp.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="PopUps\UpdateOrAddProfilePhotoPopUp.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -120,10 +123,6 @@
 		<Compile Update="PopUps\UpdateProfilePopUp.xaml.cs">
 			<DependentUpon>UpdateProfilePopUp.xaml</DependentUpon>
 		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="lib\" />
 	</ItemGroup>
 
 	<ProjectExtensions>

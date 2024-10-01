@@ -1,11 +1,13 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
-using SellerInformationApps;
 using SellerInformationApps.Models;
+using SellerInformationApps.PopUps;
 using SellerInformationApps.ServiceHelper;
 using ServiceHelper.Authentication;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -59,13 +61,13 @@ namespace SellerInformationApps.ViewModel
 		{
 			if (!IsFormValid())
 			{
-				await App.Current.MainPage.DisplayAlert("Hata", "Lütfen tüm alanları doldurduğunuzdan emin olun.", "Tamam");
+				await Shell.Current.DisplayAlert("Hata", "Lütfen tüm alanları doldurduğunuzdan emin olun.", "Tamam");
 				return;
 			}
 
 			if (!ArePasswordsMatching())
 			{
-				await App.Current.MainPage.DisplayAlert("Hata", "Şifreler eşleşmiyor.", "Tamam");
+				await Shell.Current.DisplayAlert("Hata", "Şifreler eşleşmiyor.", "Tamam");
 				return;
 			}
 
@@ -75,41 +77,39 @@ namespace SellerInformationApps.ViewModel
 
 				if (user == null)
 				{
-					await App.Current.MainPage.DisplayAlert("Hata", "Kullanıcı bilgileri oluşturulurken bir hata oluştu.", "Tamam");
+					await Shell.Current.DisplayAlert("Hata", "Kullanıcı bilgileri oluşturulurken bir hata oluştu.", "Tamam");
 					return;
 				}
 
-				if (ProfileImageStream == null)
-				{
-					var assembly = typeof(RegisterViewModel).Assembly;
-					ProfileImageStream = assembly.GetManifestResourceStream("profilephotots.png");
+				var userContent = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
-					if (ProfileImageStream == null)
+				MultipartFormDataContent content = new MultipartFormDataContent
+				{
+					{ userContent, "user" }
+				};
+
+				if (ProfileImageStream != null)
+				{
+					var streamContent = new StreamContent(ProfileImageStream)
 					{
-						await App.Current.MainPage.DisplayAlert("Hata", "Default resim yüklenemedi.", "Tamam");
-						return;
-					}
+						Headers = { ContentType = new MediaTypeHeaderValue("image/jpeg") }
+					};
+					content.Add(streamContent, "ProfileImage", "profileImage.jpg");
 				}
 
-				var content = new MultipartFormDataContent();
-				var userContent = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-				content.Add(userContent, "user");
-
-				var streamContent = new StreamContent(ProfileImageStream);
-				streamContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-				content.Add(streamContent, "ProfileImage", "profileImage.jpg");
-
-				var httpClient = HttpClientFactory.Create("https://778d-37-130-115-34.ngrok-free.app");
-				string url = "https://778d-37-130-115-34.ngrok-free.app/RegisterOrLoginApi/RegisterUser";
-
-				using (var response = await httpClient.PostAsync(url, content))
+				using (var httpClient = new HttpClient())
 				{
-					await HandleResponseAsync(response);
+					string url = "https://560d-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+
+					using (var response = await httpClient.PostAsync(url, content))
+					{
+						await HandleResponseAsync(response);
+					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await App.Current.MainPage.DisplayAlert("Hata", $"Hata Oluştu: {ex.Message}", "Tamam");
+				await Shell.Current.DisplayAlert("Hata", $"Hata Oluştu: {ex.Message}", "Tamam");
 			}
 			finally
 			{
@@ -120,11 +120,11 @@ namespace SellerInformationApps.ViewModel
 		private bool IsFormValid()
 		{
 			return !(string.IsNullOrWhiteSpace(FirstName) ||
-				   string.IsNullOrWhiteSpace(LastName) ||
-				   string.IsNullOrWhiteSpace(UserName) ||
-				   string.IsNullOrWhiteSpace(Email) ||
-				   string.IsNullOrWhiteSpace(Password) ||
-				   !Age.HasValue);
+					 string.IsNullOrWhiteSpace(LastName) ||
+					 string.IsNullOrWhiteSpace(UserName) ||
+					 string.IsNullOrWhiteSpace(Email) ||
+					 string.IsNullOrWhiteSpace(Password) ||
+					 !Age.HasValue);
 		}
 
 		private bool ArePasswordsMatching()
@@ -141,7 +141,7 @@ namespace SellerInformationApps.ViewModel
 				UserName = UserName,
 				Email = Email,
 				Password = Password,
-				Age = Age.Value
+				Age = Age.Value,
 			};
 		}
 
@@ -154,17 +154,18 @@ namespace SellerInformationApps.ViewModel
 
 				if (apiResponse.Success)
 				{
-					await App.Current.MainPage.DisplayAlert("Başarı", "Kayıt başarılı!", "Tamam");
+					await Shell.Current.DisplayAlert("Başarı", "Kayıt başarılı!", "Tamam");
 					await Shell.Current.GoToAsync("//LoginPage");
 				}
 				else
 				{
-					await App.Current.MainPage.DisplayAlert("Hata", apiResponse.ErrorMessage, "Tamam");
+					await Shell.Current.DisplayAlert("Hata", apiResponse.ErrorMessage, "Tamam");
 				}
 			}
 			else
 			{
-				await App.Current.MainPage.DisplayAlert("Hata", $"HTTP İsteği Başarısız: {response.StatusCode}", "Tamam");
+				var errorContent = await response.Content.ReadAsStringAsync();
+				await Shell.Current.DisplayAlert("Error", $"HTTP Error: {errorContent}", "OK");
 			}
 		}
 
@@ -174,5 +175,7 @@ namespace SellerInformationApps.ViewModel
 		{
 			await Shell.Current.GoToAsync("//LoginPage");
 		}
+
+
 	}
 }
