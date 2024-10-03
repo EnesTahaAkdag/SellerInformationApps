@@ -5,60 +5,73 @@
            xmlns:sys="clr-namespace:System;assembly=mscorlib"
            xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
            xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
-           CanBeDismissedByTappingOutsideOfPopup="True">
+           CanBeDismissedByTappingOutsideOfPopup="True"
+           VerticalOptions="Fill"
+           HorizontalOptions="Fill">
 
-    <Grid BackgroundColor="#FFFFFF" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+    <Grid BackgroundColor="#FFFFFF"
+          VerticalOptions="FillAndExpand"
+          HorizontalOptions="FillAndExpand"
+          Padding="0">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-            <StackLayout Padding="20" Spacing="25">
-                <StackLayout Orientation="Horizontal" Spacing="20" HorizontalOptions="Center">
-                    <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" IsClippedToBounds="True" BorderColor="#ccc" BackgroundColor="White" HasShadow="True">
-                        <Image Source="profilephotots.png" WidthRequest="100" HeightRequest="100" Aspect="AspectFill"/>
-                    </Frame>
-                    <StackLayout VerticalOptions="Center" Spacing="10">
-                        <Button Text="Resimi Ekle / Değiştir" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="16" FontAttributes="Bold" Clicked="OnAddOrChangeImageClicked"/>
-                        <Button Text="Şifreyi Değiştir" BackgroundColor="BlueViolet" Clicked="OpenUpdateProfilePasswordPupUp" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="16" FontAttributes="Bold"/>
-                    </StackLayout>
-                </StackLayout>
-                <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
-                    <StackLayout Spacing="5">
-                        <Label Text="Ad" FontSize="14" TextColor="#6200EE"/>
-                        <Entry Text="{Binding FirstName}" FontSize="20" TextColor="Black" Placeholder="Adınızı Giriniz" FontAttributes="Bold"/>
-                    </StackLayout>
+
+        <StackLayout Padding="20" Spacing="25" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <StackLayout Orientation="Horizontal" Spacing="20" HorizontalOptions="Center">
+                <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" IsClippedToBounds="True" BorderColor="#ccc" BackgroundColor="White" HasShadow="True">
+                    <Image Source="profilephotots.png" WidthRequest="100" HeightRequest="100" Aspect="AspectFill"/>
                 </Frame>
-                <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
-                    <StackLayout Spacing="5">
-                        <Label Text="SoyAd" FontSize="14" TextColor="#6200EE"/>
-                        <Entry Text="{Binding LastName}" FontSize="20" TextColor="Black" Placeholder="Soyadınızı Giriniz" FontAttributes="Bold"/>
-                    </StackLayout>
-                </Frame>
-                <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
-                    <StackLayout Spacing="5">
-                        <Label Text="Kullanıcı Adı" FontSize="14" TextColor="#6200EE"/>
-                        <Label Text="Kullanıcı Adı Değiştirilemez" FontSize="12" TextColor="#911704" />
-                        <Entry Text="{Binding UserName}" FontSize="20" TextColor="Black" Placeholder="Kullanıcı Adını Giriniz" IsEnabled="False" FontAttributes="Bold"/>
-                    </StackLayout>
-                </Frame>
-                <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
-                    <StackLayout Spacing="5">
-                        <Label Text="E-Mail" FontSize="14" TextColor="#6200EE"/>
-                        <Entry Text="{Binding Email}" FontSize="20" TextColor="Black" Placeholder="Mail Adresini Giriniz" Keyboard="Email" FontAttributes="Bold"/>
-                    </StackLayout>
-                </Frame>
-                <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
-                    <StackLayout Spacing="5">
-                        <Label Text="Doğum Tarihi" FontSize="14" TextColor="#6200EE"/>
-                        <DatePicker x:Name="AgeEntry" MinimumDate="1900-01-01" MaximumDate="{x:Static sys:DateTime.Now}" FontSize="20" TextColor="Black" BackgroundColor="Transparent" Date="{Binding Age, StringFormat='{0:dd/MM/yyyy}'}" FontAttributes="Bold"/>
-                    </StackLayout>
-                </Frame>
-                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="20">
-                    <Button Text="Kaydet" Clicked="SubmitButton" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="150" FontSize="16"/>
-                    <Button Text="İptal Et" Clicked="ClosePopUpButton" BackgroundColor="#E74C3C" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="150" FontSize="16"/>
+                <StackLayout VerticalOptions="Center" Spacing="10">
+                    <Button Text="Resim Ekle / Değiştir" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="16" FontAttributes="Bold" Clicked="OnAddOrChangeImageClicked"/>
+                    <Button Text="Şifreyi Değiştir" BackgroundColor="BlueViolet" Clicked="OpenUpdateProfilePasswordPupUp" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="16" FontAttributes="Bold"/>
                 </StackLayout>
             </StackLayout>
+
+            <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
+                <StackLayout Spacing="5">
+                    <Label Text="Ad" FontSize="14" TextColor="#6200EE"/>
+                    <Entry Text="{Binding FirstName}" FontSize="20" TextColor="Black" Placeholder="Adınızı Giriniz" FontAttributes="Bold"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
+                <StackLayout Spacing="5">
+                    <Label Text="SoyAd" FontSize="14" TextColor="#6200EE"/>
+                    <Entry Text="{Binding LastName}" FontSize="20" TextColor="Black" Placeholder="Soyadınızı Giriniz" FontAttributes="Bold"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
+                <StackLayout Spacing="5">
+                    <Label Text="Kullanıcı Adı" FontSize="14" TextColor="#6200EE"/>
+                    <Label Text="Kullanıcı Adı Değiştirilemez" FontSize="12" TextColor="#911704" />
+                    <Entry Text="{Binding UserName}" FontSize="20" TextColor="Black" Placeholder="Kullanıcı Adını Giriniz" IsEnabled="False" FontAttributes="Bold"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
+                <StackLayout Spacing="5">
+                    <Label Text="E-Mail" FontSize="14" TextColor="#6200EE"/>
+                    <Entry Text="{Binding Email}" FontSize="20" TextColor="Black" Placeholder="Mail Adresini Giriniz" Keyboard="Email" FontAttributes="Bold"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
+                <StackLayout Spacing="5">
+                    <Label Text="Doğum Tarihi" FontSize="14" TextColor="#6200EE"/>
+                    <DatePicker x:Name="AgeEntry" MinimumDate="1900-01-01" MaximumDate="{x:Static sys:DateTime.Now}" FontSize="20" TextColor="Black" BackgroundColor="Transparent" Date="{Binding Age, StringFormat='{0:dd/MM/yyyy}'}" FontAttributes="Bold"/>
+                </StackLayout>
+            </Frame>
+
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="20">
+                <Button Text="Kaydet" Clicked="SubmitButton" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="150" FontSize="16"/>
+                <Button Text="İptal Et" Clicked="ClosePopUpButton" BackgroundColor="#E74C3C" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="150" FontSize="16"/>
+            </StackLayout>
+        </StackLayout>
     </Grid>
 </mct:Popup>

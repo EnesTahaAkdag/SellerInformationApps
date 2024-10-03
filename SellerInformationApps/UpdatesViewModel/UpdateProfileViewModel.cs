@@ -67,7 +67,7 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://560d-37-130-115-91.ngrok-free.app/");
+				var httpClient = HttpClientFactory.Create("https://b8ac-37-130-115-91.ngrok-free.app/");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				string url = "/UserUpdateApi/EditUserData";

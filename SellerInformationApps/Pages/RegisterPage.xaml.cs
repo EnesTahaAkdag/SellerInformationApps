@@ -1,4 +1,3 @@
-using Microsoft.Maui.Controls;
 using SellerInformationApps.ViewModel;
 
 namespace SellerInformationApps.Pages
@@ -27,6 +26,7 @@ namespace SellerInformationApps.Pages
 			viewModel.Email = string.Empty;
 			viewModel.Password = string.Empty;
 			viewModel.VerifyPassword = string.Empty;
+			viewModel.ProfileImage = null;
 		}
 
 		private async void SelectProfileImageButton(object sender, EventArgs e)
@@ -53,7 +53,10 @@ namespace SellerInformationApps.Pages
 
 			if (result != null)
 			{
-				viewModel.ProfileImageStream = await result.OpenReadAsync();
+				using (FileStream localFileStream = File.OpenWrite(result.FullPath))
+				{
+					viewModel.ProfileImage = File.ReadAllBytes(result.FullPath);
+				}
 			}
 		}
 
@@ -66,7 +69,10 @@ namespace SellerInformationApps.Pages
 
 			if (result != null)
 			{
-				viewModel.ProfileImageStream = await result.OpenReadAsync();
+				using (FileStream localFileStream = File.OpenWrite(result.FullPath))
+				{
+					viewModel.ProfileImage = File.ReadAllBytes(result.FullPath);
+				}
 			}
 		}
 	}

@@ -1,15 +1,13 @@
-﻿using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
-using SellerInformationApps.PopUps;
 using SellerInformationApps.ServiceHelper;
 using ServiceHelper.Authentication;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SellerInformationApps.ViewModel
 {
@@ -34,7 +32,7 @@ namespace SellerInformationApps.ViewModel
 		private string verifyPassword;
 
 		[ObservableProperty]
-		private Stream profileImageStream;
+		private byte[] profileImage;
 
 		[ObservableProperty]
 		[JsonConverter(typeof(CustemDateTimeConverter))]
@@ -81,39 +79,26 @@ namespace SellerInformationApps.ViewModel
 					return;
 				}
 
-				var userContent = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+				var httpClient = HttpClientFactory.Create("https://b8ac-37-130-115-91.ngrok-free.app/");
+				string url = "https://b8ac-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
 
-				MultipartFormDataContent content = new MultipartFormDataContent
-				{
-					{ userContent, "user" }
-				};
+				var userJson = JsonConvert.SerializeObject(user);
 
-				if (ProfileImageStream != null)
+				using (var request = new HttpRequestMessage(HttpMethod.Post, new Uri(url)))
 				{
-					var streamContent = new StreamContent(ProfileImageStream)
+					var content = new System.Net.Http.StringContent(userJson, Encoding.UTF8, "application/json");
+					request.Content = content;
+					using (var response = await httpClient.SendAsync(request).ConfigureAwait(false))
 					{
-						Headers = { ContentType = new MediaTypeHeaderValue("image/jpeg") }
-					};
-					content.Add(streamContent, "ProfileImage", "profileImage.jpg");
-				}
-
-				using (var httpClient = new HttpClient())
-				{
-					string url = "https://560d-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-
-					using (var response = await httpClient.PostAsync(url, content))
-					{
-						await HandleResponseAsync(response);
+						using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+						{
+						}
 					}
 				}
 			}
 			catch (Exception ex)
 			{
 				await Shell.Current.DisplayAlert("Hata", $"Hata Oluştu: {ex.Message}", "Tamam");
-			}
-			finally
-			{
-				ProfileImageStream?.Dispose();
 			}
 		}
 
@@ -141,7 +126,8 @@ namespace SellerInformationApps.ViewModel
 				UserName = UserName,
 				Email = Email,
 				Password = Password,
-				Age = Age.Value,
+				Age = Age.GetValueOrDefault().ToString("yyyy-MM-dd HH:mm"),
+				//ProfileImage = ProfileImage
 			};
 		}
 
@@ -165,7 +151,17 @@ namespace SellerInformationApps.ViewModel
 			else
 			{
 				var errorContent = await response.Content.ReadAsStringAsync();
-				await Shell.Current.DisplayAlert("Error", $"HTTP Error: {errorContent}", "OK");
+				var errorResponse = JsonConvert.DeserializeObject<RegisterApiResponse>(errorContent);
+
+				if (errorResponse.Errors != null)
+				{
+					var errorMessages = string.Join("\n", errorResponse.Errors.SelectMany(kvp => kvp.Value));
+					await Shell.Current.DisplayAlert("Hata", $"HTTP Hatası: {errorMessages}", "Tamam");
+				}
+				else
+				{
+					await Shell.Current.DisplayAlert("Hata", $"HTTP Hatası: {errorContent}", "Tamam");
+				}
 			}
 		}
 
@@ -175,7 +171,5 @@ namespace SellerInformationApps.ViewModel
 		{
 			await Shell.Current.GoToAsync("//LoginPage");
 		}
-
-
 	}
 }

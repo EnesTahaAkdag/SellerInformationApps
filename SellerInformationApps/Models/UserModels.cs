@@ -25,15 +25,14 @@ namespace SellerInformationApps.Models
 		public string Email { get; set; }
 
 		[JsonProperty("Age")]
-		[JsonConverter(typeof(CustemDateTimeConverter))]
-		public DateTime Age { get; set; }
+		public string Age { get; set; }
 
 		[DataType(DataType.Password)]
 		[Required(ErrorMessage = "Lütfen şifre giriniz.")]
 		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d]{8,}$", ErrorMessage = "En az 8 karakterlik bir parola büyük ve küçük harflerin kombinasyonunu içermelidir.")]
 		public string Password { get; set; }
-		public IFormFile ProfileImage { get; set; }
 
+		public byte[] ProfileImage { get; set; }
 	}
 
 	public class UpdateUserPassword
@@ -140,12 +139,19 @@ namespace SellerInformationApps.Models
 		public List<UpdateUser> Data { get; set; }
 	}
 
+
 	public class RegisterApiResponse
 	{
+		public string Type { get; set; }
+		public string Title { get; set; }
+		public int Status { get; set; }
+		public Dictionary<string, List<string>> Errors { get; set; }
+		public string TraceId { get; set; }
 		public bool Success { get; set; }
 		public string ErrorMessage { get; set; }
-		public List<User> Data { get; set; }
+		public User Data { get; set; }
 	}
+
 
 	public class UpdatePasswordApiResponse
 	{

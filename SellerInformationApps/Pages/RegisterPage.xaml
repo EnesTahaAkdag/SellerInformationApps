@@ -41,7 +41,7 @@
 
                 <!-- Doğum Tarihi -->
                 <Frame BackgroundColor="White" BorderColor="#007AFF" CornerRadius="10" Padding="5">
-                    <DatePicker Date="{Binding Age, Mode=TwoWay}" MinimumDate="1900-01-01" MaximumDate="{Binding CurrentDate}" BackgroundColor="White" TextColor="Black"/>
+                    <DatePicker Date="{Binding Age, StringFormat='{0:dd/MM/yyyy}'}" Format="dd/MM/yyyy" MinimumDate="1900-01-01" MaximumDate="{Binding CurrentDate}" BackgroundColor="White" TextColor="Black"/>
                 </Frame>
 
                 <!-- Şifre -->
