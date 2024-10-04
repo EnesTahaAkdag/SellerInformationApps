@@ -9,7 +9,6 @@ namespace SellerInformationApps.PopUps
 		private readonly UpdateProfileViewModel _viewModel;
 		private readonly AddOrUpdateProfilePhotosViewModel _profilePhotosViewModel;
 
-		private bool isPopupOpen = false;
 		public UpdateProfilePopUp(UpdateProfileViewModel viewModel, AddOrUpdateProfilePhotosViewModel profilePhotosViewModel)
 		{
 			InitializeComponent();
@@ -20,75 +19,23 @@ namespace SellerInformationApps.PopUps
 
 		private async void SubmitButton(object sender, EventArgs e)
 		{
-			if (!isPopupOpen)
-			{
-				isPopupOpen = true;
-
-				var button = sender as Button;
-				button.IsEnabled = false;
-
-				await _viewModel.SubmitAsync();
-				Close();
-
-				isPopupOpen = false;
-				button.IsEnabled = true;
-			}
+			await _viewModel.SubmitAsync();
+			Close();
 		}
 
 		private void ClosePopUpButton(object sender, EventArgs e)
 		{
-			if (!isPopupOpen)
-			{
-				isPopupOpen = true;
-
-				var button = sender as Button;
-				button.IsEnabled = false;
-
-				Close();
-
-				isPopupOpen = false;
-				button.IsEnabled = true;
-			}
+			Close();
 		}
 		private void OpenUpdateProfilePasswordPupUp(object sender, EventArgs e)
 		{
-			if (!isPopupOpen)
-			{
-				isPopupOpen = true;
-
-				var button = sender as Button;
-				button.IsEnabled = false;
-
-				var popup = new UpdateProfilePasswordPopUp(new UpdateProfilePassword());
-
-				popup.Closed += (s, args) =>
-				{
-					isPopupOpen = false;
-					button.IsEnabled = true;
-				};
-
-				Application.Current.MainPage.ShowPopup(popup);
-			}
+			var popup = new UpdateProfilePasswordPopUp(new UpdateProfilePassword());
+			Application.Current.MainPage.ShowPopup(popup);
 		}
 		private void OnAddOrChangeImageClicked(object sender, EventArgs e)
 		{
-			if (!isPopupOpen)
-			{
-				isPopupOpen = true;
-
-				var button = sender as Button;
-				button.IsEnabled = false;
-
-				var popup = new UpdateOrAddProfilePhotoPopUp(new AddOrUpdateProfilePhotosViewModel());
-
-				popup.Closed += (s, args) =>
-				{
-					isPopupOpen = false;
-					button.IsEnabled = true;
-				};
-
-				Application.Current.MainPage.ShowPopup(popup);
-			}
+			var popup = new UpdateOrAddProfilePhotoPopUp(new AddOrUpdateProfilePhotosViewModel());
+			Application.Current.MainPage.ShowPopup(popup);
 		}
 	}
 }

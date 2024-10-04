@@ -4,10 +4,14 @@ namespace SellerInformationApps.Pages
 {
 	public partial class RegisterPage : ContentPage
 	{
-		public RegisterPage()
+		private readonly RegisterViewModel _registerViewModel;
+		private Stream _profileImageStream;
+
+		public RegisterPage(RegisterViewModel registerViewModel)
 		{
 			InitializeComponent();
-			BindingContext = new RegisterViewModel();
+			_registerViewModel = registerViewModel;
+			BindingContext = _registerViewModel;
 		}
 
 		protected override void OnAppearing()
@@ -18,61 +22,56 @@ namespace SellerInformationApps.Pages
 
 		private void ResetForm()
 		{
-			var viewModel = (RegisterViewModel)BindingContext;
-			viewModel.FirstName = string.Empty;
-			viewModel.UserName = string.Empty;
-			viewModel.LastName = string.Empty;
-			viewModel.Age = default;
-			viewModel.Email = string.Empty;
-			viewModel.Password = string.Empty;
-			viewModel.VerifyPassword = string.Empty;
-			viewModel.ProfileImage = null;
+			_registerViewModel.ClearFormFields();
 		}
 
-		private async void SelectProfileImageButton(object sender, EventArgs e)
+		private async void SubmitButton_Clicked(object sender, EventArgs e)
 		{
-			var viewModel = (RegisterViewModel)BindingContext;
+			await _registerViewModel.RegisterAsync(_profileImageStream);
+		}
+
+		private async void SelectProfileImageButton_Clicked(object sender, EventArgs e)
+		{
 			string action = await DisplayActionSheet("Resim Kaynaðýný Seç", "Ýptal", null, "Galeriden Seç", "Kamera ile Çek");
 
 			if (action == "Galeriden Seç")
 			{
-				await PickImageFromGalleryAsync(viewModel);
+				await PickOrCaptureImageAsync(isPickPhoto: true);
 			}
 			else if (action == "Kamera ile Çek")
 			{
-				await CaptureImageWithCameraAsync(viewModel);
+				await PickOrCaptureImageAsync(isPickPhoto: false);
 			}
 		}
 
-		private async Task PickImageFromGalleryAsync(RegisterViewModel viewModel)
+		private async Task PickOrCaptureImageAsync(bool isPickPhoto)
 		{
-			var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
+			try
 			{
-				Title = "Bir fotoðraf seçin"
-			});
+				FileResult result = null;
 
-			if (result != null)
-			{
-				using (FileStream localFileStream = File.OpenWrite(result.FullPath))
+				if (isPickPhoto)
 				{
-					viewModel.ProfileImage = File.ReadAllBytes(result.FullPath);
+					result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions { Title = "Bir Fotoðraf Seçin" });
+				}
+				else
+				{
+					result = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions { Title = "Bir Fotoðraf Çekin" });
+				}
+
+				if (result != null)
+				{
+					_profileImageStream = await result.OpenReadAsync();
+					_registerViewModel.ProfileImage = ImageSource.FromStream(() => _profileImageStream);
+				}
+				else
+				{
+					await DisplayAlert("Hata", isPickPhoto ? "Herhangi bir resim seçilmedi." : "Fotoðraf çekilemedi.", "Tamam");
 				}
 			}
-		}
-
-		private async Task CaptureImageWithCameraAsync(RegisterViewModel viewModel)
-		{
-			var result = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions
+			catch (Exception ex)
 			{
-				Title = "Bir fotoðraf çekin"
-			});
-
-			if (result != null)
-			{
-				using (FileStream localFileStream = File.OpenWrite(result.FullPath))
-				{
-					viewModel.ProfileImage = File.ReadAllBytes(result.FullPath);
-				}
+				await DisplayAlert("Hata", ex.Message, "Tamam");
 			}
 		}
 	}

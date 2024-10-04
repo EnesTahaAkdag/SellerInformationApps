@@ -10,7 +10,6 @@ namespace SellerInformationApps.Pages
 		private readonly ProfilePageViewModel _viewModel;
 
 		public string FirstName { get; set; }
-		private bool isPopupOpen = false;
 
 		public ProfilePage(ProfilePageViewModel viewModel)
 		{
@@ -43,31 +42,23 @@ namespace SellerInformationApps.Pages
 
 		private async void UpdateProfileAsync(object sender, EventArgs e)
 		{
-			if (!isPopupOpen)
+			if (_viewModel.UserProfileData != null)
 			{
-				isPopupOpen = true;
-				var button = sender as Button;
-				button.IsEnabled = false;
-				if (_viewModel.UserProfileData != null)
+				var userProfileUpdate = new UpdateProfileViewModel();
+				var profilePhotosViewModel = new AddOrUpdateProfilePhotosViewModel();
+
+				await userProfileUpdate.WriteData(_viewModel.UserProfileData);
+
+				var result = await this.ShowPopupAsync(new UpdateProfilePopUp(userProfileUpdate, profilePhotosViewModel));
+
+				if (result != null)
 				{
-					var userProfileUpdate = new UpdateProfileViewModel();
-					var profilePhotosViewModel = new AddOrUpdateProfilePhotosViewModel();
-
-					await userProfileUpdate.WriteData(_viewModel.UserProfileData);
-
-					var result = await this.ShowPopupAsync(new UpdateProfilePopUp(userProfileUpdate, profilePhotosViewModel));
-
-					if (result != null)
-					{
-						await _viewModel.Accessed();
-					}
+					await _viewModel.Accessed();
 				}
-				else
-				{
-					await Shell.Current.DisplayAlert("Hata", "Profil bilgileri yüklenemedi", "Tamam");
-				}
-				isPopupOpen = false;
-				button.IsEnabled = true;
+			}
+			else
+			{
+				await Shell.Current.DisplayAlert("Hata", "Profil bilgileri yüklenemedi", "Tamam");
 			}
 		}
 	}

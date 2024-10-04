@@ -13,57 +13,44 @@
 
             <!-- Profil Fotoğrafı -->
             <Frame WidthRequest="130" HeightRequest="130" CornerRadius="65" IsClippedToBounds="True" BorderColor="#007AFF" BackgroundColor="#F0F0F0" HorizontalOptions="Center">
-                <Image Source="profilephotots.png" Aspect="AspectFill" />
+                <Image Source="{Binding ProfileImage}" Aspect="AspectFill" />
             </Frame>
-            <Button Text="Profil Fotoğrafı Yükle" Clicked="SelectProfileImageButton" BackgroundColor="Transparent" TextColor="#007AFF" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Button Text="Profil Fotoğrafı Yükle" Clicked="SelectProfileImageButton_Clicked" BackgroundColor="Transparent" TextColor="#007AFF" FontAttributes="Bold" HorizontalOptions="Center"/>
 
             <!-- Girdi Alanları -->
             <StackLayout Spacing="15">
-                <!-- Ad -->
-                <Frame BackgroundColor="White" BorderColor="#007AFF" CornerRadius="10" Padding="5">
-                    <Entry Placeholder="Ad" Text="{Binding FirstName}" BackgroundColor="White" PlaceholderColor="Gray" TextColor="Black" HeightRequest="50"/>
+                <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
+                    <Entry Placeholder="Adınız" Text="{Binding FirstName}" TextColor="Black"/>
                 </Frame>
-
-                <!-- Soyad -->
-                <Frame BackgroundColor="White" BorderColor="#007AFF" CornerRadius="10" Padding="5">
-                    <Entry Placeholder="Soyad" Text="{Binding LastName}" BackgroundColor="White" PlaceholderColor="Gray" TextColor="Black" HeightRequest="50"/>
+                <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
+                    <Entry Placeholder="Soyadınız" Text="{Binding LastName}" TextColor="Black"/>
                 </Frame>
-
-                <!-- Kullanıcı Adı -->
-                <Frame BackgroundColor="White" BorderColor="#007AFF" CornerRadius="10" Padding="5">
-                    <Entry Placeholder="Kullanıcı Adı" Text="{Binding UserName}" BackgroundColor="White" PlaceholderColor="Gray" TextColor="Black" HeightRequest="50"/>
+                <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
+                    <Entry Placeholder="Kullanıcı Adı" Text="{Binding UserName}" TextColor="Black"/>
                 </Frame>
-
-                <!-- E-posta -->
-                <Frame BackgroundColor="White" BorderColor="#007AFF" CornerRadius="10" Padding="5">
-                    <Entry Placeholder="E-posta" Keyboard="Email" Text="{Binding Email}" BackgroundColor="White" PlaceholderColor="Gray" TextColor="Black" HeightRequest="50"/>
+                <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
+                    <Entry Placeholder="Email" Text="{Binding Email}" Keyboard="Email" TextColor="Black"/>
                 </Frame>
-
-                <!-- Doğum Tarihi -->
-                <Frame BackgroundColor="White" BorderColor="#007AFF" CornerRadius="10" Padding="5">
-                    <DatePicker Date="{Binding Age, StringFormat='{0:dd/MM/yyyy}'}" Format="dd/MM/yyyy" MinimumDate="1900-01-01" MaximumDate="{Binding CurrentDate}" BackgroundColor="White" TextColor="Black"/>
+                <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
+                    <Entry Placeholder="Şifre" Text="{Binding Password}" IsPassword="True" TextColor="Black"/>
                 </Frame>
-
-                <!-- Şifre -->
-                <Frame BackgroundColor="White" BorderColor="#007AFF" CornerRadius="10" Padding="5">
-                    <Entry Placeholder="Şifre" IsPassword="True" Text="{Binding Password}" BackgroundColor="White" PlaceholderColor="Gray" TextColor="Black" HeightRequest="50"/>
+                <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
+                    <Entry Placeholder="Şifre Tekrarı" Text="{Binding VerifyPassword}" IsPassword="True" TextColor="Black"/>
                 </Frame>
-
-                <!-- Şifreyi Doğrula -->
-                <Frame BackgroundColor="White" BorderColor="#007AFF" CornerRadius="10" Padding="5">
-                    <Entry Placeholder="Şifreyi Doğrula" IsPassword="True" Text="{Binding VerifyPassword}" BackgroundColor="White" PlaceholderColor="Gray" TextColor="Black" HeightRequest="50"/>
+                <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
+                    <DatePicker Date="{Binding Age}" MaximumDate="{Binding CurrentDate}" TextColor="Black" Format="dd/MM/yyyy"/>
                 </Frame>
             </StackLayout>
 
-            <!-- Kayıt Ol Butonu -->
-            <Button Text="Kayıt Ol" BackgroundColor="#007AFF" TextColor="White" CornerRadius="10" FontSize="Medium" HeightRequest="55" Command="{Binding RegisterUserCommand}"/>
+            <!-- Kayıt Butonu -->
+            <Button Text="Hesap Oluştur" Clicked="SubmitButton_Clicked" BackgroundColor="#007AFF" TextColor="White" CornerRadius="20" FontAttributes="Bold" />
 
-            <!-- Hesabınız Var mı? Giriş Yap -->
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="5">
-                <Label Text="Hesabınız Var mı?" TextColor="Gray" FontSize="Small"/>
-                <Label Text="Giriş Yap" TextColor="#007AFF" FontSize="Small" FontAttributes="Bold">
+            <!-- Zaten Hesabım Var -->
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Label Text="Zaten bir hesabınız var mı?" TextColor="Gray"/>
+                <Label Text=" Giriş yapın" TextColor="#007AFF" FontAttributes="Bold">
                     <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding LoginCommand}" />
+                        <TapGestureRecognizer Command="{Binding LoginCommand}"/>
                     </Label.GestureRecognizers>
                 </Label>
             </StackLayout>

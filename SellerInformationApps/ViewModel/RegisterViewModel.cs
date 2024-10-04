@@ -4,14 +4,12 @@ using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using SellerInformationApps.ServiceHelper;
-using ServiceHelper.Authentication;
-using System;
-using System.Text;
-using System.Text.RegularExpressions;
+using System.Net.Http.Headers;
+using System.Windows.Input;
 
 namespace SellerInformationApps.ViewModel
 {
-	public partial class RegisterViewModel : Authentication
+	public partial class RegisterViewModel : ObservableObject
 	{
 		[ObservableProperty]
 		private string firstName;
@@ -32,37 +30,42 @@ namespace SellerInformationApps.ViewModel
 		private string verifyPassword;
 
 		[ObservableProperty]
-		private byte[] profileImage;
-
-		[ObservableProperty]
 		[JsonConverter(typeof(CustemDateTimeConverter))]
 		private DateTime? age = DateTime.Now;
 
-		private DateTime _currentDate = DateTime.Now;
-		public DateTime CurrentDate
-		{
-			get => _currentDate;
-			set => SetProperty(ref _currentDate, value);
-		}
+		[ObservableProperty]
+		private ImageSource profileImage;
 
-		public IRelayCommand RegisterUserCommand { get; }
+		private DateTime _currentDate = DateTime.Now;
+		public DateTime CurrentDate => _currentDate;
+
+		public ICommand RegisterUserCommand { get; }
+		public ICommand LoginCommand { get; }
 
 		public RegisterViewModel()
 		{
-			CurrentDate = DateTime.Now;
-			RegisterUserCommand = new AsyncRelayCommand(RegisterAsync);
 			LoginCommand = new AsyncRelayCommand(NavigateToLoginPageAsync);
 		}
 
-		[RelayCommand]
-		public async Task RegisterAsync()
+		public async Task RegisterAsync(Stream profileImageStream)
 		{
+			// Stream geri sarılamıyorsa, belleğe kopyalayarak işlemi devam ettiriyoruz
+			Stream imageStream = profileImageStream;
+			if (profileImageStream != null && !profileImageStream.CanSeek)
+			{
+				imageStream = new MemoryStream();
+				await profileImageStream.CopyToAsync(imageStream);
+				imageStream.Position = 0;
+			}
+
+			// Formun geçerliliğini kontrol et
 			if (!IsFormValid())
 			{
 				await Shell.Current.DisplayAlert("Hata", "Lütfen tüm alanları doldurduğunuzdan emin olun.", "Tamam");
 				return;
 			}
 
+			// Şifrelerin eşleştiğini kontrol et
 			if (!ArePasswordsMatching())
 			{
 				await Shell.Current.DisplayAlert("Hata", "Şifreler eşleşmiyor.", "Tamam");
@@ -73,43 +76,57 @@ namespace SellerInformationApps.ViewModel
 			{
 				var user = CreateUser();
 
-				if (user == null)
+				string url = "https://314b-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://314b-37-130-115-91.ngrok-free.app");
+
+				using (var content = new MultipartFormDataContent())
 				{
-					await Shell.Current.DisplayAlert("Hata", "Kullanıcı bilgileri oluşturulurken bir hata oluştu.", "Tamam");
-					return;
-				}
-
-				var httpClient = HttpClientFactory.Create("https://b8ac-37-130-115-91.ngrok-free.app/");
-				string url = "https://b8ac-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-
-				var userJson = JsonConvert.SerializeObject(user);
-
-				using (var request = new HttpRequestMessage(HttpMethod.Post, new Uri(url)))
-				{
-					var content = new System.Net.Http.StringContent(userJson, Encoding.UTF8, "application/json");
-					request.Content = content;
-					using (var response = await httpClient.SendAsync(request).ConfigureAwait(false))
+					// Profil resmi ekleme işlemi
+					if (imageStream != null)
 					{
-						using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+						var byteContent = new StreamContent(imageStream);
+						byteContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+						content.Add(byteContent, "ProfileImage", "profileImage.jpg");
+					}
+
+					// Diğer kullanıcı bilgilerini ekle
+					content.Add(new StringContent(UserName), "UserName");
+					content.Add(new StringContent(FirstName), "FirstName");
+					content.Add(new StringContent(LastName), "LastName");
+					content.Add(new StringContent(Email), "Email");
+					content.Add(new StringContent(Password), "Password");
+					content.Add(new StringContent(age?.ToString("yyyy-MM-dd")), "Age");
+
+					// Sunucuya isteği gönder
+					using (var response = await httpClient.PostAsync(url, content))
+					{
+						if (response.IsSuccessStatusCode)
 						{
+							await Shell.Current.DisplayAlert("Başarı", "Kayıt başarılı!", "Tamam");
+							//await Shell.Current.GoToAsync("//LoginPage");
+						}
+						else
+						{
+							string responseContent = await response.Content.ReadAsStringAsync();
+							await Shell.Current.DisplayAlert("Hata", $"Sunucu hatası: {response.StatusCode}\n{responseContent}", "Tamam");
 						}
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await Shell.Current.DisplayAlert("Hata", $"Hata Oluştu: {ex.Message}", "Tamam");
+				await Shell.Current.DisplayAlert("Hata", $"Kayıt işlemi sırasında bir hata oluştu: {ex.Message}", "Tamam");
 			}
 		}
 
 		private bool IsFormValid()
 		{
-			return !(string.IsNullOrWhiteSpace(FirstName) ||
-					 string.IsNullOrWhiteSpace(LastName) ||
-					 string.IsNullOrWhiteSpace(UserName) ||
-					 string.IsNullOrWhiteSpace(Email) ||
-					 string.IsNullOrWhiteSpace(Password) ||
-					 !Age.HasValue);
+			return !string.IsNullOrWhiteSpace(FirstName) &&
+				   !string.IsNullOrWhiteSpace(LastName) &&
+				   !string.IsNullOrWhiteSpace(UserName) &&
+				   !string.IsNullOrWhiteSpace(Email) &&
+				   !string.IsNullOrWhiteSpace(Password) &&
+				   age.HasValue;
 		}
 
 		private bool ArePasswordsMatching()
@@ -126,46 +143,21 @@ namespace SellerInformationApps.ViewModel
 				UserName = UserName,
 				Email = Email,
 				Password = Password,
-				Age = Age.GetValueOrDefault().ToString("yyyy-MM-dd HH:mm"),
-				//ProfileImage = ProfileImage
+				Age = age?.ToString("yyyy-MM-dd")
 			};
 		}
 
-		private async Task HandleResponseAsync(HttpResponseMessage response)
+		public void ClearFormFields()
 		{
-			if (response.IsSuccessStatusCode)
-			{
-				string json = await response.Content.ReadAsStringAsync();
-				var apiResponse = JsonConvert.DeserializeObject<RegisterApiResponse>(json);
-
-				if (apiResponse.Success)
-				{
-					await Shell.Current.DisplayAlert("Başarı", "Kayıt başarılı!", "Tamam");
-					await Shell.Current.GoToAsync("//LoginPage");
-				}
-				else
-				{
-					await Shell.Current.DisplayAlert("Hata", apiResponse.ErrorMessage, "Tamam");
-				}
-			}
-			else
-			{
-				var errorContent = await response.Content.ReadAsStringAsync();
-				var errorResponse = JsonConvert.DeserializeObject<RegisterApiResponse>(errorContent);
-
-				if (errorResponse.Errors != null)
-				{
-					var errorMessages = string.Join("\n", errorResponse.Errors.SelectMany(kvp => kvp.Value));
-					await Shell.Current.DisplayAlert("Hata", $"HTTP Hatası: {errorMessages}", "Tamam");
-				}
-				else
-				{
-					await Shell.Current.DisplayAlert("Hata", $"HTTP Hatası: {errorContent}", "Tamam");
-				}
-			}
+			FirstName = string.Empty;
+			LastName = string.Empty;
+			UserName = string.Empty;
+			Email = string.Empty;
+			Password = string.Empty;
+			VerifyPassword = string.Empty;
+			age = DateTime.Now;
+			profileImage = null;
 		}
-
-		public IRelayCommand LoginCommand { get; }
 
 		private async Task NavigateToLoginPageAsync()
 		{

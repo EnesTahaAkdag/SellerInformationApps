@@ -8,7 +8,7 @@ namespace SellerInformationApps.PopUps
 		{
 			InitializeComponent();
 		}
-		private async void SubmitButton(object sender,EventArgs e)
+		private void SubmitButton(object sender,EventArgs e)
 		{
 
 		}
