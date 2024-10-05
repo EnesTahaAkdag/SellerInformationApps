@@ -3,20 +3,33 @@
            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
            x:Class="SellerInformationApps.PopUps.UpdateOrAddProfilePhotoPopUp"
            xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
-           CanBeDismissedByTappingOutsideOfPopup="True"
-           >
+           CanBeDismissedByTappingOutsideOfPopup="True">
 
-    <Frame BackgroundColor="#FFFFFF" HasShadow="True" Padding="20" CornerRadius="15" VerticalOptions="CenterAndExpand">
-        <StackLayout Spacing="20" HorizontalOptions="Center">
-            <Label Text="Profil Fotoğrafını Güncelle" FontSize="Large" HorizontalOptions="Center" TextColor="#333" FontAttributes="Bold"/>
-            <StackLayout Orientation="Horizontal" Padding="0" Spacing="15" HorizontalOptions="Center">
-                <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" IsClippedToBounds="True" BorderColor="#ccc" BackgroundColor="White" HasShadow="True">
-                    <Image Source="{Binding ProfileImage}" WidthRequest="120" HeightRequest="120" Aspect="AspectFill"  />
-                </Frame>
-            </StackLayout>
-            <Button Text="Fotoğraf Çek/Galeriden Seç" Clicked="OnCaptureImageClicked" BackgroundColor="#2196F3" TextColor="White" CornerRadius="25" HeightRequest="45" WidthRequest="250" FontSize="16" HorizontalOptions="Center"/>
-            <Button Text="Kaydet" Clicked="SubmitButton" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="25" HeightRequest="45" WidthRequest="250" FontSize="16" HorizontalOptions="Center"/>
-            <Button Text="İptal" Clicked="ClosePopUpButton" BackgroundColor="#E74C3C" TextColor="White" CornerRadius="25" HeightRequest="45" WidthRequest="250" FontSize="16" HorizontalOptions="Center"/>
+    
+
+    <Frame BackgroundColor="#FFFFFF" HasShadow="True" Padding="25" CornerRadius="20" 
+           VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
+        <StackLayout Spacing="25" HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
+
+            <!-- Popup Title -->
+            <Label Text="Profil Fotoğrafını Güncelle" FontSize="Medium" HorizontalOptions="Center" 
+                   TextColor="#333" FontAttributes="Bold" />
+            <!-- Profile Image Frame -->
+            <Frame WidthRequest="140" HeightRequest="140" CornerRadius="70" IsClippedToBounds="True"
+                   BorderColor="#ddd" BackgroundColor="White" HasShadow="False" HorizontalOptions="Center">
+                <Image Source="{Binding ProfileImage}" WidthRequest="140" HeightRequest="140" Aspect="AspectFill" />
+            </Frame>
+            <!-- Button for selecting or capturing photo -->
+            <Button Text="Fotoğraf Çek / Galeriden Seç" Clicked="OnCaptureImageClicked" BackgroundColor="#2196F3"
+                    TextColor="White" CornerRadius="25" HeightRequest="50" WidthRequest="260" FontSize="16" HorizontalOptions="Center" />
+            <!-- Save Button -->
+            <Button Text="Kaydet" Clicked="SubmitButton" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="25" 
+                    HeightRequest="50" WidthRequest="260" FontSize="16" HorizontalOptions="Center" 
+                    IsVisible="{Binding ProfileImage, Converter={StaticResource NullToBoolConverter}}" />
+            <!-- Cancel Button -->
+            <Button Text="İptal" Clicked="ClosePopUpButton" BackgroundColor="#E74C3C" TextColor="White" CornerRadius="25"
+                    HeightRequest="50" WidthRequest="260" FontSize="16" HorizontalOptions="Center" />
+
         </StackLayout>
     </Frame>
 </mct:Popup>

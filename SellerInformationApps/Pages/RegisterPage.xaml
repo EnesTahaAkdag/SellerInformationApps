@@ -10,10 +10,12 @@
 
             <Label Text="Lütfen aşağıdaki bilgileri doldurun." TextColor="Gray" HorizontalOptions="Center" FontSize="14"/>
 
-            <Frame WidthRequest="130" HeightRequest="130" CornerRadius="65" IsClippedToBounds="True" BorderColor="#007AFF" BackgroundColor="#F0F0F0" HorizontalOptions="Center">
+            <Frame WidthRequest="130" HeightRequest="130" CornerRadius="65" IsClippedToBounds="True" BorderColor="#007AFF" 
+                   BackgroundColor="#F0F0F0" HorizontalOptions="Center">
                 <Image Source="{Binding ProfileImage}" Aspect="AspectFill" />
             </Frame>
-            <Button Text="Profil Fotoğrafı Yükle" Clicked="SelectProfileImageButton_Clicked" BackgroundColor="Transparent" TextColor="#007AFF" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Button Text="Profil Fotoğrafı Yükle" Clicked="SelectProfileImageButton_Clicked" BackgroundColor="Transparent"
+                    TextColor="#007AFF" FontAttributes="Bold" HorizontalOptions="Center"/>
 
             <StackLayout Spacing="15">
                 <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
@@ -39,7 +41,8 @@
                 </Frame>
             </StackLayout>
 
-            <Button Text="Hesap Oluştur" Clicked="SubmitButton_Clicked" BackgroundColor="#007AFF" TextColor="White" CornerRadius="20" FontAttributes="Bold" />
+            <Button Text="Hesap Oluştur" Clicked="SubmitButton_Clicked" BackgroundColor="#007AFF"
+                    TextColor="White" CornerRadius="20" FontAttributes="Bold" />
 
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                 <Label Text="Zaten bir hesabınız var mı?" TextColor="Gray"/>
