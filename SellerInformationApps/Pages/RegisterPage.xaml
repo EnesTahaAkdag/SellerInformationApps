@@ -8,16 +8,13 @@
     <ScrollView>
         <StackLayout Padding="30" Spacing="25" VerticalOptions="Center">
 
-            <!-- Hesap Oluştur Başlığı -->
             <Label Text="Lütfen aşağıdaki bilgileri doldurun." TextColor="Gray" HorizontalOptions="Center" FontSize="14"/>
 
-            <!-- Profil Fotoğrafı -->
             <Frame WidthRequest="130" HeightRequest="130" CornerRadius="65" IsClippedToBounds="True" BorderColor="#007AFF" BackgroundColor="#F0F0F0" HorizontalOptions="Center">
                 <Image Source="{Binding ProfileImage}" Aspect="AspectFill" />
             </Frame>
             <Button Text="Profil Fotoğrafı Yükle" Clicked="SelectProfileImageButton_Clicked" BackgroundColor="Transparent" TextColor="#007AFF" FontAttributes="Bold" HorizontalOptions="Center"/>
 
-            <!-- Girdi Alanları -->
             <StackLayout Spacing="15">
                 <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
                     <Entry Placeholder="Adınız" Text="{Binding FirstName}" TextColor="Black"/>
@@ -42,10 +39,8 @@
                 </Frame>
             </StackLayout>
 
-            <!-- Kayıt Butonu -->
             <Button Text="Hesap Oluştur" Clicked="SubmitButton_Clicked" BackgroundColor="#007AFF" TextColor="White" CornerRadius="20" FontAttributes="Bold" />
 
-            <!-- Zaten Hesabım Var -->
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                 <Label Text="Zaten bir hesabınız var mı?" TextColor="Gray"/>
                 <Label Text=" Giriş yapın" TextColor="#007AFF" FontAttributes="Bold">

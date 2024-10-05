@@ -13,6 +13,16 @@ namespace SellerInformationApps.UpdatesViewModel
 		[ObservableProperty]
 		private string userName = Preferences.Get("UserName", string.Empty);
 
+		[ObservableProperty]
+		private ImageSource profileImage = ImageSource.FromFile("profilephotos.png");
+
+		partial void OnProfileImageChanged(ImageSource value)
+		{
+			if (ProfileImage == null)
+			{
+				ProfileImage = ImageSource.FromFile("profilephotos.png");
+			}
+		}
 		public async Task AddOrUpdateProfilePhotosAsync(Stream imageStream)
 		{
 			try
@@ -25,9 +35,9 @@ namespace SellerInformationApps.UpdatesViewModel
 				var password = Preferences.Get("Password", string.Empty);
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{password}"));
 
-				string endpoint = "https://314b-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
+				string url = "https://4155-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
 
-				var client = HttpClientFactory.Create(endpoint);
+				var client = HttpClientFactory.Create(url);
 				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				using (var content = new MultipartFormDataContent())
@@ -38,7 +48,7 @@ namespace SellerInformationApps.UpdatesViewModel
 					content.Add(streamContent, "ProfileImage", "profileImage.jpg");
 					content.Add(new StringContent(UserName), "UserName");
 
-					using (var response = await client.PostAsync(endpoint, content))
+					using (var response = await client.PostAsync(url, content))
 					{
 						if (!response.IsSuccessStatusCode)
 						{

@@ -32,7 +32,7 @@ namespace SellerInformationApps.Models
 		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d]{8,}$", ErrorMessage = "En az 8 karakterlik bir parola büyük ve küçük harflerin kombinasyonunu içermelidir.")]
 		public string Password { get; set; }
 
-		public byte[] ProfileImage { get; set; }
+		public IFormFile ProfileImage { get; set; }
 	}
 
 	public class UpdateUserPassword

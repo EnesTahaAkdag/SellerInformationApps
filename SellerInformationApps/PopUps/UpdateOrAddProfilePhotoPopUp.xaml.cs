@@ -5,13 +5,14 @@ namespace SellerInformationApps.PopUps
 {
 	public partial class UpdateOrAddProfilePhotoPopUp : Popup
 	{
-		private readonly AddOrUpdateProfilePhotosViewModel  profilePhotosViewModel;
+		private readonly AddOrUpdateProfilePhotosViewModel  _profilePhotosViewModel;
 		private Stream stream;
 
 		public UpdateOrAddProfilePhotoPopUp(AddOrUpdateProfilePhotosViewModel profilePhotosViewModel)
 		{
 			InitializeComponent();
-			 profilePhotosViewModel = profilePhotosViewModel;
+			 _profilePhotosViewModel = profilePhotosViewModel;
+			BindingContext = _profilePhotosViewModel;
 		}
 
 		private void ClosePopUpButton(object sender, EventArgs e)
@@ -38,7 +39,7 @@ namespace SellerInformationApps.PopUps
 
 		private async void SubmitButton(object sender, EventArgs e)
 		{
-			await  profilePhotosViewModel.AddOrUpdateProfilePhotosAsync(stream);
+			await  _profilePhotosViewModel.AddOrUpdateProfilePhotosAsync(stream);
 			Close();
 		}
 

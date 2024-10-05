@@ -24,11 +24,9 @@ namespace SellerInformationApps.ViewModel
 
 		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-		private readonly HttpClient _httpClient;
 
 		public SellerInfosViewModel(HttpClient httpClient)
 		{
-			_httpClient = httpClient;
 			StoreInfos = new ObservableCollection<StoreInfo>();
 		}
 
@@ -53,12 +51,13 @@ namespace SellerInformationApps.ViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
+				var httpClient = HttpClientFactory.Create("https://4155-37-130-115-91.ngrok-free.app");
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = $"https://314b-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://4155-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
 
-				using (var response = await _httpClient.GetAsync(url))
+				using (var response = await httpClient.GetAsync(url))
 				{
 					if (response.IsSuccessStatusCode)
 					{

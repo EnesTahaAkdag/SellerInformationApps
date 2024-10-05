@@ -5,7 +5,7 @@ namespace SellerInformationApps.Pages
 	public partial class RegisterPage : ContentPage
 	{
 		private readonly RegisterViewModel _registerViewModel;
-		private Stream _profileImageStream;
+		private Stream stream;
 
 		public RegisterPage(RegisterViewModel registerViewModel)
 		{
@@ -27,7 +27,7 @@ namespace SellerInformationApps.Pages
 
 		private async void SubmitButton_Clicked(object sender, EventArgs e)
 		{
-			await _registerViewModel.RegisterAsync(_profileImageStream);
+			await _registerViewModel.RegisterAsync(stream);
 		}
 
 		private async void SelectProfileImageButton_Clicked(object sender, EventArgs e)
@@ -61,9 +61,21 @@ namespace SellerInformationApps.Pages
 
 				if (result != null)
 				{
-					_profileImageStream = await result.OpenReadAsync();
-					_registerViewModel.ProfileImage = ImageSource.FromStream(() => _profileImageStream);
+					stream = await result.OpenReadAsync();
+
+					using (var memoryStream = new MemoryStream())
+					{
+						await stream.CopyToAsync(memoryStream);
+
+						var streamForApi = new MemoryStream(memoryStream.ToArray());
+						var streamForImage = new MemoryStream(memoryStream.ToArray());
+
+						_registerViewModel.ProfileImage = ImageSource.FromStream(() => streamForImage);
+
+						stream = streamForApi;
+					}
 				}
+
 				else
 				{
 					await DisplayAlert("Hata", isPickPhoto ? "Herhangi bir resim seçilmedi." : "Fotoðraf çekilemedi.", "Tamam");
