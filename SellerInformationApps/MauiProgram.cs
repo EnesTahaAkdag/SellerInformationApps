@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
 using SellerInformationApps.Models;
 using SellerInformationApps.Pages;
@@ -26,11 +25,9 @@ namespace SellerInformationApps
 					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 					fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 				});
-
 #if DEBUG
 			builder.Logging.AddDebug();
 #endif
-
 			builder.Services.AddSingleton<HttpClient>(sp => new HttpClient());
 
 			builder.Services.AddSingleton<ChartPage>();
@@ -49,10 +46,6 @@ namespace SellerInformationApps
 			builder.Services.AddTransient<SellerInfosViewModel>();
 			builder.Services.AddTransient<UpdateProfileViewModel>();
 			builder.Services.AddTransient<UserListViewModel>();
-
-
-
-
 
 			return builder.Build();
 		}

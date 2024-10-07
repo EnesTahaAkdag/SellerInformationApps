@@ -19,7 +19,7 @@
                     <Grid>
                         <StackLayout>
                             <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" IsClippedToBounds="True" BorderColor="#ccc" BackgroundColor="White" HasShadow="True">
-                                <Image Source="profilephotots.png" WidthRequest="100" HeightRequest="100" Aspect="AspectFill"/>
+                                <Image Source="{Binding ProfileImage}" WidthRequest="100" HeightRequest="100" Aspect="AspectFill"/>
                             </Frame>
                         </StackLayout>
                     </Grid>

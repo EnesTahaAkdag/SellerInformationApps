@@ -4,7 +4,8 @@ using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
-using SellerInformationApps.PopUps;
+using SellerInformationApps.PopUps.ForgetPasswordPopUps;
+using SellerInformationApps.UpdatesViewModel;
 using ServiceHelper.Authentication;
 using System.Text;
 using System.Windows.Input;
@@ -51,8 +52,8 @@ namespace SellerInformationApps.ViewModel
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://c7c9-37-130-115-91.ngrok-free.app/");
-				string url = "https://c7c9-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
+				var httpClient = HttpClientFactory.Create("https://0ad8-37-130-115-91.ngrok-free.app");
+				string url = "https://0ad8-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -109,11 +110,12 @@ namespace SellerInformationApps.ViewModel
 		{
 			await Shell.Current.GoToAsync("//RegisterPage");
 		}
-		private static Task RememberPasswordAsync()
+		private async Task RememberPasswordAsync()
 		{
-			var popup = new RememberPasswordPupUp();
+			var viewModel = new ForgetPasswordViewModel();
+			var popup = new ForgetPasswordPupUp(viewModel);
 			Application.Current.MainPage.ShowPopup(popup);
-			return Task.CompletedTask;
+			await Task.CompletedTask;
 		}
 	}
 }

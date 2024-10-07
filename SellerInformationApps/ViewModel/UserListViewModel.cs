@@ -31,10 +31,10 @@ namespace SellerInformationApps.ViewModel
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 				
 
-				var httpClient = HttpClientFactory.Create("https://c7c9-37-130-115-91.ngrok-free.app/");
+				var httpClient = HttpClientFactory.Create("https://0ad8-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "https://c7c9-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList";
+				string url = "https://0ad8-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList";
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
 					using (var response = await httpClient.SendAsync(request))

@@ -28,13 +28,16 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
-
+	
+	
+	<!-- Splash Screen And App Icon -->
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#333333" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#333333" BaseSize="128,128" />
+
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -47,6 +50,8 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
+	
+	
 	<ItemGroup>
 		<None Remove="Resources\Images\cameraicon.png" />
 		<None Remove="Resources\Images\loginicon.png" />
@@ -102,11 +107,17 @@
 		<MauiXaml Update="Pages\SellerInfosPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="PopUps\RememberPasswordPupUp.xaml">
+		<MauiXaml Update="PopUps\ForgetPasswordPopUps\ChangePasswordPopUp.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="PopUps\ForgetPasswordPopUps\ForgetPassword.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="PopUps\ForgetPasswordPopUps\VerificationCodeEntryPopup.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="PopUps\UpdateOrAddProfilePhotoPopUp.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="PopUps\UpdateProfilePopUp.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -120,6 +131,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="PopUps\ForgetPasswordPopUps\ForgetPassword.xaml.cs">
+		  <DependentUpon>ForgetPassword.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="PopUps\UpdateProfilePopUp.xaml.cs">
 			<DependentUpon>UpdateProfilePopUp.xaml</DependentUpon>
 		</Compile>

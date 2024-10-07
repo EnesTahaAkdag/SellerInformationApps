@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
@@ -16,7 +17,7 @@ namespace SellerInformationApps.ViewModel
 		[ObservableProperty] private string userName;
 		[ObservableProperty] private string email;
 		[ObservableProperty] private DateTime? age;
-		[ObservableProperty] private string profileImage;
+		[ObservableProperty] private ImageSource profileImage;
 		[ObservableProperty] private bool isLoading;
 
 		private readonly Authentication _authentication;
@@ -52,7 +53,7 @@ namespace SellerInformationApps.ViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://c7c9-37-130-115-91.ngrok-free.app/");
+				var httpClient = HttpClientFactory.Create("https://0ad8-37-130-115-91.ngrok-free.app/");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				string url = $"/UserDataSendApi/DataSend?userName={userName}";
@@ -72,7 +73,7 @@ namespace SellerInformationApps.ViewModel
 								UserName = profileData.Data.UserName,
 								Email = profileData.Data.Email,
 								Age = profileData.Data.Age,
-								ProfileImage = profileData.Data.ProfileImage 
+								ProfileImage = profileData.Data.ProfileImage
 							};
 
 							FirstName = UserProfileData.FirstName;
@@ -81,8 +82,19 @@ namespace SellerInformationApps.ViewModel
 							Email = UserProfileData.Email;
 							Age = UserProfileData.Age;
 
-							var imageUrl = $"https://c7c9-37-130-115-91.ngrok-free.app//images/{UserProfileData.ProfileImage}";
-							ProfileImage = imageUrl;
+							if (UserProfileData.ProfileImage != null)
+							{
+								using (var memoryStream = new MemoryStream())
+								{
+									await UserProfileData.ProfileImage.CopyToAsync(memoryStream);
+									byte[] imageBytes = memoryStream.ToArray();
+									ProfileImage = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+								}
+							}
+							else
+							{
+								ProfileImage = null;
+							}
 						}
 						else
 						{
@@ -100,6 +112,7 @@ namespace SellerInformationApps.ViewModel
 				await Shell.Current.DisplayAlert("Hata", $"Hata oluştu: {ex.Message}", "Tamam");
 			}
 		}
+
 
 		[RelayCommand]
 		public async Task LogOutAsync()

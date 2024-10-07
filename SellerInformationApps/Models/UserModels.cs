@@ -110,6 +110,18 @@ namespace SellerInformationApps.Models
 		public long Id { get; set; }
 	}
 
+	public class ForgetPassword
+	{
+		public string UserName { get; set; }
+	}
+
+	public class ForgetPasswordApiResponse
+	{
+		public bool Success { get; set; }
+		public string ErrorMessage { get; set; }
+		public ForgetPassword Data { get; set; }
+	}
+
 	public class ProfileApiResponse
 	{
 		public bool Success { get; set; }
