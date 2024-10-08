@@ -110,7 +110,7 @@
 		<MauiXaml Update="PopUps\ForgetPasswordPopUps\ChangePasswordPopUp.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="PopUps\ForgetPasswordPopUps\ForgetPassword.xaml">
+		<MauiXaml Update="PopUps\ForgetPasswordPopUps\ForgetPasswordPopUp.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="PopUps\ForgetPasswordPopUps\VerificationCodeEntryPopup.xaml">
@@ -131,8 +131,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="PopUps\ForgetPasswordPopUps\ForgetPassword.xaml.cs">
-		  <DependentUpon>ForgetPassword.xaml</DependentUpon>
+		<Compile Update="PopUps\ForgetPasswordPopUps\ForgetPasswordPopUp.xaml.cs">
+		  <DependentUpon>ForgetPasswordPopUp.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="PopUps\UpdateProfilePopUp.xaml.cs">
 			<DependentUpon>UpdateProfilePopUp.xaml</DependentUpon>

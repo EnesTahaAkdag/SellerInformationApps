@@ -1,9 +1,13 @@
-namespace SellerInformationApps.PopUps.ForgetPasswordPopUps;
+using CommunityToolkit.Maui.Views;
 
-public partial class VerificationCodeEntryPopup : ContentPage
+namespace SellerInformationApps.PopUps.ForgetPasswordPopUps
 {
-	public VerificationCodeEntryPopup()
+	public partial class VerificationCodeEntryPopup : Popup
 	{
-		InitializeComponent();
+		public VerificationCodeEntryPopup(UpdatesViewModel.ForgetPasswordViewModels.VerifactionCodeEntryViewModel viewModel)
+		{
+			InitializeComponent();
+			BindingContext = viewModel;
+		}
 	}
 }

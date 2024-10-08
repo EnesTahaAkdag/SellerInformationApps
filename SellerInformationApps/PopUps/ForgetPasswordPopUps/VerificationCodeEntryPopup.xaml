@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SellerInformationApps.PopUps.ForgetPasswordPopUps.VerificationCodeEntryPopup"
-             Title="VerificationCodeEntryPopup">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
-</ContentPage>
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           x:Class="SellerInformationApps.PopUps.ForgetPasswordPopUps.VerificationCodeEntryPopup"
+           xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+           xmlns:sys="clr-namespace:System;assembly=mscorlib"
+           xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
+           CanBeDismissedByTappingOutsideOfPopup="True">
+
+    <Frame BackgroundColor="#FFFFFF" HasShadow="True" VerticalOptions="Center" HorizontalOptions="Center" CornerRadius="25" Padding="20" BorderColor="Black">
+
+        <StackLayout Spacing="20">
+            <Label Text="E-Mail Adresinize Gönderilen Doğrulama Kodunu Giriniz" HorizontalOptions="Center" TextColor="#666666" FontSize="12"/>
+
+            <Frame BackgroundColor="#EFEFEF" CornerRadius="12" Padding="10">
+                <Entry x:Name="verificationCode" Placeholder="Doğrulama Kodunuzu Giriniz" BackgroundColor="Transparent" Text="{Binding VerificationCode}" TextColor="Black"/>
+            </Frame>
+
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="15">
+                <Button Text="Gönder" Command="{Binding SubmitCommand}" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="22" HeightRequest="50" WidthRequest="130" FontSize="16"/>
+            </StackLayout>
+
+        </StackLayout>
+    </Frame>
+
+</mct:Popup>

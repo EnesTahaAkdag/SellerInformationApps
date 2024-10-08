@@ -1,11 +1,15 @@
 using CommunityToolkit.Maui.Views;
+using System.Numerics;
+using System.Reflection;
 
-namespace SellerInformationApps.PopUps.ForgetPasswordPopUps;
-
-public partial class ChangePasswordPopUp : Popup
+namespace SellerInformationApps.PopUps.ForgetPasswordPopUps
 {
-	public ChangePasswordPopUp()
+	public partial class ChangePasswordPopUp : Popup
 	{
-		InitializeComponent();
+		public ChangePasswordPopUp(UpdatesViewModel.ForgetPasswordViewModels.ChangePasswordViewModel viewModel)
+		{
+			InitializeComponent();
+			BindingContext = viewModel;
+		}
 	}
 }
