@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using SellerInformationApps.Models;
 using System.Text;
 using Newtonsoft.Json;
-using System.Net.Http;
 using CommunityToolkit.Maui.Views;
 using SellerInformationApps.PopUps.ForgetPasswordPopUps;
 using PraPazar.ServiceHelper;
@@ -52,8 +51,8 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://ae8c-37-130-115-91.ngrok-free.app");
-				string url = "https://ae8c-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ForgetPassword";
+				var httpClient = HttpClientFactory.Create("https://247d-37-130-115-91.ngrok-free.app");
+				string url = "https://247d-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ForgetPassword";
 
 				var content = new StringContent(JsonConvert.SerializeObject(forgetPassword), Encoding.UTF8, "application/json");
 
@@ -68,13 +67,13 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 						{
 							await Shell.Current.DisplayAlert("Başarılı", "Doğrulama kodu e-posta adresinize gönderildi", "Tamam");
 
-							// Yeni popup açmak
-							var popup = new VerificationCodeEntryPopup(new VerifactionCodeEntryViewModel());
-							Application.Current.MainPage.ShowPopup(popup);
+							var verificationCodeEntryPopup = new VerificationCodeEntryPopup(new VerificationCodeEntryViewModel(_popup)); // _popup parametresini burada geçiyoruz
 
-							// Mevcut popup'ı kapat
+							Application.Current.MainPage.ShowPopup(verificationCodeEntryPopup);
+
 							ClosePopup();
 						}
+
 						else
 						{
 							await Shell.Current.DisplayAlert("Hata", apiResponse.ErrorMessage, "Tamam");

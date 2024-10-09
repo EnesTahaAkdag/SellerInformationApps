@@ -65,8 +65,8 @@ namespace SellerInformationApps.ViewModel
 			{
 				var user = CreateUser();
 
-				string url = "https://ae8c-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-				var httpClient = HttpClientFactory.Create("https://ae8c-37-130-115-91.ngrok-free.app");
+				string url = "https://247d-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://247d-37-130-115-91.ngrok-free.app");
 
 				using (var content = new MultipartFormDataContent())
 				{

@@ -93,6 +93,20 @@ namespace SellerInformationApps.Models
 		public IFormFile ProfileImage { get; set; }
 	}
 
+	public class VerificationCodeModel
+	{
+		public int VerificationCode { get; set; }
+	}
+
+	public class VerificationCodeApiResponse
+	{
+		public bool Success { get; set; }
+
+        public string ErrorMessage { get; set; }
+
+        public VerificationCodeModel Data{ get; set; }
+    }
+
 	public class ProfilePohotosApiResponse
 	{
 		public bool Success { get; set; }

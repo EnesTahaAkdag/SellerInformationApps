@@ -1,3 +1,4 @@
+using SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels;
 using CommunityToolkit.Maui.Views;
 
 namespace SellerInformationApps.PopUps.ForgetPasswordPopUps
@@ -7,7 +8,7 @@ namespace SellerInformationApps.PopUps.ForgetPasswordPopUps
 		public ForgetPasswordPopUp()
 		{
 			InitializeComponent();
-			var viewModel = new UpdatesViewModel.ForgetPasswordViewModels.ForgetPasswordViewModel(this); // Pop-up referansý veriliyor
+			var viewModel = new ForgetPasswordViewModel(this); // Pop-up referansý veriliyor
 			BindingContext = viewModel;
 		}
 	}
