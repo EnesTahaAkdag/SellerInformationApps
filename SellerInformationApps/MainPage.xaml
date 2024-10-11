@@ -5,27 +5,9 @@
              x:Class="SellerInformationApps.MainPage"
              BackgroundColor="#F5F5F5">
 
-    <!--<Shell.TitleView>
-        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="Center">
-            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Spacing="10" Grid.Column="0">
-                <Label Text="Ana Sayfa" FontSize="24" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Padding="0,0,0,0"/>
-            </StackLayout>
-
-            <StackLayout Orientation="Vertical" HorizontalOptions="End" VerticalOptions="EndAndExpand" Spacing="2" Padding="5,0,0,0" Grid.Column="1" WidthRequest="80" >
-                <ImageButton Source="profileicone.png" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent" Clicked="OpenProfilePage" />
-                <Label Text="Profil Sayfası" HorizontalOptions="Center" VerticalOptions="Center" FontSize="11" FontAttributes="Bold" TextColor="Black" />
-            </StackLayout>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-        </Grid>
-    </Shell.TitleView>-->
-
-
-
-
+    <ContentPage.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="#333333" StatusBarStyle="LightContent" />
+    </ContentPage.Behaviors>
     <ContentPage.Content>
         <Grid Padding="40" RowSpacing="30" ColumnSpacing="20">
             <!-- Satır Tanımları -->
@@ -93,8 +75,4 @@
             </StackLayout>
         </Grid>
     </ContentPage.Content>
-
-    <ContentPage.Behaviors>
-        <toolkit:StatusBarBehavior StatusBarColor="#333333" StatusBarStyle="LightContent" />
-    </ContentPage.Behaviors>
 </ContentPage>

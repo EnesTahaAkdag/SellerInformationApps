@@ -5,9 +5,10 @@ namespace SellerInformationApps.PopUps.ForgetPasswordPopUps
 {
 	public partial class VerificationCodeEntryPopup : Popup
 	{
-		public VerificationCodeEntryPopup(VerificationCodeEntryViewModel viewModel)
+		public VerificationCodeEntryPopup()
 		{
 			InitializeComponent();
+			var viewModel = new VerificationCodeEntryViewModel(this);
 			BindingContext = viewModel;
 		}
 	}

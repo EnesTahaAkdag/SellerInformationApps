@@ -1,10 +1,14 @@
-﻿using SellerInformationApps.ViewModel;
+﻿using CommunityToolkit.Maui.Views;
+using SellerInformationApps.PopUps.ForgetPasswordPopUps;
+using SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels;
+using SellerInformationApps.ViewModel;
 
 namespace SellerInformationApps;
 
 public partial class MainPage : ContentPage
 {
 	private readonly MainPageViewModel viewModel;
+
 
 	public MainPage()
 	{

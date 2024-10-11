@@ -5,7 +5,7 @@
            xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
            xmlns:sys="clr-namespace:System;assembly=mscorlib"
            xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
-           CanBeDismissedByTappingOutsideOfPopup="True">
+           CanBeDismissedByTappingOutsideOfPopup="False">
 
     <Frame BackgroundColor="#FFFFFF" HasShadow="True" VerticalOptions="Center" HorizontalOptions="Center" CornerRadius="25" Padding="20" BorderColor="Black">
 
@@ -13,7 +13,7 @@
             <Label Text="E-Mail Adresinize Gönderilen Doğrulama Kodunu Giriniz" HorizontalOptions="Center" TextColor="#666666" FontSize="12"/>
 
             <Frame BackgroundColor="#EFEFEF" CornerRadius="12" Padding="10">
-                <Entry x:Name="verificationCode" Placeholder="Doğrulama Kodunuzu Giriniz" BackgroundColor="Transparent" Text="{Binding VerificationCode}" TextColor="Black"/>
+                <Entry x:Name="verificationCode" Placeholder="Doğrulama Kodunuzu Giriniz" BackgroundColor="Transparent" Text="{Binding ValidationCode}" TextColor="Black"/>
             </Frame>
 
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="15">

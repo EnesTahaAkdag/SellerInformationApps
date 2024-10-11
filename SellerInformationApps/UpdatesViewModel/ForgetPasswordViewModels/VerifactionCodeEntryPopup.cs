@@ -14,8 +14,11 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 	{
 		private readonly Popup _popup;
 
+		private string UserName = Preferences.Get("UserName", string.Empty);
+
+
 		[ObservableProperty]
-		private int verificationCode;
+		private string validationCode;
 
 		public IRelayCommand SubmitCommand { get; }
 		public IRelayCommand CancelCommand { get; }
@@ -34,7 +37,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 		public async Task SubmitAsync()
 		{
-			if (VerificationCode == 0)
+			if (ValidationCode == null)
 			{
 				await Shell.Current.DisplayAlert("Hata", "Lütfen Doğrulama Kodunu Giriniz", "Tamam");
 				return;
@@ -42,17 +45,17 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 			try
 			{
-				var verificationCode = CreateVerificationCode();
+				var validationCode = CreateVerificationCode();
 
-				if (verificationCode == null)
+				if (validationCode == null)
 				{
 					await Shell.Current.DisplayAlert("Hata", "Geçersiz doğrulama kodu", "Tamam");
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://247d-37-130-115-91.ngrok-free.app");
-				string url = "https://247d-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/VerifyCode";
-				var content = new StringContent(JsonConvert.SerializeObject(verificationCode), Encoding.UTF8, "application/json");
+				var httpClient = HttpClientFactory.Create("https://bd1b-37-130-115-91.ngrok-free.app");
+				string url = "https://bd1b-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
+				var content = new StringContent(JsonConvert.SerializeObject(validationCode), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
 				{
@@ -65,12 +68,11 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 						{
 							await Shell.Current.DisplayAlert("Başarılı", "Doğrulama Kodu Doğrulandı", "Tamam");
 
-							var changePasswordViewModel = new ChangePasswordViewModel();
-							var popup = new ChangePasswordPopUp(changePasswordViewModel);
+							await Task.Run(() => ClosePopup());
+
+							var popup = new ChangePasswordPopUp();
 
 							Application.Current.MainPage.ShowPopup(popup);
-
-							ClosePopup();
 						}
 						else
 						{
@@ -95,7 +97,11 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 		private VerificationCodeModel CreateVerificationCode()
 		{
-			return new VerificationCodeModel { VerificationCode = VerificationCode };
+			return new VerificationCodeModel
+			{
+				UserName = UserName,
+				ValidationCode = ValidationCode
+			};
 		}
 	}
 }
