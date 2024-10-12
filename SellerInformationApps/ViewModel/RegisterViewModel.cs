@@ -65,22 +65,16 @@ namespace SellerInformationApps.ViewModel
 			{
 				var user = CreateUser();
 
-				string url = "https://bd1b-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-				var httpClient = HttpClientFactory.Create("https://bd1b-37-130-115-91.ngrok-free.app");
+				string url = "https://c177-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://c177-37-130-115-91.ngrok-free.app");
 
 				using (var content = new MultipartFormDataContent())
 				{
 					if (profileImageStream != null)
 					{
-						using (var memoryStream = new MemoryStream())
-						{
-							await profileImageStream.CopyToAsync(memoryStream);
-							var streamForApi = new MemoryStream(memoryStream.ToArray());
-
-							var streamContent = new StreamContent(streamForApi);
-							streamContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-							content.Add(streamContent, "ProfileImage", "profileImage.jpg");
-						}
+						var fileContent = new StreamContent(profileImageStream);
+						fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+						content.Add(fileContent, "ProfileImage", "profile.jpg");
 					}
 
 					content.Add(new StringContent(UserName), "UserName");
@@ -97,6 +91,7 @@ namespace SellerInformationApps.ViewModel
 						if (response.IsSuccessStatusCode)
 						{
 							await Shell.Current.DisplayAlert("Başarı", "Kayıt başarılı!", "Tamam");
+							await Shell.Current.GoToAsync("/LoginPage");
 						}
 						else
 						{
@@ -110,6 +105,8 @@ namespace SellerInformationApps.ViewModel
 				await Shell.Current.DisplayAlert("Hata", $"Kayıt işlemi sırasında bir hata oluştu: {ex.Message}\n{ex.StackTrace}", "Tamam");
 			}
 		}
+
+
 
 
 		private bool IsFormValid()

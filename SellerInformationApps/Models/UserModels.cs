@@ -90,7 +90,7 @@ namespace SellerInformationApps.Models
 
 		public DateTime? Age { get; set; }
 
-		public IFormFile ProfileImage { get; set; }
+		public IFormFile ProfileImageBase64 { get; set; }
 	}
 
 	public class VerificationCodeModel
@@ -116,7 +116,7 @@ namespace SellerInformationApps.Models
 
 	public class ChancePasswordApiResponse
 	{
-		public bool Succes { get; set; }
+		public bool Success { get; set; }
 
 		public string ErrorMessage { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
@@ -43,7 +44,15 @@ namespace SellerInformationApps.UpdatesViewModel
 			UserName = userProfileData.UserName;
 			Email = userProfileData.Email;
 			Age = userProfileData.Age.Value;
-			IFormFile profileImage = userProfileData.ProfileImage;
+
+			if (!string.IsNullOrEmpty(userProfileData.ProfileImageBase64))
+			{
+				ProfileImage = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(userProfileData.ProfileImageBase64)));
+			}
+			else
+			{
+				ProfileImage = "profilephotots.png";
+			}
 		}
 
 		[RelayCommand]

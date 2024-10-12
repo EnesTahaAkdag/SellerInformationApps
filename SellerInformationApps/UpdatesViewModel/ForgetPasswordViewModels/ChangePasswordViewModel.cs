@@ -26,7 +26,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 		private readonly string _userName = Preferences.Get("UserName", string.Empty);
 
-		private static readonly HttpClient httpClient = HttpClientFactory.Create("https://bd1b-37-130-115-91.ngrok-free.app");
+		private static readonly HttpClient httpClient = HttpClientFactory.Create("https://c177-37-130-115-91.ngrok-free.app");
 
 		public IRelayCommand UpdatePasswordCommand { get; }
 		public IRelayCommand CancelCommand { get; }
@@ -67,7 +67,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 					return;
 				}
 
-				string url = "https://bd1b-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ChangePassword";
+				string url = "https://c177-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ChangePassword";
 				var content = new StringContent(JsonConvert.SerializeObject(changePasswordModel), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content).ConfigureAwait(false))
@@ -75,7 +75,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 					string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 					var apiResponse = JsonConvert.DeserializeObject<ChancePasswordApiResponse>(json);
 
-					if (response.IsSuccessStatusCode && apiResponse.Succes)
+					if (response.IsSuccessStatusCode && apiResponse.Success)
 					{
 						await ShowToast("Şifreniz başarıyla değiştirildi. Lütfen giriş yapın.", true);
 						Preferences.Remove("UserName");

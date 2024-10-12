@@ -1,24 +1,38 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using ServiceHelper.Authentication;
 using System.Net.Http.Headers;
 using System.Text;
+using Microsoft.Maui.Controls;
+using System.Threading.Tasks;
 
 namespace SellerInformationApps.ViewModel
 {
 	public partial class ProfilePageViewModel : Authentication
 	{
-		[ObservableProperty] private string firstName;
-		[ObservableProperty] private string lastName;
-		[ObservableProperty] private string userName;
-		[ObservableProperty] private string email;
-		[ObservableProperty] private DateTime? age;
-		[ObservableProperty] private ImageSource profileImage;
-		[ObservableProperty] private bool isLoading;
+		[ObservableProperty] 
+		private string firstName;
+		
+		[ObservableProperty] 
+		private string lastName;
+		
+		[ObservableProperty] 
+		private string userName;
+		
+		[ObservableProperty] 
+		private string email;
+		
+		[ObservableProperty] 
+		private DateTime? age;
+		
+		[ObservableProperty]
+		private ImageSource profileImage;
+		
+		[ObservableProperty] 
+		private bool isLoading;
 
 		private readonly Authentication _authentication;
 		public UserProfileData UserProfileData { get; private set; }
@@ -53,7 +67,7 @@ namespace SellerInformationApps.ViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://bd1b-37-130-115-91.ngrok-free.app/");
+				var httpClient = HttpClientFactory.Create("https://c177-37-130-115-91.ngrok-free.app/");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				string url = $"/UserDataSendApi/DataSend?userName={userName}";
@@ -73,7 +87,7 @@ namespace SellerInformationApps.ViewModel
 								UserName = profileData.Data.UserName,
 								Email = profileData.Data.Email,
 								Age = profileData.Data.Age,
-								ProfileImage = profileData.Data.ProfileImage
+								ProfileImageBase64 = profileData.Data.ProfileImageBase64
 							};
 
 							FirstName = UserProfileData.FirstName;
@@ -82,18 +96,13 @@ namespace SellerInformationApps.ViewModel
 							Email = UserProfileData.Email;
 							Age = UserProfileData.Age;
 
-							if (UserProfileData.ProfileImage != null)
+							if (!string.IsNullOrEmpty(UserProfileData.ProfileImageBase64))
 							{
-								using (var memoryStream = new MemoryStream())
-								{
-									await UserProfileData.ProfileImage.CopyToAsync(memoryStream);
-									byte[] imageBytes = memoryStream.ToArray();
-									ProfileImage = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-								}
+								ProfileImage = ImageSource.FromUri(new Uri(UserProfileData.ProfileImageBase64));
 							}
 							else
 							{
-								ProfileImage = null;
+								ProfileImage = "profilephotots.png";
 							}
 						}
 						else
@@ -113,7 +122,6 @@ namespace SellerInformationApps.ViewModel
 			}
 		}
 
-
 		[RelayCommand]
 		public async Task LogOutAsync()
 		{
@@ -124,7 +132,7 @@ namespace SellerInformationApps.ViewModel
 		{
 			FirstName = LastName = UserName = Email = string.Empty;
 			Age = null;
-			ProfileImage = null;
+			ProfileImage = "profilephotots.png";
 		}
 	}
 }
