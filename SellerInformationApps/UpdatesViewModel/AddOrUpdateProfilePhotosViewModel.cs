@@ -5,6 +5,9 @@ using System.Net.Http.Headers;
 using ServiceHelper.Authentication;
 using System.Text;
 using PraPazar.ServiceHelper;
+using Microsoft.AspNetCore.Http;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Alerts;
 
 namespace SellerInformationApps.UpdatesViewModel
 {
@@ -14,15 +17,10 @@ namespace SellerInformationApps.UpdatesViewModel
 		private string userName = Preferences.Get("UserName", string.Empty);
 
 		[ObservableProperty]
-		private ImageSource profileImage = ImageSource.FromFile("profilephotos");
+		private ImageSource profileImage;
 
-		partial void OnProfileImageChanged(ImageSource value)
-		{
-			if (ProfileImage == null)
-			{
-				ProfileImage = ImageSource.FromFile("profilephotos.png");
-			}
-		}
+		
+
 		public async Task AddOrUpdateProfilePhotosAsync(Stream imageStream)
 		{
 			try
@@ -35,9 +33,9 @@ namespace SellerInformationApps.UpdatesViewModel
 				var password = Preferences.Get("Password", string.Empty);
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{password}"));
 
-				string url = "https://c177-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
+				string url = "https://c846-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
 
-				var client = HttpClientFactory.Create(url);
+				var client = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
 				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				using (var content = new MultipartFormDataContent())
@@ -52,7 +50,7 @@ namespace SellerInformationApps.UpdatesViewModel
 					{
 						if (!response.IsSuccessStatusCode)
 						{
-							await Shell.Current.DisplayAlert("Hata", $"Sunucu hatası: {response.StatusCode}", "Tamam");
+							await	ShowToast($"Sunucu hatası: {response.StatusCode}	");
 							return;
 						}
 
@@ -63,7 +61,7 @@ namespace SellerInformationApps.UpdatesViewModel
 			}
 			catch (Exception ex)
 			{
-				await Shell.Current.DisplayAlert("Hata", $"Bir hata oluştu: {ex.Message}", "Tamam");
+				await ShowToast($"Bir hata oluştu: {ex.Message}");
 			}
 		}
 
@@ -75,17 +73,26 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				if (profilePhotosApiResponse?.Success == true)
 				{
-					await Shell.Current.DisplayAlert("Başarılı", "Resminiz Güncellendi", "Tamam");
+					await ShowToast("Resminiz Güncellendi");
 				}
 				else
 				{
-					await Shell.Current.DisplayAlert("Hata", profilePhotosApiResponse?.ErrorMessage ?? "Bilinmeyen hata", "Tamam");
+					await ShowToast(profilePhotosApiResponse?.ErrorMessage ?? "Bilinmeyen hata");
 				}
 			}
 			catch (Exception ex)
 			{
-				await Shell.Current.DisplayAlert("Hata", ex.Message, "Tamam");
+				await ShowToast(ex.Message);
 			}
+		}
+		private async Task ShowToast(string message, bool isSuccess = false)
+		{
+			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
+
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				await toast.Show();
+			});
 		}
 	}
 }

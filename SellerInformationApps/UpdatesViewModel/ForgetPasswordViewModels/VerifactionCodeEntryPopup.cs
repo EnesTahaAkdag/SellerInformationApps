@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
@@ -39,7 +41,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 		{
 			if (ValidationCode == null)
 			{
-				await Shell.Current.DisplayAlert("Hata", "Lütfen Doğrulama Kodunu Giriniz", "Tamam");
+				await ShowToast("Lütfen Doğrulama Kodunu Giriniz");
 				return;
 			}
 
@@ -49,12 +51,12 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 				if (validationCode == null)
 				{
-					await Shell.Current.DisplayAlert("Hata", "Geçersiz doğrulama kodu", "Tamam");
+					await ShowToast("Geçersiz doğrulama kodu");
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://c177-37-130-115-91.ngrok-free.app");
-				string url = "https://c177-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
+				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
+				string url = "https://c846-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
 				var content = new StringContent(JsonConvert.SerializeObject(validationCode), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -76,22 +78,22 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 						}
 						else
 						{
-							await Shell.Current.DisplayAlert("Hata", apiResponse.ErrorMessage, "Tamam");
+							await ShowToast(apiResponse.ErrorMessage);
 						}
 					}
 					else
 					{
-						await Shell.Current.DisplayAlert("Hata", $"HTTP isteği başarısız oldu: {response.StatusCode}", "Tamam");
+						await ShowToast($"HTTP isteği başarısız oldu: {response.StatusCode}");
 					}
 				}
 			}
 			catch (HttpRequestException httpEx)
 			{
-				await Shell.Current.DisplayAlert("Hata", "İnternet bağlantınızı kontrol edin: " + httpEx.Message, "Tamam");
+				await ShowToast("İnternet bağlantınızı kontrol edin: " + httpEx.Message);
 			}
 			catch (Exception ex)
 			{
-				await Shell.Current.DisplayAlert("Hata", $"Bir Hata Oluştu: {ex.Message}", "Tamam");
+				await ShowToast($"Bir Hata Oluştu: {ex.Message}");
 			}
 		}
 
@@ -102,6 +104,16 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 				UserName = UserName,
 				ValidationCode = ValidationCode
 			};
+		}
+
+		private async Task ShowToast(string message, bool isSuccess = false)
+		{
+			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
+
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				await toast.Show();
+			});
 		}
 	}
 }

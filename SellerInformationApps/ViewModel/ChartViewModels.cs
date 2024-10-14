@@ -5,6 +5,8 @@ using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using System.Text;
 using System.Net.Http.Headers;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Alerts;
 
 namespace SellerInformationApps.ViewModel
 {
@@ -30,7 +32,7 @@ namespace SellerInformationApps.ViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://c177-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
@@ -80,17 +82,17 @@ namespace SellerInformationApps.ViewModel
 					}
 					else
 					{
-						await ShowAlertAsync("API İsteği Başarısız", apiResponses.ErrorMessage);
+						await ShowToast(apiResponses.ErrorMessage);
 					}
 				}
 				else
 				{
-					await ShowAlertAsync("HTTP İsteği Başarısız", response.StatusCode.ToString());
+					await ShowToast($"HTTP İsteği Başarısız {response.StatusCode.ToString()}");
 				}
 			}
 			catch (Exception ex)
 			{
-				await ShowAlertAsync("Hata Oluştu", $"Apiye İstek Atılamadı: {ex.Message}");
+				await ShowToast($"Apiye İstek Atılamadı: {ex.Message}");
 			}
 			finally
 			{
@@ -98,11 +100,13 @@ namespace SellerInformationApps.ViewModel
 			}
 		}
 
-		private async Task ShowAlertAsync(string title, string message)
+		private async Task ShowToast(string message, bool isSuccess = false)
 		{
+			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
+
 			await MainThread.InvokeOnMainThreadAsync(async () =>
 			{
-				await App.Current.MainPage.DisplayAlert("HATA", $"{title}: {message}", "Tamam");
+				await toast.Show();
 			});
 		}
 	}

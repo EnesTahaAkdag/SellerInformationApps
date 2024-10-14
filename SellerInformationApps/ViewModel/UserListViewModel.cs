@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
@@ -29,12 +31,12 @@ namespace SellerInformationApps.ViewModel
 				var password = Preferences.Get("Password", string.Empty);
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				
 
-				var httpClient = HttpClientFactory.Create("https://c177-37-130-115-91.ngrok-free.app");
+
+				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "https://c177-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList";
+				string url = "https://c846-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList";
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
 					using (var response = await httpClient.SendAsync(request))
@@ -52,21 +54,33 @@ namespace SellerInformationApps.ViewModel
 							}
 							else
 							{
-								await App.Current.MainPage.DisplayAlert("HATA", $"API İsteği Başarısız: {apiResponse.ErrorMessage}", "Tamam");
+								await ShowToast($"API İsteği Başarısız: {apiResponse.ErrorMessage}");
 							}
 						}
 						else
 						{
-							await App.Current.MainPage.DisplayAlert("HATA", $"HTTP İsteği Başarısız: {response.StatusCode}", "Tamam");
+							await ShowToast($"HTTP İsteği Başarısız: {response.StatusCode}");
 						}
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await App.Current.MainPage.DisplayAlert("HATA", $"Hata Oluştu Apiye İstek Atılamadı: {ex.Message}", "Tamam");
+				await ShowToast($"Hata Oluştu Apiye İstek Atılamadı: {ex.Message}");
 			}
-			finally { IsLoading = false; }
+			finally
+			{
+				IsLoading = false;
+			}
+		}
+		private async Task ShowToast(string message, bool isSuccess = false)
+		{
+			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
+
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				await toast.Show();
+			});
 		}
 	}
 }

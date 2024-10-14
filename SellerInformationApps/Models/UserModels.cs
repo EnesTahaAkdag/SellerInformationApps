@@ -65,6 +65,11 @@ namespace SellerInformationApps.Models
 		public IFormFile ProfileImage { get; set; }
 	}
 
+	public class UserProfilePhoto
+	{
+		public IFormFile ProfileImageBase64 { get; set; }
+	}
+
 	public class UpdateUser : UserProfileData
 	{
 	}
@@ -90,7 +95,7 @@ namespace SellerInformationApps.Models
 
 		public DateTime? Age { get; set; }
 
-		public IFormFile ProfileImageBase64 { get; set; }
+		public string ProfileImageBase64 { get; set; }
 	}
 
 	public class VerificationCodeModel
@@ -103,10 +108,10 @@ namespace SellerInformationApps.Models
 	{
 		public bool Success { get; set; }
 
-        public string ErrorMessage { get; set; }
+		public string ErrorMessage { get; set; }
 
-        public VerificationCodeModel Data{ get; set; }
-    }
+		public VerificationCodeModel Data { get; set; }
+	}
 
 	public class ChancePasswordModel
 	{

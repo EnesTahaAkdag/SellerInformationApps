@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
@@ -51,11 +53,11 @@ namespace SellerInformationApps.ViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://c177-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = $"https://c177-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://c846-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
 
 				using (var response = await httpClient.GetAsync(url))
 				{
@@ -74,18 +76,18 @@ namespace SellerInformationApps.ViewModel
 						}
 						else
 						{
-							await ShowAlertAsync("Hata", "Veri alınamadı.");
+							await ShowToast("Veri alınamadı.");
 						}
 					}
 					else
 					{
-						await ShowAlertAsync("Hata", "API isteği başarısız oldu.");
+						await ShowToast("API isteği başarısız oldu.");
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await ShowAlertAsync("Hata", $"API isteği sırasında bir hata oluştu: {ex.Message}");
+				await ShowToast($"API isteği sırasında bir hata oluştu: {ex.Message}");
 			}
 			finally
 			{
@@ -93,10 +95,14 @@ namespace SellerInformationApps.ViewModel
 			}
 		}
 
-		private async Task ShowAlertAsync(string title, string message)
+		private async Task ShowToast(string message, bool isSuccess = false)
 		{
-			await MainThread.InvokeOnMainThreadAsync(() =>
-				App.Current.MainPage.DisplayAlert(title, message, "Tamam"));
+			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
+
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				await toast.Show();
+			});
 		}
 	}
 }

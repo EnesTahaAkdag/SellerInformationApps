@@ -6,7 +6,7 @@
              xmlns:a="clr-namespace:SellerInformationApps.Converter"
              xmlns:viewModel="clr-namespace:SellerInformationApps.ViewModel"
              xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
-             BackgroundColor="#f5f5f5">
+             BackgroundColor="#F0F0F0">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -14,24 +14,37 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-
     <ContentPage.BindingContext>
         <viewModel:ChartPageViewModel/>
     </ContentPage.BindingContext>
 
-    <Grid Padding="15">
-        <!-- Yüklenme Animasyonu -->
-        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Color="Blue" WidthRequest="60" HeightRequest="60"/>
+    <Grid Padding="20" RowDefinitions="Auto, *">
 
-        <!-- Ana İçerik -->
-        <Frame IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" CornerRadius="10" Padding="10" HasShadow="True" BackgroundColor="White">
-            <Grid RowDefinitions="Auto, Auto, *" Margin="0,20,0,0">
+        <!-- Header Bölümü -->
+        <Grid Row="0" Padding="10,20" BackgroundColor="#3F51B5">
+            <Label Text="Mağaza Puanları" FontSize="24" FontAttributes="Bold" TextColor="White" 
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <!-- Ana İçerik Bölümü -->
+        <Grid Row="1" Margin="0,20,0,0">
+
+            <!-- Yüklenme Animasyonu -->
+            <StackLayout IsVisible="{Binding IsLoading}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                <ActivityIndicator IsRunning="{Binding IsLoading}" Color="#3F51B5" WidthRequest="80" HeightRequest="80"/>
+                <Label Text="Yükleniyor..." FontSize="Medium" TextColor="#3F51B5" HorizontalOptions="Center"/>
+            </StackLayout>
+
+            <Grid IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Padding="20" BackgroundColor="White" >
+            <!-- Grafik İçeriği -->
 
                 <!-- Grafik Başlığı -->
-                <Label Text="📊 Mağaza Puanı Grafiği" TextColor="#333333" HorizontalOptions="Center" VerticalOptions="Start" FontAttributes="Bold" FontSize="20" Padding="10" BackgroundColor="#f0f0f0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Margin="0,10,0,10" />
+                <Label Text="Mağaza Karşılaştırma Grafiği" FontSize="18" FontAttributes="Bold" TextColor="#333"
+                       HorizontalOptions="Center" VerticalOptions="Start" Margin="0,10,0,20"/>
 
-                <!-- Telerik Chart -->
-                <telerik:RadCartesianChart x:Name="chart" AutomationId="chart" Grid.Row="2" HeightRequest="350" BackgroundColor="White">
+                <!-- Grafik -->
+                <telerik:RadCartesianChart x:Name="chart" AutomationId="chart" VerticalOptions="FillAndExpand" 
+                                           HorizontalOptions="FillAndExpand" BackgroundColor="White">
                     <telerik:RadCartesianChart.ChartBehaviors>
                         <telerik:ChartSelectionBehavior DataPointSelectionMode="None" SeriesSelectionMode="None" />
                         <telerik:ChartTooltipBehavior TriggerMode="Tap" />
@@ -39,17 +52,19 @@
 
                     <!-- X Eksen -->
                     <telerik:RadCartesianChart.HorizontalAxis>
-                        <telerik:CategoricalAxis LineColor="#A9A9A9" MajorTickThickness="2" PlotMode="BetweenTicks" ShowLabels="True" LabelTextColor="Black" MajorTickBackgroundColor="#A9A9A9" />
+                        <telerik:CategoricalAxis LineColor="#CCCCCC" MajorTickThickness="1" PlotMode="BetweenTicks" 
+                                                 ShowLabels="True" LabelTextColor="#666666" MajorTickBackgroundColor="#CCCCCC" />
                     </telerik:RadCartesianChart.HorizontalAxis>
 
                     <!-- Y Eksen -->
                     <telerik:RadCartesianChart.VerticalAxis>
-                        <telerik:NumericalAxis LineColor="#A9A9A9" ShowLabels="True" LabelFormat="0" LabelTextColor="Black" LabelFitMode="Rotate" MajorTickBackgroundColor="#A9A9A9" />
+                        <telerik:NumericalAxis LineColor="#CCCCCC" ShowLabels="True" LabelFormat="0" LabelTextColor="#666666" 
+                                               MajorTickBackgroundColor="#CCCCCC" />
                     </telerik:RadCartesianChart.VerticalAxis>
 
                     <!-- Grid -->
                     <telerik:RadCartesianChart.Grid>
-                        <telerik:CartesianChartGrid MajorLinesVisibility="Y" MajorLineThickness="1" MajorLineColor="#D3D3D3" />
+                        <telerik:CartesianChartGrid MajorLinesVisibility="Y" MajorLineThickness="1" MajorLineColor="#EEEEEE" />
                     </telerik:RadCartesianChart.Grid>
 
                     <!-- Bar Serisi -->
@@ -58,7 +73,8 @@
                     </telerik:RadCartesianChart.Series>
 
                 </telerik:RadCartesianChart>
+
             </Grid>
-        </Frame>
+        </Grid>
     </Grid>
 </ContentPage>

@@ -27,8 +27,8 @@
                     <Image Source="{Binding ProfileImage}" WidthRequest="100" HeightRequest="100" Aspect="AspectFill"/>
                 </Frame>
                 <StackLayout VerticalOptions="Center" Spacing="10">
-                    <Button Text="Resim Ekle / Değiştir" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="16" FontAttributes="Bold" Clicked="OnAddOrChangeImageClicked"/>
-                    <Button Text="Şifreyi Değiştir" BackgroundColor="BlueViolet" Clicked="OpenUpdateProfilePasswordPupUp" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="16" FontAttributes="Bold"/>
+                    <Button Text="Profil Resmini Güncelle" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="15" FontAttributes="Bold" Clicked="OnAddOrChangeImageClicked"/>
+                    <Button Text="Şifreyi Güncelle" BackgroundColor="BlueViolet" Clicked="OpenUpdateProfilePasswordPupUp" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="16" FontAttributes="Bold"/>
                 </StackLayout>
             </StackLayout>
 

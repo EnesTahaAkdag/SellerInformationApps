@@ -7,7 +7,7 @@
 
     
 
-    <Frame BackgroundColor="#FFFFFF" HasShadow="True" Padding="25" CornerRadius="20" 
+    <Frame BackgroundColor="#FFFFFF" HasShadow="True" Padding="25" 
            VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
         <StackLayout Spacing="25" HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
 

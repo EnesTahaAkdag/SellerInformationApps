@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
@@ -38,7 +40,7 @@ namespace SellerInformationApps.ViewModel
 		{
 			if (!IsFormValid())
 			{
-				await App.Current.MainPage.DisplayAlert("Hata", "Lütfen tüm alanları doldurduğunuzdan emin olun.", "Tamam");
+				await ShowToast("Lütfen tüm alanları doldurduğunuzdan emin olun.");
 				return;
 			}
 
@@ -47,12 +49,12 @@ namespace SellerInformationApps.ViewModel
 				var user = CreateLoginUser();
 				if (user == null)
 				{
-					await App.Current.MainPage.DisplayAlert("Hata", "Giriş yaparken bir hata oluştu.", "Tamam");
+					await ShowToast("Giriş yaparken bir hata oluştu.");
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://c177-37-130-115-91.ngrok-free.app");
-				string url = "https://c177-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
+				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
+				string url = "https://c846-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -62,7 +64,7 @@ namespace SellerInformationApps.ViewModel
 			}
 			catch (Exception ex)
 			{
-				await App.Current.MainPage.DisplayAlert("Hata", $"Hata oluştu: {ex.Message}", "Tamam");
+				await ShowToast($"Hata oluştu: {ex.Message}");
 			}
 		}
 
@@ -96,12 +98,12 @@ namespace SellerInformationApps.ViewModel
 				}
 				else
 				{
-					await App.Current.MainPage.DisplayAlert("Başarısız", apiResponse.ErrorMessage, "Tamam");
+					await ShowToast(apiResponse.ErrorMessage);
 				}
 			}
 			else
 			{
-				await App.Current.MainPage.DisplayAlert("Hata", $"HTTP isteği başarısız oldu: {response.StatusCode}", "Tamam");
+				await ShowToast($"HTTP isteği başarısız oldu: {response.StatusCode}");
 			}
 		}
 
@@ -114,6 +116,16 @@ namespace SellerInformationApps.ViewModel
 			var popup = new ForgetPasswordPopUp();
 			Application.Current.MainPage.ShowPopup(popup);
 			await Task.CompletedTask;
+		}
+
+		private async Task ShowToast(string message, bool isSuccess = false)
+		{
+			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
+
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				await toast.Show();
+			});
 		}
 	}
 }

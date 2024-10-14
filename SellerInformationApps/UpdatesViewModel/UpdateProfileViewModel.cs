@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
@@ -26,8 +28,8 @@ namespace SellerInformationApps.UpdatesViewModel
 		[ObservableProperty] private string email;
 		[ObservableProperty] private DateTime age;
 		[ObservableProperty] private ImageSource profileImage;
-		[ObservableProperty] private IFormFile formFile;
 
+		public AddOrUpdateProfilePhotosViewModel ProfilePhotosViewModel { get; set; }
 
 		public UserProfileData UserProfile { get; internal set; }
 
@@ -35,7 +37,7 @@ namespace SellerInformationApps.UpdatesViewModel
 		{
 			if (userProfileData == null)
 			{
-				await Shell.Current.DisplayAlert("Hata", "Veriler gelmedi", "Tamam");
+				await ShowToast("Veriler gelmedi");
 				return;
 			}
 
@@ -47,12 +49,31 @@ namespace SellerInformationApps.UpdatesViewModel
 
 			if (!string.IsNullOrEmpty(userProfileData.ProfileImageBase64))
 			{
-				ProfileImage = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(userProfileData.ProfileImageBase64)));
+				try
+				{
+
+
+					if (!string.IsNullOrEmpty(userProfileData.ProfileImageBase64))
+					{
+						ProfileImage = ImageSource.FromUri(new Uri(userProfileData.ProfileImageBase64));
+					}
+					else
+					{
+						ProfileImage = "profilephotots.png";
+					}
+					ProfilePhotosViewModel.ProfileImage = ImageSource.FromUri(new Uri(userProfileData.ProfileImageBase64));
+
+				}
+				catch (Exception ex)
+				{
+					await ShowToast($"Profil resmi yüklenirken hata: {ex.Message}");
+				}
 			}
 			else
 			{
 				ProfileImage = "profilephotots.png";
 			}
+
 		}
 
 		[RelayCommand]
@@ -60,7 +81,7 @@ namespace SellerInformationApps.UpdatesViewModel
 		{
 			if (!IsFormValid())
 			{
-				await Shell.Current.DisplayAlert("Hata", "Lütfen tüm alanları doldurunuz", "Tamam");
+				await ShowToast("Lütfen tüm alanları doldurunuz");
 				return;
 			}
 
@@ -69,7 +90,7 @@ namespace SellerInformationApps.UpdatesViewModel
 				var user = ReadData();
 				if (user == null)
 				{
-					await Shell.Current.DisplayAlert("Hata", "Kullanıcı bilgileri güncellenirken bir hata oluştu", "Tamam");
+					await ShowToast("Kullanıcı bilgileri güncellenirken bir hata oluştu");
 					return;
 				}
 
@@ -91,7 +112,7 @@ namespace SellerInformationApps.UpdatesViewModel
 			}
 			catch (Exception ex)
 			{
-				await Shell.Current.DisplayAlert("Hata", $"Hata oluştu: {ex.Message}", "Tamam");
+				await ShowToast($"Hata oluştu: {ex.Message}");
 			}
 		}
 
@@ -129,13 +150,24 @@ namespace SellerInformationApps.UpdatesViewModel
 				}
 				else
 				{
-					await Shell.Current.DisplayAlert("Hata", "Güncelleme başarısız oldu", "Tamam");
+					await ShowToast("Güncelleme başarısız oldu");
 				}
 			}
 			else
 			{
-				await Shell.Current.DisplayAlert("Hata", $"Http isteği başarısız: {response.StatusCode}", "Tamam");
+				await ShowToast($"Http isteği başarısız: {response.StatusCode}");
 			}
 		}
+
+		private async Task ShowToast(string message, bool isSuccess = false)
+		{
+			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
+
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				await toast.Show();
+			});
+		}
+	
 	}
 }

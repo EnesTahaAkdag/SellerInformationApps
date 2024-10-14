@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
@@ -51,13 +53,13 @@ namespace SellerInformationApps.ViewModel
 		{
 			if (!IsFormValid())
 			{
-				await Shell.Current.DisplayAlert("Hata", "Lütfen tüm alanları doldurduğunuzdan emin olun.", "Tamam");
+				await ShowToast("Lütfen tüm alanları doldurduğunuzdan emin olun.");
 				return;
 			}
 
 			if (!ArePasswordsMatching())
 			{
-				await Shell.Current.DisplayAlert("Hata", "Şifreler eşleşmiyor.", "Tamam");
+				await ShowToast("Şifreler eşleşmiyor.");
 				return;
 			}
 
@@ -65,8 +67,8 @@ namespace SellerInformationApps.ViewModel
 			{
 				var user = CreateUser();
 
-				string url = "https://c177-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-				var httpClient = HttpClientFactory.Create("https://c177-37-130-115-91.ngrok-free.app");
+				string url = "https://c846-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
 
 				using (var content = new MultipartFormDataContent())
 				{
@@ -95,14 +97,14 @@ namespace SellerInformationApps.ViewModel
 						}
 						else
 						{
-							await Shell.Current.DisplayAlert("Hata", $"Sunucu hatası: {response.StatusCode}\n{responseContent}", "Tamam");
+							await ShowToast($"Sunucu hatası: {response.StatusCode}\n{responseContent}");
 						}
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await Shell.Current.DisplayAlert("Hata", $"Kayıt işlemi sırasında bir hata oluştu: {ex.Message}\n{ex.StackTrace}", "Tamam");
+				await ShowToast($"Kayıt işlemi sırasında bir hata oluştu: {ex.Message}\n{ex.StackTrace}");
 			}
 		}
 
@@ -166,6 +168,16 @@ namespace SellerInformationApps.ViewModel
 		private async Task NavigateToLoginPageAsync()
 		{
 			await Shell.Current.GoToAsync("//LoginPage");
+		}
+
+		private async Task ShowToast(string message, bool isSuccess = false)
+		{
+			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
+
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				await toast.Show();
+			});
 		}
 	}
 }

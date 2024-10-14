@@ -6,32 +6,32 @@ using SellerInformationApps.Models;
 using ServiceHelper.Authentication;
 using System.Net.Http.Headers;
 using System.Text;
-using Microsoft.Maui.Controls;
-using System.Threading.Tasks;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Alerts;
 
 namespace SellerInformationApps.ViewModel
 {
 	public partial class ProfilePageViewModel : Authentication
 	{
-		[ObservableProperty] 
+		[ObservableProperty]
 		private string firstName;
-		
-		[ObservableProperty] 
+
+		[ObservableProperty]
 		private string lastName;
-		
-		[ObservableProperty] 
+
+		[ObservableProperty]
 		private string userName;
-		
-		[ObservableProperty] 
+
+		[ObservableProperty]
 		private string email;
-		
-		[ObservableProperty] 
+
+		[ObservableProperty]
 		private DateTime? age;
-		
+
 		[ObservableProperty]
 		private ImageSource profileImage;
-		
-		[ObservableProperty] 
+
+		[ObservableProperty]
 		private bool isLoading;
 
 		private readonly Authentication _authentication;
@@ -47,7 +47,7 @@ namespace SellerInformationApps.ViewModel
 		{
 			if (!_authentication.IsLoggedIn)
 			{
-				await Shell.Current.DisplayAlert("Hata", "Lütfen giriş yapın", "Tamam");
+				await ShowToast("Lütfen giriş yapın");
 				await Shell.Current.GoToAsync("//LoginPage");
 			}
 			else
@@ -67,7 +67,7 @@ namespace SellerInformationApps.ViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://c177-37-130-115-91.ngrok-free.app/");
+				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app/");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				string url = $"/UserDataSendApi/DataSend?userName={userName}";
@@ -107,18 +107,18 @@ namespace SellerInformationApps.ViewModel
 						}
 						else
 						{
-							await Shell.Current.DisplayAlert("Hata", $"API isteği başarısız: {profileData?.ErrorMessage}", "Tamam");
+							await ShowToast($"API isteği başarısız: {profileData?.ErrorMessage}");
 						}
 					}
 					else
 					{
-						await Shell.Current.DisplayAlert("Hata", $"API isteği başarısız: {response.StatusCode}", "Tamam");
+						await ShowToast($"API isteği başarısız: {response.StatusCode}");
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await Shell.Current.DisplayAlert("Hata", $"Hata oluştu: {ex.Message}", "Tamam");
+				await ShowToast($"Hata oluştu: {ex.Message}");
 			}
 		}
 
@@ -133,6 +133,16 @@ namespace SellerInformationApps.ViewModel
 			FirstName = LastName = UserName = Email = string.Empty;
 			Age = null;
 			ProfileImage = "profilephotots.png";
+		}
+
+		private async Task ShowToast(string message, bool isSuccess = false)
+		{
+			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
+
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				await toast.Show();
+			});
 		}
 	}
 }

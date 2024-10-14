@@ -26,11 +26,13 @@ namespace SellerInformationApps.PopUps
 		{
 			Close();
 		}
+
 		private void OpenUpdateProfilePasswordPupUp(object sender, EventArgs e)
 		{
 			var popup = new UpdateProfilePasswordPopUp(new UpdateProfilePassword());
 			Application.Current.MainPage.ShowPopup(popup);
 		}
+
 		private void OnAddOrChangeImageClicked(object sender, EventArgs e)
 		{
 			var popup = new UpdateOrAddProfilePhotoPopUp(new AddOrUpdateProfilePhotosViewModel());

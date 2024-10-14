@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using CommunityToolkit.Maui.Views;
 using SellerInformationApps.PopUps.ForgetPasswordPopUps;
 using PraPazar.ServiceHelper;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Alerts;
 
 namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 {
@@ -36,7 +38,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 		{
 			if (!IsFormValid())
 			{
-				await Shell.Current.DisplayAlert("Hata", "Lütfen tüm alanları doldurduğunuzdan emin olun", "Tamam");
+				await ShowToast("Lütfen tüm alanları doldurduğunuzdan emin olun");
 				return;
 			}
 
@@ -46,12 +48,12 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 				if (forgetPassword == null)
 				{
-					await Shell.Current.DisplayAlert("Hata", "Bir hata oluştu", "Tamam");
+					await ShowToast("Bir hata oluştu");
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://c177-37-130-115-91.ngrok-free.app");
-				string url = "https://c177-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ForgetPassword";
+				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
+				string url = "https://c846-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ForgetPassword";
 
 				var content = new StringContent(JsonConvert.SerializeObject(forgetPassword), Encoding.UTF8, "application/json");
 
@@ -76,18 +78,18 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 						else
 						{
-							await Shell.Current.DisplayAlert("Hata", apiResponse.ErrorMessage, "Tamam");
+							await ShowToast(apiResponse.ErrorMessage);
 						}
 					}
 					else
 					{
-						await Shell.Current.DisplayAlert("Hata", $"HTTP isteği başarısız oldu: {response.StatusCode}", "Tamam");
+						await ShowToast($"HTTP isteği başarısız oldu: {response.StatusCode}");
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await Shell.Current.DisplayAlert("Hata", $"Bir hata oluştu: {ex.Message}", "Tamam");
+				await ShowToast($"Bir hata oluştu: {ex.Message}");
 			}
 		}
 
@@ -102,6 +104,16 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 			{
 				UserName = UserName,
 			};
+		}
+
+		private async Task ShowToast(string message, bool isSuccess = false)
+		{
+			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
+
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				await toast.Show();
+			});
 		}
 	}
 }
