@@ -63,11 +63,19 @@ namespace SellerInformationApps.Models
 	{
 		public string UserName { get; set; }
 		public IFormFile ProfileImage { get; set; }
+		public ImageSource NewProfileImage { get; set; }
+	}
+
+	public class ProfilePohotosApiResponse
+	{
+		public bool Success { get; set; }
+		public string ErrorMessage { get; set; }
+		public ProfilePhotoModel Data { get; set; }
 	}
 
 	public class UserProfilePhoto
 	{
-		public IFormFile ProfileImageBase64 { get; set; }
+		public string  ProfileImageSource { get; set; }
 	}
 
 	public class UpdateUser : UserProfileData
@@ -128,12 +136,6 @@ namespace SellerInformationApps.Models
 		public ChancePasswordModel Data { get; set; }
 	}
 
-	public class ProfilePohotosApiResponse
-	{
-		public bool Success { get; set; }
-		public string ErrorMessage { get; set; }
-		public ProfilePhotoModel Data { get; set; }
-	}
 
 	public class UserList : User
 	{

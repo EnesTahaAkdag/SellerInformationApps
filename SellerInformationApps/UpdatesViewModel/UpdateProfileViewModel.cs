@@ -59,13 +59,13 @@ namespace SellerInformationApps.UpdatesViewModel
 				}
 				catch (Exception ex)
 				{
+					ProfileImage = "profilephotots.png";
 					await alertsHelper.ShowSnackBar($"Profil resmi yüklenirken hata: {ex.Message}", true);
 				}
 			}
 			else
 			{
 				ProfileImage = "profilephotots.png";
-				ProfilePhotosViewModel.ProfileImage = ImageSource.FromFile("profilephotots.png");
 			}
 
 		}

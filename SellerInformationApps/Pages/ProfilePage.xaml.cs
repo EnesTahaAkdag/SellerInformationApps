@@ -2,11 +2,15 @@ using CommunityToolkit.Maui.Views;
 using SellerInformationApps.PopUps;
 using SellerInformationApps.UpdatesViewModel;
 using SellerInformationApps.ViewModel;
+using ServiceHelper.Alerts;
 
 namespace SellerInformationApps.Pages
 {
 	public partial class ProfilePage : ContentPage
 	{
+
+		public AlertsHelper alertsHelper = new AlertsHelper();
+
 		private readonly ProfilePageViewModel _viewModel;
 
 		public string FirstName { get; set; }
@@ -32,7 +36,7 @@ namespace SellerInformationApps.Pages
 			}
 			catch (Exception ex)
 			{
-				await DisplayAlert("Hata", $"Bir hata oluþtu: {ex.Message}", "Tamam");
+				await alertsHelper.ShowSnackBar($"Bir hata oluþtu: {ex.Message}", true);
 			}
 		}
 
@@ -61,12 +65,12 @@ namespace SellerInformationApps.Pages
 				}
 				else
 				{
-					await Shell.Current.DisplayAlert("Hata", "Profil bilgileri yüklenemedi", "Tamam");
+					await alertsHelper.ShowSnackBar("Profil bilgileri yüklenemedi", true);
 				}
 			}
 			catch (Exception ex)
 			{
-				await DisplayAlert("Hata", $"Profil güncellenirken bir hata oluþtu: {ex.Message}", "Tamam");
+				await alertsHelper.ShowSnackBar($"Profil güncellenirken bir hata oluþtu: {ex.Message}", true);
 			}
 		}
 	}

@@ -12,7 +12,7 @@ namespace SellerInformationApps.UpdatesViewModel
 {
 	public partial class AddOrUpdateProfilePhotosViewModel : Authentication
 	{
-		public AlertsHelper alertsHelper = new AlertsHelper();
+		private readonly AlertsHelper _alertsHelper = new AlertsHelper();
 
 		[ObservableProperty]
 		private string userName = Preferences.Get("UserName", string.Empty);
@@ -20,9 +20,24 @@ namespace SellerInformationApps.UpdatesViewModel
 		[ObservableProperty]
 		public ImageSource profileImage;
 
-		public AddOrUpdateProfilePhotosViewModel()
+		public async Task WriteData(UserProfilePhoto userProfilePhoto)
 		{
-			ProfileImage = SharedDataService.Instance.ProfileImage;
+			if (userProfilePhoto == null)
+			{
+				await _alertsHelper.ShowSnackBar("Profil resmi gelmedi", true);
+			}
+			else
+			{
+				try
+				{
+					ProfileImage = ImageSource.FromUri(new Uri(userProfilePhoto.ProfileImageSource));
+				}
+				catch (Exception ex)
+				{
+					ProfileImage = "profilephotots.png";
+					await _alertsHelper.ShowSnackBar($"Hata oluştu: {ex.Message}", true);
+				}
+			}
 		}
 
 		public async Task AddOrUpdateProfilePhotosAsync(Stream imageStream)
@@ -34,7 +49,7 @@ namespace SellerInformationApps.UpdatesViewModel
 					imageStream.Position = 0;
 				}
 
-				var password = Preferences.Get("Password", string.Empty);
+				string password = Preferences.Get("Password", string.Empty);
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{password}"));
 
 				string url = "https://a8c0-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
@@ -54,7 +69,7 @@ namespace SellerInformationApps.UpdatesViewModel
 					{
 						if (!response.IsSuccessStatusCode)
 						{
-							await alertsHelper.ShowSnackBar($"Sunucu hatası: {response.StatusCode}", true);
+							await _alertsHelper.ShowSnackBar($"Sunucu hatası: {response.StatusCode}", true);
 							return;
 						}
 
@@ -65,7 +80,7 @@ namespace SellerInformationApps.UpdatesViewModel
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"Bir hata oluştu: {ex.Message}", true);
+				await _alertsHelper.ShowSnackBar($"Bir hata oluştu: {ex.Message}", true);
 			}
 		}
 
@@ -77,16 +92,16 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				if (profilePhotosApiResponse?.Success == true)
 				{
-					await alertsHelper.ShowSnackBar("Resminiz Güncellendi");
+					await _alertsHelper.ShowSnackBar("Resminiz güncellendi");
 				}
 				else
 				{
-					await alertsHelper.ShowSnackBar(profilePhotosApiResponse?.ErrorMessage ?? "Bilinmeyen hata", true);
+					await _alertsHelper.ShowSnackBar(profilePhotosApiResponse?.ErrorMessage ?? "Bilinmeyen hata", true);
 				}
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar(ex.Message, true);
+				await _alertsHelper.ShowSnackBar(ex.Message, true);
 			}
 		}
 	}

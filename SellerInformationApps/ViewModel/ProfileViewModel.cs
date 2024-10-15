@@ -6,10 +6,7 @@ using SellerInformationApps.Models;
 using ServiceHelper.Authentication;
 using System.Net.Http.Headers;
 using System.Text;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Alerts;
 using ServiceHelper.Alerts;
-using SellerInformationApps.Services;
 
 namespace SellerInformationApps.ViewModel
 {
@@ -27,10 +24,12 @@ namespace SellerInformationApps.ViewModel
 		[ObservableProperty] private bool isLoading;
 
 		public UserProfileData UserProfileData { get; private set; }
+		public UserProfilePhoto UserProfilePhoto { get; private set; }
 
 		public ProfilePageViewModel()
 		{
 			_authentication = Authentication.Instance;
+			UserProfilePhoto = new UserProfilePhoto();
 		}
 
 		[RelayCommand]
@@ -120,11 +119,15 @@ namespace SellerInformationApps.ViewModel
 			Email = data.Email;
 			Age = data.Age;
 
-			ProfileImage = !string.IsNullOrEmpty(data.ProfileImageBase64)
-				? ImageSource.FromUri(new Uri(data.ProfileImageBase64))
-				: "profilephotots.png";
-
-			SharedDataService.Instance.ProfileImage = ProfileImage;
+			if (!string.IsNullOrEmpty(data.ProfileImageBase64))
+			{
+				ProfileImage = ImageSource.FromUri(new Uri(data.ProfileImageBase64));
+				UserProfilePhoto.ProfileImageSource = UserProfileData.ProfileImageBase64;
+			}
+			else
+			{
+				UserProfilePhoto.ProfileImageSource = "profilephotots.png";
+			}
 		}
 
 		[RelayCommand]
@@ -139,6 +142,7 @@ namespace SellerInformationApps.ViewModel
 			FirstName = LastName = UserName = Email = string.Empty;
 			Age = null;
 			ProfileImage = null;
+			UserProfilePhoto = new UserProfilePhoto();
 		}
 	}
 }
