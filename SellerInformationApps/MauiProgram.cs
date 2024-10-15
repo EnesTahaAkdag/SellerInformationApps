@@ -19,7 +19,11 @@ namespace SellerInformationApps
 				.UseMauiApp<App>()
 				.UseTelerik()
 				.UseSkiaSharp()
-				.UseMauiCommunityToolkit()
+				.UseMauiCommunityToolkit(
+				options =>
+				{
+					options.SetShouldEnableSnackbarOnWindows(true);
+				})
 				.ConfigureFonts(fonts =>
 				{
 					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

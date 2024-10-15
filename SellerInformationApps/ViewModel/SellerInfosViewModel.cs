@@ -4,17 +4,18 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
+using ServiceHelper.Alerts;
 using ServiceHelper.Authentication;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SellerInformationApps.ViewModel
 {
 	public partial class SellerInfosViewModel : Authentication
 	{
+		public AlertsHelper alertsHelper = new AlertsHelper();
+
 		[ObservableProperty]
 		private bool isLoading;
 
@@ -53,11 +54,11 @@ namespace SellerInformationApps.ViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = $"https://c846-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://a8c0-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
 
 				using (var response = await httpClient.GetAsync(url))
 				{
@@ -76,33 +77,23 @@ namespace SellerInformationApps.ViewModel
 						}
 						else
 						{
-							await ShowToast("Veri alınamadı.");
+							await alertsHelper.ShowSnackBar("Veri alınamadı.", true);
 						}
 					}
 					else
 					{
-						await ShowToast("API isteği başarısız oldu.");
+						await alertsHelper.ShowSnackBar("API isteği başarısız oldu.",true);
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await ShowToast($"API isteği sırasında bir hata oluştu: {ex.Message}");
+				await alertsHelper.ShowSnackBar($"API isteği sırasında bir hata oluştu: {ex.Message}",true);
 			}
 			finally
 			{
 				_semaphore.Release();
 			}
-		}
-
-		private async Task ShowToast(string message, bool isSuccess = false)
-		{
-			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
-
-			await MainThread.InvokeOnMainThreadAsync(async () =>
-			{
-				await toast.Show();
-			});
 		}
 	}
 }

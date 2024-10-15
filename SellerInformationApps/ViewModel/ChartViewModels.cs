@@ -1,12 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
-using System.Text;
+using ServiceHelper.Alerts;
+using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Alerts;
+using System.Text;
 
 namespace SellerInformationApps.ViewModel
 {
@@ -14,6 +13,7 @@ namespace SellerInformationApps.ViewModel
 	{
 		[ObservableProperty]
 		private ObservableCollection<SellerRaitingScore> data = new ObservableCollection<SellerRaitingScore>();
+
 
 		[ObservableProperty]
 		private bool isLoading;
@@ -25,6 +25,7 @@ namespace SellerInformationApps.ViewModel
 
 		public async Task GetCategoricalDataAsync()
 		{
+			var alertsHelper = new AlertsHelper();
 			try
 			{
 				IsLoading = true;
@@ -32,7 +33,7 @@ namespace SellerInformationApps.ViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
@@ -82,32 +83,22 @@ namespace SellerInformationApps.ViewModel
 					}
 					else
 					{
-						await ShowToast(apiResponses.ErrorMessage);
+						await alertsHelper.ShowSnackBar(apiResponses.ErrorMessage, true);
 					}
 				}
 				else
 				{
-					await ShowToast($"HTTP İsteği Başarısız {response.StatusCode.ToString()}");
+					await alertsHelper.ShowSnackBar($"HTTP İsteği Başarısız {response.StatusCode.ToString()}", true);
 				}
 			}
 			catch (Exception ex)
 			{
-				await ShowToast($"Apiye İstek Atılamadı: {ex.Message}");
+				await alertsHelper.ShowSnackBar($"Apiye İstek Atılamadı: {ex.Message}", true);
 			}
 			finally
 			{
 				IsLoading = false;
 			}
-		}
-
-		private async Task ShowToast(string message, bool isSuccess = false)
-		{
-			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
-
-			await MainThread.InvokeOnMainThreadAsync(async () =>
-			{
-				await toast.Show();
-			});
 		}
 	}
 }

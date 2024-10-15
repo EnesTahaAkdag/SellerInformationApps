@@ -5,21 +5,25 @@ using System.Net.Http.Headers;
 using ServiceHelper.Authentication;
 using System.Text;
 using PraPazar.ServiceHelper;
-using Microsoft.AspNetCore.Http;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Alerts;
+using ServiceHelper.Alerts;
+using SellerInformationApps.Services;
 
 namespace SellerInformationApps.UpdatesViewModel
 {
 	public partial class AddOrUpdateProfilePhotosViewModel : Authentication
 	{
+		public AlertsHelper alertsHelper = new AlertsHelper();
+
 		[ObservableProperty]
 		private string userName = Preferences.Get("UserName", string.Empty);
 
 		[ObservableProperty]
-		private ImageSource profileImage;
+		public ImageSource profileImage;
 
-		
+		public AddOrUpdateProfilePhotosViewModel()
+		{
+			ProfileImage = SharedDataService.Instance.ProfileImage;
+		}
 
 		public async Task AddOrUpdateProfilePhotosAsync(Stream imageStream)
 		{
@@ -33,9 +37,9 @@ namespace SellerInformationApps.UpdatesViewModel
 				var password = Preferences.Get("Password", string.Empty);
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{password}"));
 
-				string url = "https://c846-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
+				string url = "https://a8c0-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
 
-				var client = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
+				var client = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
 				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				using (var content = new MultipartFormDataContent())
@@ -50,7 +54,7 @@ namespace SellerInformationApps.UpdatesViewModel
 					{
 						if (!response.IsSuccessStatusCode)
 						{
-							await	ShowToast($"Sunucu hatası: {response.StatusCode}	");
+							await alertsHelper.ShowSnackBar($"Sunucu hatası: {response.StatusCode}", true);
 							return;
 						}
 
@@ -61,7 +65,7 @@ namespace SellerInformationApps.UpdatesViewModel
 			}
 			catch (Exception ex)
 			{
-				await ShowToast($"Bir hata oluştu: {ex.Message}");
+				await alertsHelper.ShowSnackBar($"Bir hata oluştu: {ex.Message}", true);
 			}
 		}
 
@@ -73,26 +77,17 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				if (profilePhotosApiResponse?.Success == true)
 				{
-					await ShowToast("Resminiz Güncellendi");
+					await alertsHelper.ShowSnackBar("Resminiz Güncellendi");
 				}
 				else
 				{
-					await ShowToast(profilePhotosApiResponse?.ErrorMessage ?? "Bilinmeyen hata");
+					await alertsHelper.ShowSnackBar(profilePhotosApiResponse?.ErrorMessage ?? "Bilinmeyen hata", true);
 				}
 			}
 			catch (Exception ex)
 			{
-				await ShowToast(ex.Message);
+				await alertsHelper.ShowSnackBar(ex.Message, true);
 			}
-		}
-		private async Task ShowToast(string message, bool isSuccess = false)
-		{
-			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
-
-			await MainThread.InvokeOnMainThreadAsync(async () =>
-			{
-				await toast.Show();
-			});
 		}
 	}
 }

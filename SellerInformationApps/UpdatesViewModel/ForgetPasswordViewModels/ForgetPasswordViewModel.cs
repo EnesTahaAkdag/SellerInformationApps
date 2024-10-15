@@ -6,13 +6,14 @@ using Newtonsoft.Json;
 using CommunityToolkit.Maui.Views;
 using SellerInformationApps.PopUps.ForgetPasswordPopUps;
 using PraPazar.ServiceHelper;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Alerts;
+using ServiceHelper.Alerts;
 
 namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 {
 	public partial class ForgetPasswordViewModel : ObservableObject
 	{
+		public AlertsHelper alertsHelper = new AlertsHelper();
+
 		private readonly Popup _popup;
 
 		[ObservableProperty]
@@ -38,7 +39,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 		{
 			if (!IsFormValid())
 			{
-				await ShowToast("Lütfen tüm alanları doldurduğunuzdan emin olun");
+				await alertsHelper.ShowSnackBar("Lütfen tüm alanları doldurduğunuzdan emin olun",true);
 				return;
 			}
 
@@ -48,12 +49,12 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 				if (forgetPassword == null)
 				{
-					await ShowToast("Bir hata oluştu");
+					await alertsHelper.ShowSnackBar("Bir hata oluştu", true);
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
-				string url = "https://c846-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ForgetPassword";
+				var httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
+				string url = "https://a8c0-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ForgetPassword";
 
 				var content = new StringContent(JsonConvert.SerializeObject(forgetPassword), Encoding.UTF8, "application/json");
 
@@ -67,7 +68,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 						if (apiResponse.Success)
 						{
 							Preferences.Set("UserName",UserName);
-							await Shell.Current.DisplayAlert("Başarılı", "Doğrulama kodu e-posta adresinize gönderildi", "Tamam");
+							await alertsHelper.ShowSnackBar("Doğrulama kodu e-posta adresinize gönderildi");
 
 							var verificationCodeEntryPopup = new VerificationCodeEntryPopup();
 
@@ -78,18 +79,18 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 						else
 						{
-							await ShowToast(apiResponse.ErrorMessage);
+							await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage, true);
 						}
 					}
 					else
 					{
-						await ShowToast($"HTTP isteği başarısız oldu: {response.StatusCode}");
+						await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}", true);
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await ShowToast($"Bir hata oluştu: {ex.Message}");
+				await alertsHelper.ShowSnackBar($"Bir hata oluştu: {ex.Message}", true);
 			}
 		}
 
@@ -104,16 +105,6 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 			{
 				UserName = UserName,
 			};
-		}
-
-		private async Task ShowToast(string message, bool isSuccess = false)
-		{
-			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
-
-			await MainThread.InvokeOnMainThreadAsync(async () =>
-			{
-				await toast.Show();
-			});
 		}
 	}
 }

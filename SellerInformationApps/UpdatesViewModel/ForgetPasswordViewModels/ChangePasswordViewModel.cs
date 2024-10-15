@@ -11,11 +11,15 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Core;
+using ServiceHelper.Alerts;
 
 namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 {
 	public partial class ChangePasswordViewModel : Authentication
 	{
+		public AlertsHelper alertsHelper = new AlertsHelper();
+
+
 		private readonly Popup _popup;
 
 		[ObservableProperty]
@@ -26,7 +30,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 		private readonly string _userName = Preferences.Get("UserName", string.Empty);
 
-		private static readonly HttpClient httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
+		private static readonly HttpClient httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
 
 		public IRelayCommand UpdatePasswordCommand { get; }
 		public IRelayCommand CancelCommand { get; }
@@ -48,13 +52,13 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 		{
 			if (!IsFormValid())
 			{
-				await ShowToast("Lütfen tüm alanları doldurduğunuzdan emin olun.");
+				await alertsHelper.ShowSnackBar("Lütfen tüm alanları doldurduğunuzdan emin olun.", true);
 				return;
 			}
 
 			if (string.IsNullOrEmpty(_userName))
 			{
-				await ShowToast("Kullanıcı adı boş olamaz.");
+				await alertsHelper.ShowSnackBar("Kullanıcı adı boş olamaz.", true);
 				return;
 			}
 
@@ -63,11 +67,11 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 				var changePasswordModel = CreateNewPasswordModel();
 				if (changePasswordModel == null)
 				{
-					await ShowToast("Kullanıcı adı boş olamaz.");
+					await alertsHelper.ShowSnackBar("Kullanıcı adı boş olamaz.", true);
 					return;
 				}
 
-				string url = "https://c846-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ChangePassword";
+				string url = "https://a8c0-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ChangePassword";
 				var content = new StringContent(JsonConvert.SerializeObject(changePasswordModel), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content).ConfigureAwait(false))
@@ -77,19 +81,19 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 					if (response.IsSuccessStatusCode && apiResponse.Success)
 					{
-						await ShowToast("Şifreniz başarıyla değiştirildi. Lütfen giriş yapın.", true);
+						await alertsHelper.ShowSnackBar("Şifreniz başarıyla değiştirildi. Lütfen giriş yapın.");
 						Preferences.Remove("UserName");
 						ClosePopup();
 					}
 					else
 					{
-						await ShowToast(apiResponse?.ErrorMessage ?? "Bilinmeyen bir hata oluştu.");
+						await alertsHelper.ShowSnackBar(apiResponse?.ErrorMessage ?? "Bilinmeyen bir hata oluştu.", true);
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await ShowToast($"Bir hata oluştu: {ex.Message}");
+				await alertsHelper.ShowSnackBar($"Bir hata oluştu: {ex.Message}", true);
 			}
 		}
 
@@ -105,16 +109,6 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 				UserName = _userName,
 				Password = Password
 			};
-		}
-		
-		private async Task ShowToast(string message, bool isSuccess = false)
-		{
-			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
-
-			await MainThread.InvokeOnMainThreadAsync(async () =>
-			{
-				await toast.Show();
-			});
 		}
 	}
 }

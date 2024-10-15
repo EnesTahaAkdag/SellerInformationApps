@@ -21,18 +21,19 @@ namespace SellerInformationApps.Pages
 		protected override async void OnAppearing()
 		{
 			base.OnAppearing();
-			await _viewModel.Accessed();
-
-			if (!string.IsNullOrEmpty(FirstName))
+			try
 			{
-				_viewModel.FirstName = FirstName;
-			}
-		}
+				await _viewModel.AccessedAsync();
 
-		protected override void OnDisappearing()
-		{
-			base.OnDisappearing();
-			ClearData();
+				if (!string.IsNullOrEmpty(FirstName))
+				{
+					_viewModel.FirstName = FirstName;
+				}
+			}
+			catch (Exception ex)
+			{
+				await DisplayAlert("Hata", $"Bir hata oluþtu: {ex.Message}", "Tamam");
+			}
 		}
 
 		private void ClearData()
@@ -42,23 +43,30 @@ namespace SellerInformationApps.Pages
 
 		private async void UpdateProfileAsync(object sender, EventArgs e)
 		{
-			if (_viewModel.UserProfileData != null)
+			try
 			{
-				var userProfileUpdate = new UpdateProfileViewModel();
-				var profilePhotosViewModel = new AddOrUpdateProfilePhotosViewModel();
-
-				await userProfileUpdate.WriteData(_viewModel.UserProfileData);
-
-				var result = await this.ShowPopupAsync(new UpdateProfilePopUp(userProfileUpdate, profilePhotosViewModel));
-
-				if (result != null)
+				if (_viewModel.UserProfileData != null)
 				{
-					await _viewModel.Accessed();
+					var userProfileUpdate = new UpdateProfileViewModel();
+					var profilePhotosViewModel = new AddOrUpdateProfilePhotosViewModel();
+
+					await userProfileUpdate.WriteData(_viewModel.UserProfileData);
+
+					var result = await this.ShowPopupAsync(new UpdateProfilePopUp(userProfileUpdate, profilePhotosViewModel));
+
+					if (result != null)
+					{
+						await _viewModel.AccessedAsync();
+					}
+				}
+				else
+				{
+					await Shell.Current.DisplayAlert("Hata", "Profil bilgileri yüklenemedi", "Tamam");
 				}
 			}
-			else
+			catch (Exception ex)
 			{
-				await Shell.Current.DisplayAlert("Hata", "Profil bilgileri yüklenemedi", "Tamam");
+				await DisplayAlert("Hata", $"Profil güncellenirken bir hata oluþtu: {ex.Message}", "Tamam");
 			}
 		}
 	}

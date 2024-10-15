@@ -1,11 +1,10 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using SellerInformationApps.ServiceHelper;
+using ServiceHelper.Alerts;
 using System.Net.Http.Headers;
 using System.Windows.Input;
 
@@ -13,6 +12,8 @@ namespace SellerInformationApps.ViewModel
 {
 	public partial class RegisterViewModel : ObservableObject
 	{
+		public AlertsHelper alertsHelper = new AlertsHelper();
+
 		[ObservableProperty]
 		private string firstName;
 
@@ -53,13 +54,13 @@ namespace SellerInformationApps.ViewModel
 		{
 			if (!IsFormValid())
 			{
-				await ShowToast("Lütfen tüm alanları doldurduğunuzdan emin olun.");
+				await alertsHelper.ShowSnackBar("Lütfen tüm alanları doldurduğunuzdan emin olun.", true);
 				return;
 			}
 
 			if (!ArePasswordsMatching())
 			{
-				await ShowToast("Şifreler eşleşmiyor.");
+				await alertsHelper.ShowSnackBar("Şifreler eşleşmiyor.", true);
 				return;
 			}
 
@@ -67,8 +68,8 @@ namespace SellerInformationApps.ViewModel
 			{
 				var user = CreateUser();
 
-				string url = "https://c846-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
+				string url = "https://a8c0-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
 
 				using (var content = new MultipartFormDataContent())
 				{
@@ -92,19 +93,19 @@ namespace SellerInformationApps.ViewModel
 
 						if (response.IsSuccessStatusCode)
 						{
-							await Shell.Current.DisplayAlert("Başarı", "Kayıt başarılı!", "Tamam");
+							await alertsHelper.ShowSnackBar("Kayıt başarılı!");
 							await Shell.Current.GoToAsync("/LoginPage");
 						}
 						else
 						{
-							await ShowToast($"Sunucu hatası: {response.StatusCode}\n{responseContent}");
+							await alertsHelper.ShowSnackBar($"Sunucu hatası: {response.StatusCode}\n{responseContent}", true);
 						}
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await ShowToast($"Kayıt işlemi sırasında bir hata oluştu: {ex.Message}\n{ex.StackTrace}");
+				await alertsHelper.ShowSnackBar($"Kayıt işlemi sırasında bir hata oluştu: {ex.Message}\n{ex.StackTrace}", true);
 			}
 		}
 
@@ -168,16 +169,6 @@ namespace SellerInformationApps.ViewModel
 		private async Task NavigateToLoginPageAsync()
 		{
 			await Shell.Current.GoToAsync("//LoginPage");
-		}
-
-		private async Task ShowToast(string message, bool isSuccess = false)
-		{
-			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
-
-			await MainThread.InvokeOnMainThreadAsync(async () =>
-			{
-				await toast.Show();
-			});
 		}
 	}
 }

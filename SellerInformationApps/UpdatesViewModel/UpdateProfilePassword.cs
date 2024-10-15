@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
+using ServiceHelper.Alerts;
 using ServiceHelper.Authentication;
 using System.Net.Http.Headers;
 using System.Text;
@@ -13,6 +14,9 @@ namespace SellerInformationApps.UpdatesViewModel
 {
 	public partial class UpdateProfilePassword : Authentication
 	{
+		public AlertsHelper alertsHelper = new AlertsHelper();
+
+
 		public bool IsPasswordUpdated;
 
 		[ObservableProperty]
@@ -35,19 +39,19 @@ namespace SellerInformationApps.UpdatesViewModel
 		{
 			if (IsOldPasswordUsed())
 			{
-				await ShowToast("Eski Şifre ile Yeni Şifre Aynı Olamaz");
+				await alertsHelper.ShowSnackBar("Eski Şifre ile Yeni Şifre Aynı Olamaz", true);
 				return;
 			}
 
 			if (!IsFormValid())
 			{
-				await ShowToast("Tüm alanları doldurunuz ve şifreler eşleşmelidir");
+				await alertsHelper.ShowSnackBar("Tüm alanları doldurunuz ve şifreler eşleşmelidir", true);
 				return;
 			}
 
 			if (!IsCorrectOldPassword())
 			{
-				await ShowToast("Mevcut şifreniz yanlış");
+				await alertsHelper.ShowSnackBar("Mevcut şifreniz yanlış", true);
 				return;
 			}
 
@@ -56,16 +60,16 @@ namespace SellerInformationApps.UpdatesViewModel
 				var user = PrepareUserData();
 				if (user == null)
 				{
-					await ShowToast("Kullanıcı bilgileri güncellenirken bir hata oluştu");
+					await alertsHelper.ShowSnackBar("Kullanıcı bilgileri güncellenirken bir hata oluştu", true);
 					return;
 				}
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{UsedPassword}"));
 
-				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "https://c846-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdatePassword";
+				string url = "https://a8c0-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdatePassword";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -75,7 +79,7 @@ namespace SellerInformationApps.UpdatesViewModel
 			}
 			catch (Exception ex)
 			{
-				await ShowToast($"Hata oluştu: {ex.Message}");
+				await alertsHelper.ShowSnackBar($"Hata oluştu: {ex.Message}",true);
 			}
 		}
 
@@ -118,30 +122,21 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				if (apiResponse.Success)
 				{
-					await ShowToast("Şifre başarıyla güncellendi");
+					await alertsHelper.ShowSnackBar("Şifre başarıyla güncellendi");
 					Preferences.Set("Password", NewPassword);
 					IsPasswordUpdated = true;
 					await Shell.Current.GoToAsync("//ProfilePage");
 				}
 				else
 				{
-					await ShowToast("Şifre güncelleme başarısız oldu");
+					await alertsHelper.ShowSnackBar("Şifre güncelleme başarısız oldu", true);
 					IsPasswordUpdated = false;
 				}
 			}
 			else
 			{
-				await ShowToast($"Http isteği başarısız oldu: {response.StatusCode}");
+				await alertsHelper.ShowSnackBar($"Http isteği başarısız oldu: {response.StatusCode}", true);
 			}
-		}
-		private async Task ShowToast(string message, bool isSuccess = false)
-		{
-			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
-
-			await MainThread.InvokeOnMainThreadAsync(async () =>
-			{
-				await toast.Show();
-			});
 		}
 	}
 }

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
+using ServiceHelper.Alerts;
 using ServiceHelper.Authentication;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,9 @@ namespace SellerInformationApps.ViewModel
 {
 	public partial class UserListViewModel : Authentication
 	{
+		public AlertsHelper alertsHelper = new AlertsHelper();
+
+
 		[ObservableProperty]
 		private bool isLoading;
 
@@ -32,11 +36,10 @@ namespace SellerInformationApps.ViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-
-				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "https://c846-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList";
+				string url = "https://a8c0-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList";
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
 					using (var response = await httpClient.SendAsync(request))
@@ -54,33 +57,24 @@ namespace SellerInformationApps.ViewModel
 							}
 							else
 							{
-								await ShowToast($"API İsteği Başarısız: {apiResponse.ErrorMessage}");
+								await alertsHelper.ShowSnackBar($"API İsteği Başarısız: {apiResponse.ErrorMessage}", true);
 							}
 						}
 						else
 						{
-							await ShowToast($"HTTP İsteği Başarısız: {response.StatusCode}");
+							await alertsHelper.ShowSnackBar($"HTTP İsteği Başarısız: {response.StatusCode}", true);
 						}
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await ShowToast($"Hata Oluştu Apiye İstek Atılamadı: {ex.Message}");
+				await alertsHelper.ShowSnackBar($"Hata Oluştu Apiye İstek Atılamadı: {ex.Message}", true);
 			}
 			finally
 			{
 				IsLoading = false;
 			}
-		}
-		private async Task ShowToast(string message, bool isSuccess = false)
-		{
-			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
-
-			await MainThread.InvokeOnMainThreadAsync(async () =>
-			{
-				await toast.Show();
-			});
 		}
 	}
 }

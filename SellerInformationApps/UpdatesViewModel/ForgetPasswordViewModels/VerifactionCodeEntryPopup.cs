@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using SellerInformationApps.PopUps.ForgetPasswordPopUps;
+using ServiceHelper.Alerts;
 using ServiceHelper.Authentication;
 using System.Text;
 
@@ -14,6 +15,9 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 {
 	public partial class VerificationCodeEntryViewModel : Authentication
 	{
+		public AlertsHelper alertsHelper = new AlertsHelper();
+
+
 		private readonly Popup _popup;
 
 		private string UserName = Preferences.Get("UserName", string.Empty);
@@ -41,7 +45,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 		{
 			if (ValidationCode == null)
 			{
-				await ShowToast("Lütfen Doğrulama Kodunu Giriniz");
+				await alertsHelper.ShowSnackBar("Lütfen Doğrulama Kodunu Giriniz", true);
 				return;
 			}
 
@@ -51,12 +55,12 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 				if (validationCode == null)
 				{
-					await ShowToast("Geçersiz doğrulama kodu");
+					await alertsHelper.ShowSnackBar("Geçersiz doğrulama kodu", true);
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://c846-37-130-115-91.ngrok-free.app");
-				string url = "https://c846-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
+				var httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
+				string url = "https://a8c0-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
 				var content = new StringContent(JsonConvert.SerializeObject(validationCode), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -68,7 +72,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 						if (apiResponse.Success)
 						{
-							await Shell.Current.DisplayAlert("Başarılı", "Doğrulama Kodu Doğrulandı", "Tamam");
+							await alertsHelper.ShowSnackBar("Doğrulama Kodu Doğrulandı");
 
 							await Task.Run(() => ClosePopup());
 
@@ -78,22 +82,22 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 						}
 						else
 						{
-							await ShowToast(apiResponse.ErrorMessage);
+							await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage, true);
 						}
 					}
 					else
 					{
-						await ShowToast($"HTTP isteği başarısız oldu: {response.StatusCode}");
+						await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}", true);
 					}
 				}
 			}
 			catch (HttpRequestException httpEx)
 			{
-				await ShowToast("İnternet bağlantınızı kontrol edin: " + httpEx.Message);
+				await alertsHelper.ShowSnackBar("İnternet bağlantınızı kontrol edin: " + httpEx.Message, true);
 			}
 			catch (Exception ex)
 			{
-				await ShowToast($"Bir Hata Oluştu: {ex.Message}");
+				await alertsHelper.ShowSnackBar($"Bir Hata Oluştu: {ex.Message}",true);
 			}
 		}
 
@@ -104,16 +108,6 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 				UserName = UserName,
 				ValidationCode = ValidationCode
 			};
-		}
-
-		private async Task ShowToast(string message, bool isSuccess = false)
-		{
-			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
-
-			await MainThread.InvokeOnMainThreadAsync(async () =>
-			{
-				await toast.Show();
-			});
 		}
 	}
 }

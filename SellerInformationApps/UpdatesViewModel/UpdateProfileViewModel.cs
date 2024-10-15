@@ -1,33 +1,37 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
+using ServiceHelper.Alerts;
 using ServiceHelper.Authentication;
 using System.Net.Http.Headers;
 using System.Text;
 
 namespace SellerInformationApps.UpdatesViewModel
 {
-	[QueryProperty(nameof(FirstName), nameof(FirstName))]
-	[QueryProperty(nameof(LastName), nameof(LastName))]
-	[QueryProperty(nameof(UserName), nameof(UserName))]
-	[QueryProperty(nameof(Email), nameof(Email))]
-	[QueryProperty(nameof(Age), nameof(Age))]
-	[QueryProperty(nameof(ProfileImage), nameof(ProfileImage))]
-
 	public partial class UpdateProfileViewModel : Authentication
 	{
-		[ObservableProperty] private string firstName;
-		[ObservableProperty] private string lastName;
-		[ObservableProperty] private string userName;
-		[ObservableProperty] private string email;
-		[ObservableProperty] private DateTime age;
-		[ObservableProperty] private ImageSource profileImage;
+		[ObservableProperty]
+		private string firstName;
+		
+		[ObservableProperty]
+		private string lastName;
+		
+		[ObservableProperty]
+		private string userName;
+		
+		[ObservableProperty]
+		private string email;
+		
+		[ObservableProperty]
+		private DateTime age;
+		
+		[ObservableProperty]
+		private ImageSource profileImage;
+
+		public AlertsHelper alertsHelper = new AlertsHelper();
+
 
 		public AddOrUpdateProfilePhotosViewModel ProfilePhotosViewModel { get; set; }
 
@@ -37,7 +41,7 @@ namespace SellerInformationApps.UpdatesViewModel
 		{
 			if (userProfileData == null)
 			{
-				await ShowToast("Veriler gelmedi");
+				await alertsHelper.ShowSnackBar("Veriler gelmedi", true);
 				return;
 			}
 
@@ -51,27 +55,17 @@ namespace SellerInformationApps.UpdatesViewModel
 			{
 				try
 				{
-
-
-					if (!string.IsNullOrEmpty(userProfileData.ProfileImageBase64))
-					{
-						ProfileImage = ImageSource.FromUri(new Uri(userProfileData.ProfileImageBase64));
-					}
-					else
-					{
-						ProfileImage = "profilephotots.png";
-					}
-					ProfilePhotosViewModel.ProfileImage = ImageSource.FromUri(new Uri(userProfileData.ProfileImageBase64));
-
+					ProfileImage = ImageSource.FromUri(new Uri(userProfileData.ProfileImageBase64));
 				}
 				catch (Exception ex)
 				{
-					await ShowToast($"Profil resmi yüklenirken hata: {ex.Message}");
+					await alertsHelper.ShowSnackBar($"Profil resmi yüklenirken hata: {ex.Message}", true);
 				}
 			}
 			else
 			{
 				ProfileImage = "profilephotots.png";
+				ProfilePhotosViewModel.ProfileImage = ImageSource.FromFile("profilephotots.png");
 			}
 
 		}
@@ -81,7 +75,7 @@ namespace SellerInformationApps.UpdatesViewModel
 		{
 			if (!IsFormValid())
 			{
-				await ShowToast("Lütfen tüm alanları doldurunuz");
+				await alertsHelper.ShowSnackBar("Lütfen tüm alanları doldurunuz", true);
 				return;
 			}
 
@@ -90,7 +84,7 @@ namespace SellerInformationApps.UpdatesViewModel
 				var user = ReadData();
 				if (user == null)
 				{
-					await ShowToast("Kullanıcı bilgileri güncellenirken bir hata oluştu");
+					await alertsHelper.ShowSnackBar("Kullanıcı bilgileri güncellenirken bir hata oluştu", true);
 					return;
 				}
 
@@ -112,7 +106,7 @@ namespace SellerInformationApps.UpdatesViewModel
 			}
 			catch (Exception ex)
 			{
-				await ShowToast($"Hata oluştu: {ex.Message}");
+				await alertsHelper.ShowSnackBar($"Hata oluştu: {ex.Message}", true);
 			}
 		}
 
@@ -146,28 +140,17 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				if (apiResponse?.Success == true)
 				{
-					await Shell.Current.DisplayAlert("Başarılı", "Güncelleme başarılı", "Tamam");
+					await alertsHelper.ShowSnackBar("Güncelleme başarılı");
 				}
 				else
 				{
-					await ShowToast("Güncelleme başarısız oldu");
+					await alertsHelper.ShowSnackBar("Güncelleme başarısız oldu", true);
 				}
 			}
 			else
 			{
-				await ShowToast($"Http isteği başarısız: {response.StatusCode}");
+				await alertsHelper.ShowSnackBar($"Http isteği başarısız: {response.StatusCode}", true);
 			}
 		}
-
-		private async Task ShowToast(string message, bool isSuccess = false)
-		{
-			var toast = Toast.Make(message, ToastDuration.Short, isSuccess ? 20 : 14);
-
-			await MainThread.InvokeOnMainThreadAsync(async () =>
-			{
-				await toast.Show();
-			});
-		}
-	
 	}
 }
