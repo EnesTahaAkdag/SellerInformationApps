@@ -29,7 +29,7 @@
                 </Frame>
                 <StackLayout VerticalOptions="Center" Spacing="10">
                     <Button Text="Profil Resmini Güncelle" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="15" FontAttributes="Bold" Clicked="OnAddOrChangeImageClicked"/>
-                    <Button Text="Şifreyi Güncelle" BackgroundColor="BlueViolet" Clicked="OpenUpdateProfilePasswordPupUp" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="16" FontAttributes="Bold"/>
+                    <Button Text="Şifreyi Güncelle" BackgroundColor="BlueViolet" Clicked="OpenUpdateProfilePasswordPopUp" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="16" FontAttributes="Bold"/>
                 </StackLayout>
             </StackLayout>
 
@@ -65,7 +65,14 @@
             <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
                 <StackLayout Spacing="5">
                     <Label Text="Doğum Tarihi" FontSize="14" TextColor="#6200EE"/>
-                    <DatePicker x:Name="AgeEntry" MinimumDate="1900-01-01" MaximumDate="{x:Static sys:DateTime.Now}" FontSize="20" TextColor="Black" BackgroundColor="Transparent" Date="{Binding Age, StringFormat='{0:dd/MM/yyyy}'}" FontAttributes="Bold"/>
+                    <DatePicker x:Name="AgeEntry"
+            MinimumDate="1900-01-01"
+            MaximumDate="{x:Static sys:DateTime.Now}"
+            Date="{Binding Age, Mode=TwoWay}"
+            FontSize="20"
+            TextColor="Black"
+            BackgroundColor="Transparent"
+            FontAttributes="Bold" />
                 </StackLayout>
             </Frame>
 

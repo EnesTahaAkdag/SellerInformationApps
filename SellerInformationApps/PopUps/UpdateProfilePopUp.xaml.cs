@@ -1,5 +1,5 @@
 using CommunityToolkit.Maui.Views;
-using Microsoft.Maui.Controls.Internals;
+using SellerInformationApps.Models;
 using SellerInformationApps.UpdatesViewModel;
 using SellerInformationApps.ViewModel;
 using ServiceHelper.Alerts;
@@ -9,7 +9,6 @@ namespace SellerInformationApps.PopUps
 	public partial class UpdateProfilePopUp : Popup
 	{
 		private AlertsHelper alertsHelper = new AlertsHelper();
-		private readonly ProfilePageViewModel _profilePageViewModel;
 		private readonly UpdateProfileViewModel _viewModel;
 		private readonly AddOrUpdateProfilePhotosViewModel _profilePhotosViewModel;
 
@@ -32,7 +31,7 @@ namespace SellerInformationApps.PopUps
 			Close();
 		}
 
-		private void OpenUpdateProfilePasswordPupUp(object sender, EventArgs e)
+		private void OpenUpdateProfilePasswordPopUp(object sender, EventArgs e)
 		{
 			var popup = new UpdateProfilePasswordPopUp(new UpdateProfilePassword());
 			Application.Current.MainPage.ShowPopup(popup);
@@ -42,28 +41,14 @@ namespace SellerInformationApps.PopUps
 		{
 			try
 			{
-				if (_profilePageViewModel.UserProfilePhoto != null)
-				{
-					// Profil resmi eklemek ya da güncellemek için popup açýlýyor
-					await _profilePhotosViewModel.WriteData(_profilePageViewModel.UserProfilePhoto);
-
-					var popup = new UpdateOrAddProfilePhotoPopUp(_profilePhotosViewModel);
-
-					// Popup açýldýðýnda bir event handler tanýmla
-					popup.Opened += (s, e) =>
-					{
-						// Açýldýðýnda yapýlacak iþlemler
-						Console.WriteLine("Popup açýldý");
-					};
-
-					Application.Current.MainPage.ShowPopup(popup);
-				}
+				await _profilePhotosViewModel.WriteData(_viewModel.ProfileImage);
+				var popup = new UpdateOrAddProfilePhotoPopUp(_profilePhotosViewModel);
+				Application.Current.MainPage.ShowPopup(popup);
 			}
 			catch (Exception ex)
 			{
 				await alertsHelper.ShowSnackBar($"Bir hata oluþtu: {ex.Message}", true);
 			}
 		}
-
 	}
 }

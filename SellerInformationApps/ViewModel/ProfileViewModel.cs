@@ -23,13 +23,43 @@ namespace SellerInformationApps.ViewModel
 		[ObservableProperty] private ImageSource profileImage;
 		[ObservableProperty] private bool isLoading;
 
-		public UserProfileData UserProfileData { get; private set; }
-		public UserProfilePhoto UserProfilePhoto { get; private set; }
+		public UserProfileData UserProfileData { get; set; }
+		public UserProfilePhoto UserProfilePhoto { get; set; }
 
 		public ProfilePageViewModel()
 		{
 			_authentication = Authentication.Instance;
 			UserProfilePhoto = new UserProfilePhoto();
+		}
+		public void ClearProfileData()
+		{
+			FirstName = LastName = UserName = Email = string.Empty;
+			Age = null;
+			ProfileImage = null;
+			UserProfilePhoto = new UserProfilePhoto();
+		}
+
+		public async Task WriteData(UserProfileData updateUserData)
+		{
+			if (updateUserData == null)
+			{
+				await _alertsHelper.ShowSnackBar("Güncellenen veriler Profil Sayfasına Gelmedi", true);
+			}
+			else
+			{
+				try
+				{
+					FirstName = updateUserData.FirstName ?? string.Empty;
+					LastName = updateUserData.LastName ?? string.Empty;
+					UserName = updateUserData.UserName ?? string.Empty;
+					Email = updateUserData.Email ?? string.Empty;
+					Age = updateUserData.Age;
+				}
+				catch (Exception ex)
+				{
+					await _alertsHelper.ShowSnackBar($"Veriler Geldi Ama Ekrana Basılırken hata verdi: {ex.Message}", true);
+				}
+			}
 		}
 
 		[RelayCommand]
@@ -74,29 +104,30 @@ namespace SellerInformationApps.ViewModel
 				}
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				var httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app/");
+				var httpClient = HttpClientFactory.Create("https://59b7-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				string url = $"/UserDataSendApi/DataSend?userName={userName}";
-				var response = await httpClient.GetAsync(url);
-
-				if (response.IsSuccessStatusCode)
+				using (var response = await httpClient.GetAsync(url))
 				{
-					var json = await response.Content.ReadAsStringAsync();
-					var profileData = JsonConvert.DeserializeObject<ProfileApiResponse>(json);
-
-					if (profileData?.Success == true)
+					if (response.IsSuccessStatusCode)
 					{
-						UpdateProfileData(profileData.Data);
+						var json = await response.Content.ReadAsStringAsync();
+						var profileData = JsonConvert.DeserializeObject<ProfileApiResponse>(json);
+
+						if (profileData?.Success == true)
+						{
+							UpdateProfileData(profileData.Data);
+						}
+						else
+						{
+							await _alertsHelper.ShowSnackBar($"API isteği başarısız: {profileData?.ErrorMessage}", true);
+						}
 					}
 					else
 					{
-						await _alertsHelper.ShowSnackBar($"API isteği başarısız: {profileData?.ErrorMessage}", true);
+						await _alertsHelper.ShowSnackBar($"API isteği başarısız: {response.StatusCode}", true);
 					}
-				}
-				else
-				{
-					await _alertsHelper.ShowSnackBar($"API isteği başarısız: {response.StatusCode}", true);
 				}
 			}
 			catch (Exception ex)
@@ -111,18 +142,28 @@ namespace SellerInformationApps.ViewModel
 
 		private void UpdateProfileData(UserProfileData data)
 		{
+			if (data == null)
+			{
+				return;
+			}
+
 			UserProfileData = data;
 
-			FirstName = data.FirstName;
-			LastName = data.LastName;
-			UserName = data.UserName;
-			Email = data.Email;
+			FirstName = data.FirstName ?? string.Empty;
+			LastName = data.LastName ?? string.Empty;
+			UserName = data.UserName ?? string.Empty;
+			Email = data.Email ?? string.Empty;
 			Age = data.Age;
+
+			if (UserProfilePhoto == null)
+			{
+				UserProfilePhoto = new UserProfilePhoto();
+			}
 
 			if (!string.IsNullOrEmpty(data.ProfileImageBase64))
 			{
 				ProfileImage = ImageSource.FromUri(new Uri(data.ProfileImageBase64));
-				UserProfilePhoto.ProfileImageSource = UserProfileData.ProfileImageBase64;
+				UserProfilePhoto.ProfileImageSource = data.ProfileImageBase64;
 			}
 			else
 			{
@@ -135,14 +176,6 @@ namespace SellerInformationApps.ViewModel
 		{
 			ClearProfileData();
 			await _authentication.LogOut();
-		}
-
-		public void ClearProfileData()
-		{
-			FirstName = LastName = UserName = Email = string.Empty;
-			Age = null;
-			ProfileImage = null;
-			UserProfilePhoto = new UserProfilePhoto();
 		}
 	}
 }

@@ -4,71 +4,60 @@ using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using ServiceHelper.Alerts;
-using ServiceHelper.Authentication;
 using System.Net.Http.Headers;
 using System.Text;
 
 namespace SellerInformationApps.UpdatesViewModel
 {
-	public partial class UpdateProfileViewModel : Authentication
+	public partial class UpdateProfileViewModel : ObservableObject
 	{
-		[ObservableProperty]
-		private string firstName;
-		
-		[ObservableProperty]
-		private string lastName;
-		
-		[ObservableProperty]
-		private string userName;
-		
-		[ObservableProperty]
-		private string email;
-		
-		[ObservableProperty]
-		private DateTime age;
-		
-		[ObservableProperty]
-		private ImageSource profileImage;
+		[ObservableProperty] private string firstName;
+		[ObservableProperty] private string lastName;
+		[ObservableProperty] private string userName;
+		[ObservableProperty] private string email;
+		[ObservableProperty] private DateTime? age;
+		[ObservableProperty] private ImageSource profileImage;
 
 		public AlertsHelper alertsHelper = new AlertsHelper();
+		public UserProfileData UserProfile { get; set; }
 
-
-		public AddOrUpdateProfilePhotosViewModel ProfilePhotosViewModel { get; set; }
-
-		public UserProfileData UserProfile { get; internal set; }
-
-		public async Task WriteData(UserProfileData userProfileData)
+		public async Task WriteData(UserProfileData updateUserData)
 		{
-			if (userProfileData == null)
+			if (updateUserData == null)
 			{
-				await alertsHelper.ShowSnackBar("Veriler gelmedi", true);
-				return;
-			}
-
-			FirstName = userProfileData.FirstName;
-			LastName = userProfileData.LastName;
-			UserName = userProfileData.UserName;
-			Email = userProfileData.Email;
-			Age = userProfileData.Age.Value;
-
-			if (!string.IsNullOrEmpty(userProfileData.ProfileImageBase64))
-			{
-				try
-				{
-					ProfileImage = ImageSource.FromUri(new Uri(userProfileData.ProfileImageBase64));
-				}
-				catch (Exception ex)
-				{
-					ProfileImage = "profilephotots.png";
-					await alertsHelper.ShowSnackBar($"Profil resmi yüklenirken hata: {ex.Message}", true);
-				}
+				await alertsHelper.ShowSnackBar("Güncellenen veriler Profil Sayfasına Gelmedi", true);
 			}
 			else
 			{
-				ProfileImage = "profilephotots.png";
-			}
+				try
+				{
+					FirstName = updateUserData.FirstName ?? string.Empty;
+					OnPropertyChanged(nameof(FirstName));
 
+					LastName = updateUserData.LastName ?? string.Empty;
+					OnPropertyChanged(nameof(LastName));
+
+					UserName = updateUserData.UserName ?? string.Empty;
+					OnPropertyChanged(nameof(UserName));
+
+					Email = updateUserData.Email ?? string.Empty;
+					OnPropertyChanged(nameof(Email));
+
+					Age = updateUserData.Age;
+					OnPropertyChanged(nameof(Age));
+
+					ProfileImage = updateUserData.ProfileImageBase64 != null
+						? ImageSource.FromUri(new Uri(updateUserData.ProfileImageBase64))
+						: "default_image.png";
+					OnPropertyChanged(nameof(ProfileImage));
+				}
+				catch (Exception ex)
+				{
+					await alertsHelper.ShowSnackBar($"Veriler Geldi Ama Ekrana Basılırken hata verdi: {ex.Message}", true);
+				}
+			}
 		}
+
 
 		[RelayCommand]
 		public async Task SubmitAsync()
@@ -82,41 +71,40 @@ namespace SellerInformationApps.UpdatesViewModel
 			try
 			{
 				var user = ReadData();
-				if (user == null)
-				{
-					await alertsHelper.ShowSnackBar("Kullanıcı bilgileri güncellenirken bir hata oluştu", true);
-					return;
-				}
 
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
+				var client = HttpClientFactory.Create("https://59b7-37-130-115-91.ngrok-free.app");
+				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+					Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}")));
 
-				var httpClient = HttpClientFactory.Create("https://bd1b-37-130-115-91.ngrok-free.app/");
-				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
-
-				string url = "/UserUpdateApi/EditUserData";
-				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-
-				using (var response = await httpClient.PostAsync(url, content))
+				var json = JsonConvert.SerializeObject(user);
+				var content = new StringContent(json, Encoding.UTF8, "application/json");
+				using (var response = await client.PutAsync($"/UserUpdateApi/EditUserData", content))
 				{
-					await HandleResponseAsync(response);
+					if (response.IsSuccessStatusCode)
+					{
+						await alertsHelper.ShowSnackBar("Profil başarıyla güncellendi", false);
+					}
+					else
+					{
+						await alertsHelper.ShowSnackBar("Profil güncellenemedi", true);
+					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"Hata oluştu: {ex.Message}", true);
+				await alertsHelper.ShowSnackBar($"Bir hata oluştu: {ex.Message}", true);
 			}
 		}
 
 		private bool IsFormValid()
 		{
-			return !(string.IsNullOrWhiteSpace(FirstName) ||
-					 string.IsNullOrWhiteSpace(LastName) ||
-					 string.IsNullOrWhiteSpace(UserName) ||
-					 string.IsNullOrWhiteSpace(Email) ||
-					 Age == default);
+			return !string.IsNullOrWhiteSpace(FirstName) &&
+				   !string.IsNullOrWhiteSpace(LastName) &&
+				   !string.IsNullOrWhiteSpace(Email) &&
+				   Age != null;
 		}
 
 		private UserProfileData ReadData()
@@ -127,30 +115,9 @@ namespace SellerInformationApps.UpdatesViewModel
 				LastName = LastName,
 				UserName = UserName,
 				Email = Email,
-				Age = Age
+				Age = Age,
 			};
 		}
 
-		private async Task HandleResponseAsync(HttpResponseMessage response)
-		{
-			if (response.IsSuccessStatusCode)
-			{
-				string json = await response.Content.ReadAsStringAsync();
-				var apiResponse = JsonConvert.DeserializeObject<UserApiResponse>(json);
-
-				if (apiResponse?.Success == true)
-				{
-					await alertsHelper.ShowSnackBar("Güncelleme başarılı");
-				}
-				else
-				{
-					await alertsHelper.ShowSnackBar("Güncelleme başarısız oldu", true);
-				}
-			}
-			else
-			{
-				await alertsHelper.ShowSnackBar($"Http isteği başarısız: {response.StatusCode}", true);
-			}
-		}
 	}
 }

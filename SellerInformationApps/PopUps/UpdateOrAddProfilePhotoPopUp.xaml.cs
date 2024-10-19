@@ -1,13 +1,13 @@
 using CommunityToolkit.Maui.Views;
-using SellerInformationApps.Models;
 using SellerInformationApps.UpdatesViewModel;
+using ServiceHelper.Alerts;
 
 namespace SellerInformationApps.PopUps
 {
 	public partial class UpdateOrAddProfilePhotoPopUp : Popup
 	{
+		private readonly AlertsHelper _alertsHelper = new AlertsHelper();
 		private readonly AddOrUpdateProfilePhotosViewModel _profilePhotosViewModel;
-		private Stream stream;
 
 		public UpdateOrAddProfilePhotoPopUp(AddOrUpdateProfilePhotosViewModel profilePhotosViewModel)
 		{
@@ -26,19 +26,26 @@ namespace SellerInformationApps.PopUps
 			var currentPage = Application.Current.MainPage;
 			string action = await currentPage.DisplayActionSheet("Resim Kaynaðýný Seç", "Ýptal", null, "Galeriden Seç", "Kamera ile Çek");
 
-			if (action == "Galeriden Seç")
+			switch (action)
 			{
-				await PickOrCaptureImageAsync(isPickPhoto: true);
-			}
-			else if (action == "Kamera ile Çek")
-			{
-				await PickOrCaptureImageAsync(isPickPhoto: false);
+				case "Galeriden Seç":
+					await PickOrCaptureImageAsync(isPickPhoto: true);
+					break;
+				case "Kamera ile Çek":
+					await PickOrCaptureImageAsync(isPickPhoto: false);
+					break;
 			}
 		}
 
 		private async void SubmitButton(object sender, EventArgs e)
 		{
-			await _profilePhotosViewModel.AddOrUpdateProfilePhotosAsync(stream);
+			if (_profilePhotosViewModel.ProfileImage == null)
+			{
+				await _alertsHelper.ShowSnackBar("Lütfen önce bir fotoðraf seçin.", true);
+				return;
+			}
+
+			await _profilePhotosViewModel.AddOrUpdateProfilePhotosAsync();
 			Close();
 		}
 
@@ -65,22 +72,23 @@ namespace SellerInformationApps.PopUps
 
 				if (result != null)
 				{
-					stream = await result.OpenReadAsync();
+					using (var stream = await result.OpenReadAsync())
+					using (MemoryStream ms = new MemoryStream())
+					{
+						await stream.CopyToAsync(ms);
+						_profilePhotosViewModel.ProfileImage = ImageSource.FromStream(() => new MemoryStream(ms.ToArray()));
+					}
 				}
 				else
 				{
-					await ShowAlertAsync("Uyarý", isPickPhoto ? "Herhangi bir resim seçilmedi." : "Fotoðraf çekilemedi.");
+					_profilePhotosViewModel.ProfileImage = "profilephotots.png";
 				}
 			}
 			catch (Exception ex)
 			{
-				await ShowAlertAsync("Hata", ex.Message);
+				await _alertsHelper.ShowSnackBar(ex.Message, true);
 			}
-		}
-
-		private async Task ShowAlertAsync(string title, string message)
-		{
-			await Shell.Current.DisplayAlert(title, message, "Tamam");
 		}
 	}
 }
+

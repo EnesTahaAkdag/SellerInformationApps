@@ -1,11 +1,13 @@
 using SellerInformationApps.ViewModel;
+using ServiceHelper.Alerts;
 
 namespace SellerInformationApps.Pages
 {
 	public partial class RegisterPage : ContentPage
 	{
+		private AlertsHelper alertsHelper = new AlertsHelper();
+
 		private readonly RegisterViewModel _registerViewModel;
-		private Stream stream;
 
 		public RegisterPage(RegisterViewModel registerViewModel)
 		{
@@ -27,7 +29,7 @@ namespace SellerInformationApps.Pages
 
 		private async void SubmitButton_Clicked(object sender, EventArgs e)
 		{
-			await _registerViewModel.RegisterAsync(stream);
+			await _registerViewModel.RegisterAsync();
 		}
 
 		private async void SelectProfileImageButton_Clicked(object sender, EventArgs e)
@@ -48,42 +50,34 @@ namespace SellerInformationApps.Pages
 		{
 			try
 			{
-				FileResult result = null;
-
+				FileResult result;
 				if (isPickPhoto)
 				{
-					result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions { Title = "Bir Fotoðraf Seçin" });
+					result = await MediaPicker.PickPhotoAsync();
 				}
 				else
 				{
-					result = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions { Title = "Bir Fotoðraf Çekin" });
+					result = await MediaPicker.CapturePhotoAsync();
 				}
 
 				if (result != null)
 				{
-					stream = await result.OpenReadAsync();
+					var stream = await result.OpenReadAsync();
 
-					using (var memoryStream = new MemoryStream())
+					using (MemoryStream ms = new MemoryStream())
 					{
-						await stream.CopyToAsync(memoryStream);
-
-						var streamForApi = new MemoryStream(memoryStream.ToArray());
-						var streamForImage = new MemoryStream(memoryStream.ToArray());
-
-						_registerViewModel.ProfileImage = ImageSource.FromStream(() => streamForImage);
-
-						stream = streamForApi;
+						await stream.CopyToAsync(ms);
+						_registerViewModel.ProfileImage = ImageSource.FromStream(() => new MemoryStream(ms.ToArray()));
 					}
 				}
-
 				else
 				{
-					await DisplayAlert("Hata", isPickPhoto ? "Herhangi bir resim seçilmedi." : "Fotoðraf çekilemedi.", "Tamam");
+					_registerViewModel.ProfileImage = "profilephotots.png";
 				}
 			}
 			catch (Exception ex)
 			{
-				await DisplayAlert("Hata", ex.Message, "Tamam");
+				await alertsHelper.ShowSnackBar(ex.Message, true);
 			}
 		}
 	}

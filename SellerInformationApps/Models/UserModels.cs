@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using SellerInformationApps.ServiceHelper;
 using System.ComponentModel.DataAnnotations;
 
 namespace SellerInformationApps.Models
@@ -32,8 +31,9 @@ namespace SellerInformationApps.Models
 		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d]{8,}$", ErrorMessage = "En az 8 karakterlik bir parola büyük ve küçük harflerin kombinasyonunu içermelidir.")]
 		public string Password { get; set; }
 
-		public IFormFile ProfileImage { get; set; }
+		public string ProfileImageBase64 { get; set; }
 	}
+
 
 	public class UpdateUserPassword
 	{
@@ -62,8 +62,7 @@ namespace SellerInformationApps.Models
 	public class ProfilePhotoModel
 	{
 		public string UserName { get; set; }
-		public IFormFile ProfileImage { get; set; }
-		public ImageSource NewProfileImage { get; set; }
+		public string NewProfileImageBase64 { get; set; }
 	}
 
 	public class ProfilePohotosApiResponse
@@ -136,13 +135,7 @@ namespace SellerInformationApps.Models
 		public ChancePasswordModel Data { get; set; }
 	}
 
-
 	public class UserList : User
-	{
-		public long Id { get; set; }
-	}
-
-	public class LoginUserViewModel : User
 	{
 		public long Id { get; set; }
 	}
@@ -188,7 +181,6 @@ namespace SellerInformationApps.Models
 		public List<UpdateUser> Data { get; set; }
 	}
 
-
 	public class RegisterApiResponse
 	{
 		public string Type { get; set; }
@@ -200,7 +192,6 @@ namespace SellerInformationApps.Models
 		public string ErrorMessage { get; set; }
 		public User Data { get; set; }
 	}
-
 
 	public class UpdatePasswordApiResponse
 	{

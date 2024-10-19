@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using ServiceHelper.Authentication;
-using System.Threading.Tasks;
 
 namespace SellerInformationApps.ViewModel
 {

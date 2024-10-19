@@ -66,10 +66,10 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{UsedPassword}"));
 
-				var httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://59b7-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "https://a8c0-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdatePassword";
+				string url = "https://59b7-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdatePassword";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))

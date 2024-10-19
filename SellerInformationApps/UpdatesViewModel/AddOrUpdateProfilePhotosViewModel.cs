@@ -4,9 +4,8 @@ using SellerInformationApps.Models;
 using System.Net.Http.Headers;
 using ServiceHelper.Authentication;
 using System.Text;
-using PraPazar.ServiceHelper;
 using ServiceHelper.Alerts;
-using SellerInformationApps.Services;
+using PraPazar.ServiceHelper;
 
 namespace SellerInformationApps.UpdatesViewModel
 {
@@ -15,22 +14,23 @@ namespace SellerInformationApps.UpdatesViewModel
 		private readonly AlertsHelper _alertsHelper = new AlertsHelper();
 
 		[ObservableProperty]
-		private string userName = Preferences.Get("UserName", string.Empty);
+		private string _userName = Preferences.Get("UserName", string.Empty);
 
 		[ObservableProperty]
 		public ImageSource profileImage;
 
-		public async Task WriteData(UserProfilePhoto userProfilePhoto)
+		public async Task WriteData(ImageSource photo)
 		{
-			if (userProfilePhoto == null)
+			if (photo == null)
 			{
-				await _alertsHelper.ShowSnackBar("Profil resmi gelmedi", true);
+				ProfileImage = "profilephotots.png";
+				await _alertsHelper.ShowSnackBar("Profil resmi gelmedi veya boş.", true);
 			}
 			else
 			{
 				try
 				{
-					ProfileImage = ImageSource.FromUri(new Uri(userProfilePhoto.ProfileImageSource));
+					ProfileImage = photo;
 				}
 				catch (Exception ex)
 				{
@@ -40,41 +40,44 @@ namespace SellerInformationApps.UpdatesViewModel
 			}
 		}
 
-		public async Task AddOrUpdateProfilePhotosAsync(Stream imageStream)
+		public async Task AddOrUpdateProfilePhotosAsync()
 		{
+			if (!IsFormValid())
+			{
+				await _alertsHelper.ShowSnackBar("Resim boş kaydedilemez.", true);
+				return;
+			}
+
 			try
 			{
-				if (imageStream.CanSeek)
-				{
-					imageStream.Position = 0;
-				}
+				var newPhoto = CreateProfilePhotoModel();
 
 				string password = Preferences.Get("Password", string.Empty);
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{password}"));
+				var httpClient = HttpClientFactory.Create("https://59b7-37-130-115-91.ngrok-free.app");
+				string url = "https://59b7-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "https://a8c0-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
+				var content = new StringContent(JsonConvert.SerializeObject(newPhoto), Encoding.UTF8, "application/json");
 
-				var client = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
-				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
-
-				using (var content = new MultipartFormDataContent())
+				using (var response = await httpClient.PostAsync(url, content))
 				{
-					var streamContent = new StreamContent(imageStream);
-					streamContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-
-					content.Add(streamContent, "ProfileImage", "profileImage.jpg");
-					content.Add(new StringContent(UserName), "UserName");
-
-					using (var response = await client.PostAsync(url, content))
+					if (!response.IsSuccessStatusCode)
 					{
-						if (!response.IsSuccessStatusCode)
-						{
-							await _alertsHelper.ShowSnackBar($"Sunucu hatası: {response.StatusCode}", true);
-							return;
-						}
+						await _alertsHelper.ShowSnackBar($"Sunucu hatası: {response.StatusCode}", true);
+						return;
+					}
 
-						string responseContent = await response.Content.ReadAsStringAsync();
-						await HandleResponseAsync(responseContent);
+					string responseContent = await response.Content.ReadAsStringAsync();
+					var apiResponse = JsonConvert.DeserializeObject<ProfilePohotosApiResponse>(responseContent);
+
+					if (apiResponse?.Success == true)
+					{
+						await _alertsHelper.ShowSnackBar("Resminiz güncellendi.");
+					}
+					else
+					{
+						await _alertsHelper.ShowSnackBar(apiResponse?.ErrorMessage ?? "Bilinmeyen hata.", true);
 					}
 				}
 			}
@@ -84,25 +87,32 @@ namespace SellerInformationApps.UpdatesViewModel
 			}
 		}
 
-		private async Task HandleResponseAsync(string responseContent)
+		private bool IsFormValid()
 		{
-			try
-			{
-				var profilePhotosApiResponse = JsonConvert.DeserializeObject<ProfilePohotosApiResponse>(responseContent);
+			return ProfileImage != null;
+		}
 
-				if (profilePhotosApiResponse?.Success == true)
-				{
-					await _alertsHelper.ShowSnackBar("Resminiz güncellendi");
-				}
-				else
-				{
-					await _alertsHelper.ShowSnackBar(profilePhotosApiResponse?.ErrorMessage ?? "Bilinmeyen hata", true);
-				}
-			}
-			catch (Exception ex)
+		private ProfilePhotoModel CreateProfilePhotoModel()
+		{
+			return new ProfilePhotoModel
 			{
-				await _alertsHelper.ShowSnackBar(ex.Message, true);
+				UserName = UserName,
+				NewProfileImageBase64 = ConvertImageSourceToBase64(ProfileImage)
+			};
+		}
+
+		private string ConvertImageSourceToBase64(ImageSource imageSource)
+		{
+			if (imageSource is StreamImageSource streamImage)
+			{
+				using (var stream = streamImage.Stream(CancellationToken.None).Result)
+				using (MemoryStream ms = new MemoryStream())
+				{
+					stream.CopyTo(ms);
+					return Convert.ToBase64String(ms.ToArray());
+				}
 			}
+			return null;
 		}
 	}
 }

@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
@@ -55,18 +53,38 @@ namespace SellerInformationApps.ViewModel
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
-				string url = "https://a8c0-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
+				var httpClient = HttpClientFactory.Create("https://59b7-37-130-115-91.ngrok-free.app");
+				string url = "https://59b7-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
 				{
-					await HandleResponseAsync(response);
+					if (response.IsSuccessStatusCode)
+					{
+						string json = await response.Content.ReadAsStringAsync();
+						var apiResponse = JsonConvert.DeserializeObject<LoginApiResponse>(json);
+
+						if (apiResponse.Success)
+						{
+							Preferences.Set("UserName", UserName);
+							Preferences.Set("Password", Password);
+							authentication.LogIn();
+							await Shell.Current.GoToAsync("//MainPage");
+						}
+						else
+						{
+							await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage, true);
+						}
+					}
+					else
+					{
+						await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}\n{response.Content}", true);
+					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"Hata oluştu: {ex.Message}", true);
+				await alertsHelper.ShowSnackBar($"Hata oluştu: {ex.Message}\n{ex.StackTrace}", true);
 			}
 		}
 
@@ -84,31 +102,6 @@ namespace SellerInformationApps.ViewModel
 			};
 		}
 
-		private async Task HandleResponseAsync(HttpResponseMessage response)
-		{
-			if (response.IsSuccessStatusCode)
-			{
-				string json = await response.Content.ReadAsStringAsync();
-				var apiResponse = JsonConvert.DeserializeObject<LoginApiResponse>(json);
-
-				if (apiResponse.Success)
-				{
-					Preferences.Set("UserName", UserName);
-					Preferences.Set("Password", Password);
-					authentication.LogIn();
-					await Shell.Current.GoToAsync("//MainPage");
-				}
-				else
-				{
-					await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage, true);
-				}
-			}
-			else
-			{
-				await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}", true);
-			}
-		}
-
 		private async Task NavigateToRegisterPageAsync()
 		{
 			await Shell.Current.GoToAsync("//RegisterPage");
@@ -116,7 +109,7 @@ namespace SellerInformationApps.ViewModel
 		private async Task RememberPasswordAsync()
 		{
 			var popup = new ForgetPasswordPopUp();
-			Application.Current.MainPage.ShowPopup(popup);
+			Shell.Current.ShowPopup(popup);
 			await Task.CompletedTask;
 		}
 	}

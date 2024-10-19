@@ -61,6 +61,7 @@ namespace SellerInformationApps.Pages
 					if (result != null)
 					{
 						await _viewModel.AccessedAsync();
+						await _viewModel.WriteData(_viewModel.UserProfileData);
 					}
 				}
 				else
@@ -73,5 +74,6 @@ namespace SellerInformationApps.Pages
 				await alertsHelper.ShowSnackBar($"Profil güncellenirken bir hata oluþtu: {ex.Message}", true);
 			}
 		}
+
 	}
 }

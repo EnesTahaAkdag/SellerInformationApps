@@ -5,7 +5,7 @@ using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using SellerInformationApps.ServiceHelper;
 using ServiceHelper.Alerts;
-using System.Net.Http.Headers;
+using System.Text;
 using System.Windows.Input;
 
 namespace SellerInformationApps.ViewModel
@@ -39,9 +39,6 @@ namespace SellerInformationApps.ViewModel
 		[ObservableProperty]
 		private ImageSource profileImage;
 
-		private DateTime _currentDate = DateTime.Now;
-		public DateTime CurrentDate => _currentDate;
-
 		public ICommand RegisterUserCommand { get; }
 		public ICommand LoginCommand { get; }
 
@@ -50,7 +47,7 @@ namespace SellerInformationApps.ViewModel
 			LoginCommand = new AsyncRelayCommand(NavigateToLoginPageAsync);
 		}
 
-		public async Task RegisterAsync(Stream profileImageStream)
+		public async Task RegisterAsync()
 		{
 			if (!IsFormValid())
 			{
@@ -68,38 +65,22 @@ namespace SellerInformationApps.ViewModel
 			{
 				var user = CreateUser();
 
-				string url = "https://a8c0-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-				var httpClient = HttpClientFactory.Create("https://a8c0-37-130-115-91.ngrok-free.app");
+				string url = "https://59b7-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://59b7-37-130-115-91.ngrok-free.app");
+				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
-				using (var content = new MultipartFormDataContent())
+				using (var response = await httpClient.PostAsync(url, content))
 				{
-					if (profileImageStream != null)
+					var responseContent = await response.Content.ReadAsStringAsync();
+
+					if (response.IsSuccessStatusCode)
 					{
-						var fileContent = new StreamContent(profileImageStream);
-						fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-						content.Add(fileContent, "ProfileImage", "profile.jpg");
+						await alertsHelper.ShowSnackBar("Kayıt başarılı!");
+						await Shell.Current.GoToAsync("/LoginPage");
 					}
-
-					content.Add(new StringContent(UserName), "UserName");
-					content.Add(new StringContent(FirstName), "FirstName");
-					content.Add(new StringContent(LastName), "LastName");
-					content.Add(new StringContent(Email), "Email");
-					content.Add(new StringContent(Password), "Password");
-					content.Add(new StringContent(Age?.ToString("yyyy-MM-dd")), "Age");
-
-					using (var response = await httpClient.PostAsync(url, content))
+					else
 					{
-						var responseContent = await response.Content.ReadAsStringAsync();
-
-						if (response.IsSuccessStatusCode)
-						{
-							await alertsHelper.ShowSnackBar("Kayıt başarılı!");
-							await Shell.Current.GoToAsync("/LoginPage");
-						}
-						else
-						{
-							await alertsHelper.ShowSnackBar($"Sunucu hatası: {response.StatusCode}\n{responseContent}", true);
-						}
+						await alertsHelper.ShowSnackBar($"Sunucu hatası: {response.StatusCode}\n{responseContent}", true);
 					}
 				}
 			}
@@ -109,16 +90,13 @@ namespace SellerInformationApps.ViewModel
 			}
 		}
 
-
-
-
 		private bool IsFormValid()
 		{
-			if (!string.IsNullOrWhiteSpace(FirstName) &&
-				!string.IsNullOrWhiteSpace(LastName) &&
-				!string.IsNullOrWhiteSpace(UserName) &&
-				!string.IsNullOrWhiteSpace(Email) &&
-				!string.IsNullOrWhiteSpace(Password) &&
+			if (!string.IsNullOrWhiteSpace(FirstName) ||
+				!string.IsNullOrWhiteSpace(LastName) ||
+				!string.IsNullOrWhiteSpace(UserName) ||
+				!string.IsNullOrWhiteSpace(Email) ||
+				!string.IsNullOrWhiteSpace(Password) ||
 				Age.HasValue)
 			{
 				try
@@ -131,10 +109,8 @@ namespace SellerInformationApps.ViewModel
 					return false;
 				}
 			}
-
 			return false;
 		}
-
 
 		private bool ArePasswordsMatching()
 		{
@@ -150,8 +126,23 @@ namespace SellerInformationApps.ViewModel
 				UserName = UserName,
 				Email = Email,
 				Password = Password,
-				Age = Age?.ToString("yyyy-MM-dd")
+				Age = Age?.ToString("yyyy-MM-dd"),
+				ProfileImageBase64 = Convert.ToBase64String(ConvertImageSourceToBytes(ProfileImage))
 			};
+		}
+
+		private byte[] ConvertImageSourceToBytes(ImageSource imageSource)
+		{
+			if (imageSource is StreamImageSource streamImage)
+			{
+				using (var stream = streamImage.Stream(CancellationToken.None).Result)
+				using (MemoryStream ms = new MemoryStream())
+				{
+					stream.CopyTo(ms);
+					return ms.ToArray();
+				}
+			}
+			return null;
 		}
 
 		public void ClearFormFields()
@@ -163,7 +154,7 @@ namespace SellerInformationApps.ViewModel
 			Password = string.Empty;
 			VerifyPassword = string.Empty;
 			Age = DateTime.Now;
-			ProfileImage = null;
+			ProfileImage = "profilephotots.png";
 		}
 
 		private async Task NavigateToLoginPageAsync()
