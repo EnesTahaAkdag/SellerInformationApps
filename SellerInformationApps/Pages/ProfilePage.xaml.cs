@@ -8,7 +8,7 @@ namespace SellerInformationApps.Pages
 {
 	public partial class ProfilePage : ContentPage
 	{
-
+		private readonly Popup popup;
 		public AlertsHelper alertsHelper = new AlertsHelper();
 
 		private readonly ProfilePageViewModel _viewModel;
@@ -51,7 +51,7 @@ namespace SellerInformationApps.Pages
 			{
 				if (_viewModel.UserProfileData != null)
 				{
-					var userProfileUpdate = new UpdateProfileViewModel();
+					var userProfileUpdate = new UpdateProfileViewModel(popup);
 					var profilePhotosViewModel = new AddOrUpdateProfilePhotosViewModel();
 
 					await userProfileUpdate.WriteData(_viewModel.UserProfileData);

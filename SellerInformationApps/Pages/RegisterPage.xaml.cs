@@ -5,8 +5,7 @@ namespace SellerInformationApps.Pages
 {
 	public partial class RegisterPage : ContentPage
 	{
-		private AlertsHelper alertsHelper = new AlertsHelper();
-
+		private readonly AlertsHelper _alertsHelper = new();
 		private readonly RegisterViewModel _registerViewModel;
 
 		public RegisterPage(RegisterViewModel registerViewModel)
@@ -19,11 +18,6 @@ namespace SellerInformationApps.Pages
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			ResetForm();
-		}
-
-		private void ResetForm()
-		{
 			_registerViewModel.ClearFormFields();
 		}
 
@@ -34,15 +28,17 @@ namespace SellerInformationApps.Pages
 
 		private async void SelectProfileImageButton_Clicked(object sender, EventArgs e)
 		{
-			string action = await DisplayActionSheet("Resim Kaynaðýný Seç", "Ýptal", null, "Galeriden Seç", "Kamera ile Çek");
+			var currentPage = Application.Current.MainPage;
+			string action = await currentPage.DisplayActionSheet("Resim Kaynaðýný Seç", "Ýptal", null, "Galeriden Seç", "Kamera ile Çek");
 
-			if (action == "Galeriden Seç")
+			switch (action)
 			{
-				await PickOrCaptureImageAsync(isPickPhoto: true);
-			}
-			else if (action == "Kamera ile Çek")
-			{
-				await PickOrCaptureImageAsync(isPickPhoto: false);
+				case "Galeriden Seç":
+					await PickOrCaptureImageAsync(isPickPhoto: true);
+					break;
+				case "Kamera ile Çek":
+					await PickOrCaptureImageAsync(isPickPhoto: false);
+					break;
 			}
 		}
 
@@ -50,34 +46,27 @@ namespace SellerInformationApps.Pages
 		{
 			try
 			{
-				FileResult result;
-				if (isPickPhoto)
-				{
-					result = await MediaPicker.PickPhotoAsync();
-				}
-				else
-				{
-					result = await MediaPicker.CapturePhotoAsync();
-				}
+				FileResult result = isPickPhoto
+					? await MediaPicker.PickPhotoAsync()
+					: await MediaPicker.CapturePhotoAsync();
 
 				if (result != null)
 				{
 					var stream = await result.OpenReadAsync();
-
-					using (MemoryStream ms = new MemoryStream())
+					using (MemoryStream ms = new())
 					{
 						await stream.CopyToAsync(ms);
-						_registerViewModel.ProfileImage = ImageSource.FromStream(() => new MemoryStream(ms.ToArray()));
+						_registerViewModel.ProfileImageBase64 = Convert.ToBase64String(ms.ToArray());
 					}
 				}
 				else
 				{
-					_registerViewModel.ProfileImage = "profilephotots.png";
+					_registerViewModel.ProfileImageBase64 = "profilephotots.png";
 				}
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar(ex.Message, true);
+				await _alertsHelper.ShowSnackBar(ex.Message, true);
 			}
 		}
 	}

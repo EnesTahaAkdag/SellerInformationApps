@@ -1,7 +1,8 @@
 <mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
            x:Class="SellerInformationApps.PopUps.UpdateProfilePopUp"
-           xmlns:a="clr-namespace:SellerInformationApps.Converter"
+           xmlns:a="clr-namespace:SellerInformationApps.Converters"
+           xmlns:sa="clr-namespace:SellerInformationApps.Converter"
            xmlns:sys="clr-namespace:System;assembly=mscorlib"
            xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
            xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
@@ -23,13 +24,20 @@
 
         <StackLayout Padding="20" Spacing="25" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <StackLayout Orientation="Horizontal" Spacing="20" HorizontalOptions="Center">
+                
                 <Frame WidthRequest="140" HeightRequest="140" CornerRadius="70" IsClippedToBounds="True"
                        BorderColor="#ddd" BackgroundColor="White" HasShadow="False" HorizontalOptions="Center">
-                    <Image Source="{Binding ProfileImage}" WidthRequest="140" HeightRequest="140" Aspect="AspectFill" />
+                
+                    <Image Source="{Binding ProfileImageBase64, Converter={StaticResource Base64ToImageSourceConverter}}"
+                      HeightRequest="150" WidthRequest="150" HorizontalOptions="Center" Aspect="AspectFill"/>
+                
                 </Frame>
                 <StackLayout VerticalOptions="Center" Spacing="10">
-                    <Button Text="Profil Resmini Güncelle" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="15" FontAttributes="Bold" Clicked="OnAddOrChangeImageClicked"/>
-                    <Button Text="Şifreyi Güncelle" BackgroundColor="BlueViolet" Clicked="OpenUpdateProfilePasswordPopUp" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="200" FontSize="16" FontAttributes="Bold"/>
+                    <Button Text="Profil Resmini Güncelle" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45"
+                            WidthRequest="200" FontSize="15" FontAttributes="Bold" Clicked="OpenProfilePhotoUpdateOrAddPopup"/>
+                    
+                    <Button Text="Şifreyi Güncelle" BackgroundColor="BlueViolet" TextColor="White" CornerRadius="20" HeightRequest="45" 
+                            WidthRequest="200" FontSize="16" FontAttributes="Bold" Clicked="OpenProfilePasswordUpdatePopup"/>
                 </StackLayout>
             </StackLayout>
 
@@ -65,20 +73,18 @@
             <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
                 <StackLayout Spacing="5">
                     <Label Text="Doğum Tarihi" FontSize="14" TextColor="#6200EE"/>
-                    <DatePicker x:Name="AgeEntry"
-            MinimumDate="1900-01-01"
-            MaximumDate="{x:Static sys:DateTime.Now}"
-            Date="{Binding Age, Mode=TwoWay}"
-            FontSize="20"
-            TextColor="Black"
-            BackgroundColor="Transparent"
-            FontAttributes="Bold" />
+                    <DatePicker x:Name="AgeEntry" MinimumDate="1900-01-01" MaximumDate="{x:Static sys:DateTime.Now}"
+                                Date="{Binding Age, Mode=TwoWay}" FontSize="20" TextColor="Black"
+                                BackgroundColor="Transparent" FontAttributes="Bold" />
                 </StackLayout>
             </Frame>
 
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="20">
-                <Button Text="Kaydet" Clicked="SubmitButton" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="150" FontSize="16"/>
-                <Button Text="İptal Et" Clicked="ClosePopUpButton" BackgroundColor="#E74C3C" TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="150" FontSize="16"/>
+                <Button Text="Kaydet" Command="{Binding UpdateProfileCommand}" BackgroundColor="#4CAF50" 
+                        TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="150" FontSize="16"/>
+
+                <Button Text="İptal Et" Command="{Binding CancelUpdatePopUpCommand}" BackgroundColor="#E74C3C"
+                        TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="150" FontSize="16"/>
             </StackLayout>
         </StackLayout>
     </Grid>

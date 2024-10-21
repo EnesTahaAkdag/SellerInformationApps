@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
@@ -54,11 +52,11 @@ namespace SellerInformationApps.ViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://59b7-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://de29-37-130-115-91.ngrok-free.app");
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = $"https://59b7-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://de29-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
 
 				using (var response = await httpClient.GetAsync(url))
 				{

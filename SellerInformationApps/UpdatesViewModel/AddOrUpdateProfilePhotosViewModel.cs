@@ -14,27 +14,28 @@ namespace SellerInformationApps.UpdatesViewModel
 		private readonly AlertsHelper _alertsHelper = new AlertsHelper();
 
 		[ObservableProperty]
-		private string _userName = Preferences.Get("UserName", string.Empty);
+		private string userName = Preferences.Get("UserName", string.Empty);
 
 		[ObservableProperty]
-		public ImageSource profileImage;
+		public string profileImageBase64;
 
-		public async Task WriteData(ImageSource photo)
+		public async Task WriteData(string photo)
 		{
 			if (photo == null)
 			{
-				ProfileImage = "profilephotots.png";
+				ProfileImageBase64 = "profilephotots.png";
 				await _alertsHelper.ShowSnackBar("Profil resmi gelmedi veya boş.", true);
 			}
 			else
 			{
 				try
 				{
-					ProfileImage = photo;
+					ProfileImageBase64 = photo;
+					OnPropertyChanged(nameof(ProfileImageBase64));
 				}
 				catch (Exception ex)
 				{
-					ProfileImage = "profilephotots.png";
+					ProfileImageBase64 = "profilephotots.png";
 					await _alertsHelper.ShowSnackBar($"Hata oluştu: {ex.Message}", true);
 				}
 			}
@@ -54,8 +55,8 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				string password = Preferences.Get("Password", string.Empty);
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{password}"));
-				var httpClient = HttpClientFactory.Create("https://59b7-37-130-115-91.ngrok-free.app");
-				string url = "https://59b7-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
+				var httpClient = HttpClientFactory.Create("https://de29-37-130-115-91.ngrok-free.app");
+				string url = "https://de29-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdateUserProfileImage";
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				var content = new StringContent(JsonConvert.SerializeObject(newPhoto), Encoding.UTF8, "application/json");
@@ -89,7 +90,7 @@ namespace SellerInformationApps.UpdatesViewModel
 
 		private bool IsFormValid()
 		{
-			return ProfileImage != null;
+			return ProfileImageBase64 != null;
 		}
 
 		private ProfilePhotoModel CreateProfilePhotoModel()
@@ -97,22 +98,8 @@ namespace SellerInformationApps.UpdatesViewModel
 			return new ProfilePhotoModel
 			{
 				UserName = UserName,
-				NewProfileImageBase64 = ConvertImageSourceToBase64(ProfileImage)
+				NewProfileImageBase64 = ProfileImageBase64
 			};
-		}
-
-		private string ConvertImageSourceToBase64(ImageSource imageSource)
-		{
-			if (imageSource is StreamImageSource streamImage)
-			{
-				using (var stream = streamImage.Stream(CancellationToken.None).Result)
-				using (MemoryStream ms = new MemoryStream())
-				{
-					stream.CopyTo(ms);
-					return Convert.ToBase64String(ms.ToArray());
-				}
-			}
-			return null;
 		}
 	}
 }

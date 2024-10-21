@@ -1,17 +1,11 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using ServiceHelper.Alerts;
 using ServiceHelper.Authentication;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SellerInformationApps.ViewModel
 {
@@ -36,10 +30,10 @@ namespace SellerInformationApps.ViewModel
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://59b7-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://de29-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "https://59b7-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList";
+				string url = "https://de29-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList";
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
 					using (var response = await httpClient.SendAsync(request))

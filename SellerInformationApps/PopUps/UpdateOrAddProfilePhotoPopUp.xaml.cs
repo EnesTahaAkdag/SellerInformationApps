@@ -6,7 +6,7 @@ namespace SellerInformationApps.PopUps
 {
 	public partial class UpdateOrAddProfilePhotoPopUp : Popup
 	{
-		private readonly AlertsHelper _alertsHelper = new AlertsHelper();
+		private readonly AlertsHelper _alertsHelper = new();
 		private readonly AddOrUpdateProfilePhotosViewModel _profilePhotosViewModel;
 
 		public UpdateOrAddProfilePhotoPopUp(AddOrUpdateProfilePhotosViewModel profilePhotosViewModel)
@@ -39,7 +39,7 @@ namespace SellerInformationApps.PopUps
 
 		private async void SubmitButton(object sender, EventArgs e)
 		{
-			if (_profilePhotosViewModel.ProfileImage == null)
+			if (_profilePhotosViewModel.ProfileImageBase64 == null)
 			{
 				await _alertsHelper.ShowSnackBar("Lütfen önce bir fotoðraf seçin.", true);
 				return;
@@ -53,35 +53,27 @@ namespace SellerInformationApps.PopUps
 		{
 			try
 			{
-				FileResult result = null;
-
-				if (isPickPhoto)
-				{
-					result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
-					{
-						Title = "Bir fotoðraf seçin"
-					});
-				}
-				else
-				{
-					result = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions
-					{
-						Title = "Bir fotoðraf çekin"
-					});
-				}
+				FileResult result = isPickPhoto
+					? await MediaPicker.PickPhotoAsync()
+					: await MediaPicker.CapturePhotoAsync();
 
 				if (result != null)
 				{
-					using (var stream = await result.OpenReadAsync())
+					var stream = await result.OpenReadAsync();
 					using (MemoryStream ms = new MemoryStream())
 					{
 						await stream.CopyToAsync(ms);
-						_profilePhotosViewModel.ProfileImage = ImageSource.FromStream(() => new MemoryStream(ms.ToArray()));
+						var photo = Convert.ToBase64String(ms.ToArray());
+
+						// Görseli manuel olarak güncelle
+						ProfileImage.Source = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(photo)));
+
+						await _profilePhotosViewModel.WriteData(photo); // Veriyi de sakla
 					}
 				}
 				else
 				{
-					_profilePhotosViewModel.ProfileImage = "profilephotots.png";
+					_profilePhotosViewModel.ProfileImageBase64 = "profilephotots.png";
 				}
 			}
 			catch (Exception ex)

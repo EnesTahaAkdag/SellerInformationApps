@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
@@ -13,7 +11,7 @@ using System.Text;
 
 namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 {
-	public partial class VerificationCodeEntryViewModel : Authentication
+	public partial class VerificationCodeEntryViewModel : ObservableObject
 	{
 		public AlertsHelper alertsHelper = new AlertsHelper();
 
@@ -59,8 +57,8 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://59b7-37-130-115-91.ngrok-free.app");
-				string url = "https://59b7-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
+				var httpClient = HttpClientFactory.Create("https://de29-37-130-115-91.ngrok-free.app");
+				string url = "https://de29-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
 				var content = new StringContent(JsonConvert.SerializeObject(validationCode), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -97,7 +95,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"Bir Hata Oluştu: {ex.Message}",true);
+				await alertsHelper.ShowSnackBar($"Bir Hata Oluştu: {ex.Message}", true);
 			}
 		}
 

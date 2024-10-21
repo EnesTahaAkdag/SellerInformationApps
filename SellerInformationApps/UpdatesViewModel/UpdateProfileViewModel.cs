@@ -1,8 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
+using SellerInformationApps.PopUps;
 using ServiceHelper.Alerts;
 using System.Net.Http.Headers;
 using System.Text;
@@ -16,48 +18,53 @@ namespace SellerInformationApps.UpdatesViewModel
 		[ObservableProperty] private string userName;
 		[ObservableProperty] private string email;
 		[ObservableProperty] private DateTime? age;
-		[ObservableProperty] private ImageSource profileImage;
+		[ObservableProperty] private string profileImageBase64;
 
-		public AlertsHelper alertsHelper = new AlertsHelper();
+		private readonly AlertsHelper alertsHelper = new AlertsHelper();
 		public UserProfileData UserProfile { get; set; }
+
+
+		public Popup _popUp;
+
+		public IRelayCommand UpdateProfileCommand { get; }
+		public IRelayCommand CancelUpdatePopUpCommand { get; }
+
+		public UpdateProfileViewModel(Popup popup)
+		{
+			_popUp = popup;
+			UpdateProfileCommand = new AsyncRelayCommand(SubmitAsync);
+			CancelUpdatePopUpCommand = new RelayCommand(CancelPopup);
+		}
+
+		private void CancelPopup()
+		{
+			_popUp?.Close();
+		}
 
 		public async Task WriteData(UserProfileData updateUserData)
 		{
 			if (updateUserData == null)
 			{
 				await alertsHelper.ShowSnackBar("Güncellenen veriler Profil Sayfasına Gelmedi", true);
+				return;
 			}
-			else
+
+			try
 			{
-				try
-				{
-					FirstName = updateUserData.FirstName ?? string.Empty;
-					OnPropertyChanged(nameof(FirstName));
-
-					LastName = updateUserData.LastName ?? string.Empty;
-					OnPropertyChanged(nameof(LastName));
-
-					UserName = updateUserData.UserName ?? string.Empty;
-					OnPropertyChanged(nameof(UserName));
-
-					Email = updateUserData.Email ?? string.Empty;
-					OnPropertyChanged(nameof(Email));
-
-					Age = updateUserData.Age;
-					OnPropertyChanged(nameof(Age));
-
-					ProfileImage = updateUserData.ProfileImageBase64 != null
-						? ImageSource.FromUri(new Uri(updateUserData.ProfileImageBase64))
-						: "default_image.png";
-					OnPropertyChanged(nameof(ProfileImage));
-				}
-				catch (Exception ex)
-				{
-					await alertsHelper.ShowSnackBar($"Veriler Geldi Ama Ekrana Basılırken hata verdi: {ex.Message}", true);
-				}
+				FirstName = updateUserData.FirstName ?? string.Empty;
+				LastName = updateUserData.LastName ?? string.Empty;
+				UserName = updateUserData.UserName ?? string.Empty;
+				Email = updateUserData.Email ?? string.Empty;
+				Age = updateUserData.Age ?? DateTime.Now;
+				ProfileImageBase64 = !string.IsNullOrWhiteSpace(updateUserData.ProfileImageBase64)
+					? updateUserData.ProfileImageBase64
+					: "profilephotots.png";
+			}
+			catch (Exception ex)
+			{
+				await alertsHelper.ShowSnackBar($"Veriler geldi, ancak ekrana yazdırılırken hata oluştu: {ex.Message}", true);
 			}
 		}
-
 
 		[RelayCommand]
 		public async Task SubmitAsync()
@@ -75,13 +82,20 @@ namespace SellerInformationApps.UpdatesViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var client = HttpClientFactory.Create("https://59b7-37-130-115-91.ngrok-free.app");
-				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
-					Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}")));
+				if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
+				{
+					await alertsHelper.ShowSnackBar("Kullanıcı adı veya şifre eksik", true);
+					return;
+				}
 
-				var json = JsonConvert.SerializeObject(user);
-				var content = new StringContent(json, Encoding.UTF8, "application/json");
-				using (var response = await client.PutAsync($"/UserUpdateApi/EditUserData", content))
+				var client = HttpClientFactory.Create("https://de29-37-130-115-91.ngrok-free.app");
+				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
+				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+
+				string url = "https://de29-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
+				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+
+				using (var response = await client.PostAsync(url, content))
 				{
 					if (response.IsSuccessStatusCode)
 					{
@@ -118,6 +132,5 @@ namespace SellerInformationApps.UpdatesViewModel
 				Age = Age,
 			};
 		}
-
 	}
 }

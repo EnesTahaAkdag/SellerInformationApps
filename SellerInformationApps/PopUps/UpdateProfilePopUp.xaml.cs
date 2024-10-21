@@ -1,7 +1,5 @@
 using CommunityToolkit.Maui.Views;
-using SellerInformationApps.Models;
 using SellerInformationApps.UpdatesViewModel;
-using SellerInformationApps.ViewModel;
 using ServiceHelper.Alerts;
 
 namespace SellerInformationApps.PopUps
@@ -17,33 +15,23 @@ namespace SellerInformationApps.PopUps
 			InitializeComponent();
 			_viewModel = viewModel;
 			_profilePhotosViewModel = profilePhotosViewModel;
+			_viewModel._popUp = this;
 			BindingContext = _viewModel;
 		}
 
-		private async void SubmitButton(object sender, EventArgs e)
-		{
-			await _viewModel.SubmitAsync();
-			Close();
-		}
-
-		private void ClosePopUpButton(object sender, EventArgs e)
-		{
-			Close();
-		}
-
-		private void OpenUpdateProfilePasswordPopUp(object sender, EventArgs e)
+		private void OpenProfilePasswordUpdatePopup(object sender, EventArgs e)
 		{
 			var popup = new UpdateProfilePasswordPopUp(new UpdateProfilePassword());
-			Application.Current.MainPage.ShowPopup(popup);
+			Shell.Current.ShowPopup(popup);
 		}
 
-		private async void OnAddOrChangeImageClicked(object sender, EventArgs e)
+		private async void OpenProfilePhotoUpdateOrAddPopup(object sender, EventArgs e)
 		{
 			try
 			{
-				await _profilePhotosViewModel.WriteData(_viewModel.ProfileImage);
+				await _profilePhotosViewModel.WriteData(_viewModel.ProfileImageBase64);
 				var popup = new UpdateOrAddProfilePhotoPopUp(_profilePhotosViewModel);
-				Application.Current.MainPage.ShowPopup(popup);
+				Shell.Current.ShowPopup(popup);
 			}
 			catch (Exception ex)
 			{

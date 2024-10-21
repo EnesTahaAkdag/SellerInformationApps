@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:SellerInformationApps.Converters"
              x:Class="SellerInformationApps.Pages.RegisterPage"
              BackgroundColor="White">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:Base64ToImageSourceConverter x:Key="Base64ToImageSourceConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <!-- İçerik -->
     <ScrollView>
@@ -10,10 +17,13 @@
 
             <Label Text="Lütfen aşağıdaki bilgileri doldurun." TextColor="Gray" HorizontalOptions="Center" FontSize="14"/>
 
+            <!-- Profil resmi Frame içinde gösterilecek -->
             <Frame WidthRequest="130" HeightRequest="130" CornerRadius="65" IsClippedToBounds="True" BorderColor="#007AFF" 
                    BackgroundColor="#F0F0F0" HorizontalOptions="Center">
-                <Image Source="{Binding ProfileImage}" Aspect="AspectFill" />
+                <Image Source="{Binding ProfileImageBase64, Converter={StaticResource Base64ToImageSourceConverter}}"
+                       HeightRequest="150" WidthRequest="150" HorizontalOptions="Center" Aspect="AspectFill"/>
             </Frame>
+
             <Button Text="Profil Fotoğrafı Yükle" Clicked="SelectProfileImageButton_Clicked" BackgroundColor="Transparent"
                     TextColor="#007AFF" FontAttributes="Bold" HorizontalOptions="Center"/>
 
