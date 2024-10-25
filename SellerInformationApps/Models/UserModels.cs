@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
 namespace SellerInformationApps.Models
@@ -34,7 +33,6 @@ namespace SellerInformationApps.Models
 		public string ProfileImageBase64 { get; set; }
 	}
 
-
 	public class UpdateUserPassword
 	{
 		[StringLength(50, ErrorMessage = "50 karakterden fazla giriş yapılamaz.")]
@@ -45,6 +43,16 @@ namespace SellerInformationApps.Models
 		[Required(ErrorMessage = "Lütfen şifre giriniz.")]
 		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d]{8,}$", ErrorMessage = "En az 8 karakterlik bir parola büyük ve küçük harflerin kombinasyonunu içermelidir.")]
 		public string Password { get; set; }
+	}
+
+	public class ProfileUpdateResult
+	{
+		public string FirstName { get; set; }
+		public string LastName { get; set; }
+		public string UserName { get; set; }
+		public string Email { get; set; }
+		public DateTime Age { get; set; }
+		public string ProfileImageBase64 { get; set; }
 	}
 
 	public class LoginUser
@@ -74,7 +82,7 @@ namespace SellerInformationApps.Models
 
 	public class UserProfilePhoto
 	{
-		public string  ProfileImageSource { get; set; }
+		public string ProfileImageBase64 { get; set; }
 	}
 
 	public class UpdateUser : UserProfileData
@@ -152,6 +160,12 @@ namespace SellerInformationApps.Models
 		public ForgetPassword Data { get; set; }
 	}
 
+	public class ProfileUpdateApiResponse
+	{
+		public bool Success { get; set; }
+		public string ErrorMessage { get; set; }
+		public UserProfileData Data { get; set; }
+	}
 	public class ProfileApiResponse
 	{
 		public bool Success { get; set; }

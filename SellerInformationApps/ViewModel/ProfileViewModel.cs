@@ -12,7 +12,7 @@ namespace SellerInformationApps.ViewModel
 {
 	public partial class ProfilePageViewModel : Authentication
 	{
-		private readonly AlertsHelper _alertsHelper = new AlertsHelper();
+		private readonly AlertsHelper _alertsHelper = new();
 		private readonly Authentication _authentication;
 
 		[ObservableProperty] private string firstName;
@@ -20,7 +20,7 @@ namespace SellerInformationApps.ViewModel
 		[ObservableProperty] private string userName;
 		[ObservableProperty] private string email;
 		[ObservableProperty] private DateTime? age;
-		[ObservableProperty] private ImageSource profileImage;
+		[ObservableProperty] private string profileImageBase64;
 		[ObservableProperty] private bool isLoading;
 
 		public UserProfileData UserProfileData { get; set; }
@@ -35,10 +35,10 @@ namespace SellerInformationApps.ViewModel
 		{
 			FirstName = LastName = UserName = Email = string.Empty;
 			Age = null;
-			ProfileImage = null;
+			ProfileImageBase64 = null;
 			UserProfilePhoto = new UserProfilePhoto();
+			
 		}
-
 		public async Task WriteData(UserProfileData updateUserData)
 		{
 			if (updateUserData == null)
@@ -54,10 +54,11 @@ namespace SellerInformationApps.ViewModel
 					UserName = updateUserData.UserName ?? string.Empty;
 					Email = updateUserData.Email ?? string.Empty;
 					Age = updateUserData.Age;
+					ProfileImageBase64 = updateUserData.ProfileImageBase64 ?? string.Empty;
 				}
 				catch (Exception ex)
 				{
-					await _alertsHelper.ShowSnackBar($"Veriler Geldi Ama Ekrana Basılırken hata verdi: {ex.Message}", true);
+					await _alertsHelper.ShowSnackBar($"Veriler geldi ama ekrana basılırken hata verdi: {ex.Message}", true);
 				}
 			}
 		}
@@ -85,10 +86,10 @@ namespace SellerInformationApps.ViewModel
 				   string.IsNullOrEmpty(UserName) &&
 				   string.IsNullOrEmpty(Email) &&
 				   Age == null &&
-				   ProfileImage == null;
+				   ProfileImageBase64 == null;
 		}
 
-		private async Task FetchProfileDataFromApiAsync()
+		public async Task FetchProfileDataFromApiAsync()
 		{
 			try
 			{
@@ -104,7 +105,7 @@ namespace SellerInformationApps.ViewModel
 				}
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				var httpClient = HttpClientFactory.Create("https://de29-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://48d6-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				string url = $"/UserDataSendApi/DataSend?userName={userName}";
@@ -117,7 +118,22 @@ namespace SellerInformationApps.ViewModel
 
 						if (profileData?.Success == true)
 						{
-							UpdateProfileData(profileData.Data);
+							FirstName = profileData.Data.FirstName ?? string.Empty;
+							LastName = profileData.Data.LastName ?? string.Empty;
+							UserName = profileData.Data.UserName ?? string.Empty;
+							Email = profileData.Data.Email ?? string.Empty;
+							Age = profileData.Data.Age;
+							UserProfileData = profileData.Data;
+							if (!string.IsNullOrEmpty(profileData.Data.ProfileImageBase64))
+							{
+								ProfileImageBase64 = profileData.Data.ProfileImageBase64;
+								UserProfilePhoto.ProfileImageBase64 = profileData.Data.ProfileImageBase64;
+							}
+							else
+							{
+								ProfileImageBase64 = "profilephotots.png";
+								UserProfilePhoto.ProfileImageBase64 = "profilephotots.png";
+							}
 						}
 						else
 						{
@@ -137,37 +153,6 @@ namespace SellerInformationApps.ViewModel
 			finally
 			{
 				IsLoading = false;
-			}
-		}
-
-		private void UpdateProfileData(UserProfileData data)
-		{
-			if (data == null)
-			{
-				return;
-			}
-
-			UserProfileData = data;
-
-			FirstName = data.FirstName ?? string.Empty;
-			LastName = data.LastName ?? string.Empty;
-			UserName = data.UserName ?? string.Empty;
-			Email = data.Email ?? string.Empty;
-			Age = data.Age;
-
-			if (UserProfilePhoto == null)
-			{
-				UserProfilePhoto = new UserProfilePhoto();
-			}
-
-			if (!string.IsNullOrEmpty(data.ProfileImageBase64))
-			{
-				ProfileImage = ImageSource.FromUri(new Uri(data.ProfileImageBase64));
-				UserProfilePhoto.ProfileImageSource = data.ProfileImageBase64;
-			}
-			else
-			{
-				UserProfilePhoto.ProfileImageSource = "profilephotots.png";
 			}
 		}
 

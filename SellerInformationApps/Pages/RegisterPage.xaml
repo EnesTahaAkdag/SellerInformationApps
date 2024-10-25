@@ -5,12 +5,6 @@
              x:Class="SellerInformationApps.Pages.RegisterPage"
              BackgroundColor="White">
 
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <converters:Base64ToImageSourceConverter x:Key="Base64ToImageSourceConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
-
     <!-- İçerik -->
     <ScrollView>
         <StackLayout Padding="30" Spacing="25" VerticalOptions="Center">
@@ -20,7 +14,7 @@
             <!-- Profil resmi Frame içinde gösterilecek -->
             <Frame WidthRequest="130" HeightRequest="130" CornerRadius="65" IsClippedToBounds="True" BorderColor="#007AFF" 
                    BackgroundColor="#F0F0F0" HorizontalOptions="Center">
-                <Image Source="{Binding ProfileImageBase64, Converter={StaticResource Base64ToImageSourceConverter}}"
+                <Image Source="{Binding ProfileImageBase64}"
                        HeightRequest="150" WidthRequest="150" HorizontalOptions="Center" Aspect="AspectFill"/>
             </Frame>
 

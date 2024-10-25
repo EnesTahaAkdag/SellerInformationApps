@@ -25,7 +25,6 @@ namespace SellerInformationApps.ViewModel
 
 		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-
 		public SellerInfosViewModel(HttpClient httpClient)
 		{
 			StoreInfos = new ObservableCollection<StoreInfo>();
@@ -52,11 +51,11 @@ namespace SellerInformationApps.ViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://de29-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://48d6-37-130-115-91.ngrok-free.app");
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = $"https://de29-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://48d6-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
 
 				using (var response = await httpClient.GetAsync(url))
 				{
@@ -69,6 +68,8 @@ namespace SellerInformationApps.ViewModel
 						{
 							foreach (var item in apiResponse.Data)
 							{
+								TrimAllStringProperties(item);
+
 								StoreInfos.Add(item);
 							}
 							CurrentPage++;
@@ -80,17 +81,33 @@ namespace SellerInformationApps.ViewModel
 					}
 					else
 					{
-						await alertsHelper.ShowSnackBar("API isteği başarısız oldu.",true);
+						await alertsHelper.ShowSnackBar("API isteği başarısız oldu.", true);
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"API isteği sırasında bir hata oluştu: {ex.Message}",true);
+				await alertsHelper.ShowSnackBar($"API isteği sırasında bir hata oluştu: {ex.Message}", true);
 			}
 			finally
 			{
 				_semaphore.Release();
+			}
+		}
+
+		private void TrimAllStringProperties(StoreInfo item)
+		{
+			var properties = typeof(StoreInfo).GetProperties()
+				.Where(prop => prop.PropertyType == typeof(string) && prop.CanWrite && prop.CanRead);
+
+			foreach (var prop in properties)
+			{
+				var value = (string)prop.GetValue(item);
+
+				if (!string.IsNullOrEmpty(value) && value.Length > 16)
+				{
+					prop.SetValue(item, value.Substring(0, 16) + "...");
+				}
 			}
 		}
 	}

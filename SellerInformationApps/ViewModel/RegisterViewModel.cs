@@ -68,8 +68,8 @@ namespace SellerInformationApps.ViewModel
 			try
 			{
 				var user = CreateUser();
-				string url = "https://de29-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-				var httpClient = HttpClientFactory.Create("https://de29-37-130-115-91.ngrok-free.app");
+				string url = "https://48d6-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://48d6-37-130-115-91.ngrok-free.app");
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))

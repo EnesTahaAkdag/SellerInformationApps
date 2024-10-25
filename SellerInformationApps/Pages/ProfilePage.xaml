@@ -2,12 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SellerInformationApps.Pages.ProfilePage"
-             xmlns:a="clr-namespace:SellerInformationApps.Converter"
+             xmlns:Converters="clr-namespace:SellerInformationApps.Converters"
              BackgroundColor="#f5f5f5">
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <a:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <Converters:InverseBooleanConverter x:Key="Base64ToImageSourceConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -22,7 +23,8 @@
                         <StackLayout>
                             <Frame WidthRequest="140" HeightRequest="140" CornerRadius="70" IsClippedToBounds="True"
                                    BorderColor="#ddd" BackgroundColor="White" HasShadow="False" HorizontalOptions="Center">
-                                <Image Source="{Binding ProfileImage}" WidthRequest="140" HeightRequest="140" Aspect="AspectFill" />
+                                <Image Source="{Binding ProfileImageBase64}" 
+                                       HeightRequest="150" WidthRequest="150" HorizontalOptions="Center" Aspect="AspectFill"/>
                             </Frame>
                         </StackLayout>
                     </Grid>

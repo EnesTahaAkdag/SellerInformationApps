@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SellerInformationApps.Pages.UserListPage"
-             xmlns:a="clr-namespace:SellerInformationApps.Converter"
+             xmlns:a="clr-namespace:SellerInformationApps.Converters"
              Padding="10"
              BackgroundColor="#f5f5f5">
     

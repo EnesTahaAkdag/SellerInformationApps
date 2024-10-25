@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:SellerInformationApps.Pages"
              x:Class="SellerInformationApps.Pages.ChartPage"
-             xmlns:a="clr-namespace:SellerInformationApps.Converter"
+             xmlns:a="clr-namespace:SellerInformationApps.Converters"
              xmlns:viewModel="clr-namespace:SellerInformationApps.ViewModel"
              xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
              BackgroundColor="#F0F0F0">

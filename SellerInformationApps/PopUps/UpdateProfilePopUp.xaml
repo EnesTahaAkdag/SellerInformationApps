@@ -1,8 +1,7 @@
 <mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
            x:Class="SellerInformationApps.PopUps.UpdateProfilePopUp"
-           xmlns:a="clr-namespace:SellerInformationApps.Converters"
-           xmlns:sa="clr-namespace:SellerInformationApps.Converter"
+           xmlns:converters="clr-namespace:SellerInformationApps.Converters"
            xmlns:sys="clr-namespace:System;assembly=mscorlib"
            xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
            xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
@@ -22,17 +21,17 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <StackLayout Padding="20" Spacing="25" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <StackLayout Padding="20" Spacing="30" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <StackLayout Orientation="Horizontal" Spacing="20" HorizontalOptions="Center">
                 
                 <Frame WidthRequest="140" HeightRequest="140" CornerRadius="70" IsClippedToBounds="True"
                        BorderColor="#ddd" BackgroundColor="White" HasShadow="False" HorizontalOptions="Center">
                 
-                    <Image Source="{Binding ProfileImageBase64, Converter={StaticResource Base64ToImageSourceConverter}}"
+                    <Image Source="{Binding ProfileImageBase64}"
                       HeightRequest="150" WidthRequest="150" HorizontalOptions="Center" Aspect="AspectFill"/>
                 
                 </Frame>
-                <StackLayout VerticalOptions="Center" Spacing="10">
+                <StackLayout VerticalOptions="Center" Spacing="15">
                     <Button Text="Profil Resmini Güncelle" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45"
                             WidthRequest="200" FontSize="15" FontAttributes="Bold" Clicked="OpenProfilePhotoUpdateOrAddPopup"/>
                     
@@ -57,14 +56,6 @@
 
             <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
                 <StackLayout Spacing="5">
-                    <Label Text="Kullanıcı Adı" FontSize="14" TextColor="#6200EE"/>
-                    <Label Text="Kullanıcı Adı Değiştirilemez" FontSize="12" TextColor="#911704" />
-                    <Entry Text="{Binding UserName}" FontSize="20" TextColor="Black" Placeholder="Kullanıcı Adını Giriniz" IsEnabled="False" FontAttributes="Bold"/>
-                </StackLayout>
-            </Frame>
-
-            <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
-                <StackLayout Spacing="5">
                     <Label Text="E-Mail" FontSize="14" TextColor="#6200EE"/>
                     <Entry Text="{Binding Email}" FontSize="20" TextColor="Black" Placeholder="Mail Adresini Giriniz" Keyboard="Email" FontAttributes="Bold"/>
                 </StackLayout>
@@ -79,11 +70,11 @@
                 </StackLayout>
             </Frame>
 
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="20">
-                <Button Text="Kaydet" Command="{Binding UpdateProfileCommand}" BackgroundColor="#4CAF50" 
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="FillAndExpand" Spacing="20">
+                <Button Text="Kaydet" Clicked="SubmitButton" BackgroundColor="#4CAF50" 
                         TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="150" FontSize="16"/>
 
-                <Button Text="İptal Et" Command="{Binding CancelUpdatePopUpCommand}" BackgroundColor="#E74C3C"
+                <Button Text="İptal Et" Clicked="ClosePopup" BackgroundColor="#E74C3C"
                         TextColor="White" CornerRadius="20" HeightRequest="45" WidthRequest="150" FontSize="16"/>
             </StackLayout>
         </StackLayout>

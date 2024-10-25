@@ -25,8 +25,6 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 		private readonly string _userName = Preferences.Get("UserName", string.Empty);
 
-		private static readonly HttpClient httpClient = HttpClientFactory.Create("https://de29-37-130-115-91.ngrok-free.app");
-
 		public IRelayCommand UpdatePasswordCommand { get; }
 		public IRelayCommand CancelCommand { get; }
 
@@ -66,8 +64,10 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 					return;
 				}
 
-				string url = "https://de29-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ChangePassword";
+				string url = "https://48d6-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ChangePassword";
 				var content = new StringContent(JsonConvert.SerializeObject(changePasswordModel), Encoding.UTF8, "application/json");
+
+				var httpClient = HttpClientFactory.Create("https://48d6-37-130-115-91.ngrok-free.app");
 
 				using (var response = await httpClient.PostAsync(url, content).ConfigureAwait(false))
 				{

@@ -8,17 +8,19 @@ namespace SellerInformationApps.PopUps
 	{
 		private readonly AlertsHelper _alertsHelper = new();
 		private readonly AddOrUpdateProfilePhotosViewModel _profilePhotosViewModel;
+		private readonly UpdateProfileViewModel _updateProfileViewModel;
 
-		public UpdateOrAddProfilePhotoPopUp(AddOrUpdateProfilePhotosViewModel profilePhotosViewModel)
+		public UpdateOrAddProfilePhotoPopUp(AddOrUpdateProfilePhotosViewModel profilePhotosViewModel, UpdateProfileViewModel updateProfileViewModel)
 		{
 			InitializeComponent();
 			_profilePhotosViewModel = profilePhotosViewModel;
+			_updateProfileViewModel = updateProfileViewModel;
 			BindingContext = _profilePhotosViewModel;
 		}
 
 		private void ClosePopUpButton(object sender, EventArgs e)
 		{
-			Close();
+			Close(_profilePhotosViewModel.resultData);
 		}
 
 		private async void OnCaptureImageClicked(object sender, EventArgs e)
@@ -41,12 +43,17 @@ namespace SellerInformationApps.PopUps
 		{
 			if (_profilePhotosViewModel.ProfileImageBase64 == null)
 			{
-				await _alertsHelper.ShowSnackBar("Lütfen önce bir fotoðraf seçin.", true);
-				return;
+				_profilePhotosViewModel.ProfileImageBase64 = "profilephotots.png";
+				await _profilePhotosViewModel.AddOrUpdateProfilePhotosAsync();
+			}
+			else
+			{
+				await _profilePhotosViewModel.AddOrUpdateProfilePhotosAsync();
 			}
 
-			await _profilePhotosViewModel.AddOrUpdateProfilePhotosAsync();
-			Close();
+			string newPhoto = _profilePhotosViewModel.resultData;
+			Close(newPhoto);
+
 		}
 
 		private async Task PickOrCaptureImageAsync(bool isPickPhoto)
@@ -65,10 +72,9 @@ namespace SellerInformationApps.PopUps
 						await stream.CopyToAsync(ms);
 						var photo = Convert.ToBase64String(ms.ToArray());
 
-						// Görseli manuel olarak güncelle
 						ProfileImage.Source = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(photo)));
 
-						await _profilePhotosViewModel.WriteData(photo); // Veriyi de sakla
+						await _profilePhotosViewModel.WriteData(photo);
 					}
 				}
 				else
@@ -83,4 +89,3 @@ namespace SellerInformationApps.PopUps
 		}
 	}
 }
-

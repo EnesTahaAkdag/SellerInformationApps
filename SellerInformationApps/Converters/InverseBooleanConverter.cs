@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace SellerInformationApps.Converter
+namespace SellerInformationApps.Converters
 {
 	public class InverseBooleanConverter : IValueConverter
 	{

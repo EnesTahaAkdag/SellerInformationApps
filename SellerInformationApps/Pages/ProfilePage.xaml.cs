@@ -8,12 +8,9 @@ namespace SellerInformationApps.Pages
 {
 	public partial class ProfilePage : ContentPage
 	{
-		private readonly Popup popup;
-		public AlertsHelper alertsHelper = new AlertsHelper();
-
+		private readonly AlertsHelper alertsHelper = new();
 		private readonly ProfilePageViewModel _viewModel;
-
-		public string FirstName { get; set; }
+		private UpdateProfileViewModel updateProfile;
 
 		public ProfilePage(ProfilePageViewModel viewModel)
 		{
@@ -28,11 +25,6 @@ namespace SellerInformationApps.Pages
 			try
 			{
 				await _viewModel.AccessedAsync();
-
-				if (!string.IsNullOrEmpty(FirstName))
-				{
-					_viewModel.FirstName = FirstName;
-				}
 			}
 			catch (Exception ex)
 			{
@@ -40,10 +32,13 @@ namespace SellerInformationApps.Pages
 			}
 		}
 
-		private void ClearData()
+		protected override void OnDisappearing()
 		{
-			_viewModel.ClearProfileData();
+			base.OnDisappearing();
+			ClearData();
 		}
+
+		private void ClearData() => _viewModel.ClearProfileData();
 
 		private async void UpdateProfileAsync(object sender, EventArgs e)
 		{
@@ -51,18 +46,18 @@ namespace SellerInformationApps.Pages
 			{
 				if (_viewModel.UserProfileData != null)
 				{
-					var userProfileUpdate = new UpdateProfileViewModel(popup);
-					var profilePhotosViewModel = new AddOrUpdateProfilePhotosViewModel();
+					updateProfile = new UpdateProfileViewModel(new Popup());
+					await updateProfile.LoadDataAsync(_viewModel.UserProfileData);
 
-					await userProfileUpdate.WriteData(_viewModel.UserProfileData);
-
-					var result = await this.ShowPopupAsync(new UpdateProfilePopUp(userProfileUpdate, profilePhotosViewModel));
+					var result = await this.ShowPopupAsync(new UpdateProfilePopUp(updateProfile, new AddOrUpdateProfilePhotosViewModel()));
 
 					if (result != null)
 					{
-						await _viewModel.AccessedAsync();
-						await _viewModel.WriteData(_viewModel.UserProfileData);
+						await _viewModel.WriteData(updateProfile.ResultData);
+						_viewModel.UserProfileData = updateProfile.ResultData;
+						BindingContext = _viewModel;
 					}
+
 				}
 				else
 				{
@@ -74,6 +69,5 @@ namespace SellerInformationApps.Pages
 				await alertsHelper.ShowSnackBar($"Profil güncellenirken bir hata oluþtu: {ex.Message}", true);
 			}
 		}
-
 	}
 }

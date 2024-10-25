@@ -3,7 +3,6 @@
            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
            x:Class="SellerInformationApps.PopUps.UpdateOrAddProfilePhotoPopUp"
            xmlns:converters="clr-namespace:SellerInformationApps.Converters"
-           xmlns:converter="clr-namespace:SellerInformationApps.Converter"
            xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
            CanBeDismissedByTappingOutsideOfPopup="True">
 
@@ -17,7 +16,7 @@
             <!-- Profile Image Frame -->
             <Frame WidthRequest="140" HeightRequest="140" CornerRadius="70" IsClippedToBounds="True"
                    BorderColor="#ddd" BackgroundColor="White" HasShadow="False" HorizontalOptions="Center">
-                <Image x:Name="ProfileImage" Source="{Binding ProfileImageBase64, Converter={StaticResource Base64ToImageSourceConverter}}"
+                <Image x:Name="ProfileImage" Source="{Binding ProfileImageBase64}"
                       HeightRequest="150" WidthRequest="150" HorizontalOptions="Center" Aspect="AspectFill"/>
             </Frame>
             <!-- Button for selecting or capturing photo -->

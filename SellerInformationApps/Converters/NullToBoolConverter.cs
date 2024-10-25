@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace SellerInformationApps.NullToBoolConverters
+namespace SellerInformationApps.Converters
 {
 	public class NullToBoolConverter : IValueConverter
 	{
