@@ -45,7 +45,7 @@
             </ScrollView>
 
             <!-- İçerik -->
-            <ScrollView Grid.Row="1" Orientation="Vertical" Margin="0,10,0,0">
+            <ScrollView Grid.Row="1" Orientation="Vertical" Margin="0,10,0,0" Scrolled="OnScrollViewScrolled">
                 <ScrollView Grid.Row="1" Orientation="Horizontal" Scrolled="OnScrolled" x:Name="s">
                     <StackLayout Orientation="Vertical" BackgroundColor="White" Padding="5" Spacing="5">
                         <StackLayout BindableLayout.ItemsSource="{Binding UserLists}">

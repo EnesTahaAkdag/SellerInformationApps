@@ -73,10 +73,10 @@ namespace SellerInformationApps.UpdatesViewModel
 					return;
 				}
 
-				var client = HttpClientFactory.Create("https://48d6-37-130-115-91.ngrok-free.app");
+				var client = HttpClientFactory.Create("https://f51b-37-130-115-91.ngrok-free.app");
 				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}")));
 
-				var url = "https://48d6-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
+				var url = "https://f51b-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await client.PostAsync(url, content))
@@ -87,7 +87,15 @@ namespace SellerInformationApps.UpdatesViewModel
 					if (response.IsSuccessStatusCode && apiResponse != null && apiResponse.Success)
 					{
 						await alertsHelper.ShowSnackBar("Profil başarıyla güncellendi", false);
-						UpdateResultData(apiResponse.Data);
+
+						ResultData.FirstName = apiResponse.Data.FirstName;
+						ResultData.LastName = apiResponse.Data.LastName;
+						ResultData.UserName = apiResponse.Data.UserName;
+						ResultData.Email = apiResponse.Data.Email;
+						ResultData.Age = apiResponse.Data.Age;
+						ResultData.ProfileImageBase64 = !string.IsNullOrWhiteSpace(apiResponse.Data.ProfileImageBase64)
+							? apiResponse.Data.ProfileImageBase64
+							: "profilephotots.png";
 					}
 					else
 					{
@@ -113,19 +121,8 @@ namespace SellerInformationApps.UpdatesViewModel
 			LastName = LastName,
 			UserName = userName,
 			Email = Email,
-			Age = Age
+			Age = Age,
+			ProfileImageBase64 = ProfileImageBase64
 		};
-
-		private void UpdateResultData(UserProfileData updatedData)
-		{
-			ResultData.FirstName = updatedData.FirstName;
-			ResultData.LastName = updatedData.LastName;
-			ResultData.UserName = updatedData.UserName;
-			ResultData.Email = updatedData.Email;
-			ResultData.Age = updatedData.Age;
-			ResultData.ProfileImageBase64 = !string.IsNullOrWhiteSpace(updatedData.ProfileImageBase64)
-				? updatedData.ProfileImageBase64
-				: "profilephotots.png";
-		}
 	}
 }

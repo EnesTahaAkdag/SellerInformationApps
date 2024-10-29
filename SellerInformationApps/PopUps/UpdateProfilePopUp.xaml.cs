@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using SellerInformationApps.UpdatesViewModel;
+using SellerInformationApps.ViewModel;
 using ServiceHelper.Alerts;
 
 namespace SellerInformationApps.PopUps
@@ -8,14 +9,12 @@ namespace SellerInformationApps.PopUps
 	{
 		private readonly AlertsHelper alertsHelper = new();
 		private readonly UpdateProfileViewModel _viewModel;
-		private readonly AddOrUpdateProfilePhotosViewModel _profilePhotosViewModel;
 		private readonly Page _mainPage;
 
-		public UpdateProfilePopUp(UpdateProfileViewModel viewModel, AddOrUpdateProfilePhotosViewModel profilePhotosViewModel)
+		public UpdateProfilePopUp(UpdateProfileViewModel viewModel)
 		{
 			InitializeComponent();
 			_viewModel = viewModel;
-			_profilePhotosViewModel = profilePhotosViewModel;
 			BindingContext = _viewModel;
 			_mainPage = Application.Current?.MainPage;
 		}
@@ -40,11 +39,11 @@ namespace SellerInformationApps.PopUps
 			}
 		}
 
-
-		public void ClosePopup(object sender,EventArgs e)
+		public void ClosePopup(object sender, EventArgs e)
 		{
 			Close();
 		}
+
 		private async void OpenProfilePasswordUpdatePopup(object sender, EventArgs e)
 		{
 			try
@@ -62,19 +61,52 @@ namespace SellerInformationApps.PopUps
 		{
 			try
 			{
-				await _profilePhotosViewModel.WriteData(_viewModel.ProfileImageBase64);
-				var popup = new UpdateOrAddProfilePhotoPopUp(_profilePhotosViewModel, _viewModel);
-
-				var result = await _mainPage?.ShowPopupAsync(popup);
-				if (result is string updatedProfileImage)
+				var currentPage = Application.Current.MainPage;
+				string action = await currentPage.DisplayActionSheet("Resim Kaynaðýný Seç", "Ýptal", null, "Galeriden Seç", "Kamera ile Çek");
+				switch (action)
 				{
-					_viewModel.ProfileImageBase64 = updatedProfileImage;
-					await alertsHelper.ShowSnackBar("Profil resmi baþarýyla güncellendi.", false);
+					case "Galeriden Seç":
+						await PickOrCaptureImageAsync(isPickPhoto: true); break;
+					case "Kamera ile Çek":
+						await PickOrCaptureImageAsync(isPickPhoto: false); break;
 				}
+
 			}
 			catch (Exception ex)
 			{
 				await alertsHelper.ShowSnackBar($"Bir hata oluþtu: {ex.Message}", true);
+			}
+		}
+
+		private async Task PickOrCaptureImageAsync(bool isPickPhoto)
+		{
+			try
+			{
+				FileResult result = isPickPhoto
+								? await MediaPicker.PickPhotoAsync()
+								: await MediaPicker.CapturePhotoAsync();
+
+				if (result != null)
+				{
+					var stream = await result.OpenReadAsync();
+
+					using (MemoryStream ms = new MemoryStream())
+					{
+						await stream.CopyToAsync(ms);
+						var photo = Convert.ToBase64String(ms.ToArray());
+
+						ProfileImage.Source = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(photo)));
+						_viewModel.ProfileImageBase64 = photo;
+					}
+				}
+				else
+				{
+					_viewModel.ProfileImageBase64 = "profilephotots.png";
+				}
+			}
+			catch (Exception ex)
+			{
+				await alertsHelper.ShowSnackBar(ex.Message, true);
 			}
 		}
 	}

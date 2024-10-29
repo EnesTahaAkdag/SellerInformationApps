@@ -26,10 +26,10 @@
                 
                 <Frame WidthRequest="140" HeightRequest="140" CornerRadius="70" IsClippedToBounds="True"
                        BorderColor="#ddd" BackgroundColor="White" HasShadow="False" HorizontalOptions="Center">
-                
-                    <Image Source="{Binding ProfileImageBase64}"
-                      HeightRequest="150" WidthRequest="150" HorizontalOptions="Center" Aspect="AspectFill"/>
-                
+
+                    <Image x:Name="ProfileImage" WidthRequest="150" Source="{Binding ProfileImageBase64}"
+                           HeightRequest="150"  HorizontalOptions="Center" Aspect="AspectFill"/>
+
                 </Frame>
                 <StackLayout VerticalOptions="Center" Spacing="15">
                     <Button Text="Profil Resmini Güncelle" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="20" HeightRequest="45"

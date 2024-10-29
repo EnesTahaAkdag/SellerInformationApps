@@ -49,7 +49,7 @@ namespace SellerInformationApps.Pages
 					updateProfile = new UpdateProfileViewModel(new Popup());
 					await updateProfile.LoadDataAsync(_viewModel.UserProfileData);
 
-					var result = await this.ShowPopupAsync(new UpdateProfilePopUp(updateProfile, new AddOrUpdateProfilePhotosViewModel()));
+					var result = await this.ShowPopupAsync(new UpdateProfilePopUp(updateProfile));
 
 					if (result != null)
 					{

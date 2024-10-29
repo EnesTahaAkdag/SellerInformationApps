@@ -15,12 +15,12 @@ namespace SellerInformationApps.ViewModel
 		private readonly AlertsHelper _alertsHelper = new();
 		private readonly Authentication _authentication;
 
-		[ObservableProperty] private string firstName;
-		[ObservableProperty] private string lastName;
-		[ObservableProperty] private string userName;
-		[ObservableProperty] private string email;
-		[ObservableProperty] private DateTime? age;
-		[ObservableProperty] private string profileImageBase64;
+		[ObservableProperty] public string firstName;
+		[ObservableProperty] public string lastName;
+		[ObservableProperty] public string userName;
+		[ObservableProperty] public string email;
+		[ObservableProperty] public DateTime? age;
+		[ObservableProperty] public string profileImageBase64;
 		[ObservableProperty] private bool isLoading;
 
 		public UserProfileData UserProfileData { get; set; }
@@ -105,7 +105,7 @@ namespace SellerInformationApps.ViewModel
 				}
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				var httpClient = HttpClientFactory.Create("https://48d6-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://f51b-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
 				string url = $"/UserDataSendApi/DataSend?userName={userName}";
@@ -124,6 +124,7 @@ namespace SellerInformationApps.ViewModel
 							Email = profileData.Data.Email ?? string.Empty;
 							Age = profileData.Data.Age;
 							UserProfileData = profileData.Data;
+
 							if (!string.IsNullOrEmpty(profileData.Data.ProfileImageBase64))
 							{
 								ProfileImageBase64 = profileData.Data.ProfileImageBase64;

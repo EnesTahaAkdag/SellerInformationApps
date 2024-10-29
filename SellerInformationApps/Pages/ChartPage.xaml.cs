@@ -4,7 +4,7 @@ namespace SellerInformationApps.Pages
 {
 	public partial class ChartPage : ContentPage
 	{
-		public ChartPageViewModel viewModel { get; set; }
+		private ChartPageViewModel viewModel;
 
 		public ChartPage()
 		{
@@ -12,10 +12,10 @@ namespace SellerInformationApps.Pages
 			viewModel = new ChartPageViewModel();
 			BindingContext = viewModel;
 		}
+
 		protected override async void OnAppearing()
 		{
 			base.OnAppearing();
-			viewModel.Data.Clear();
 			await viewModel.GetCategoricalDataAsync();
 		}
 	}

@@ -64,7 +64,7 @@ namespace ServiceHelper.Authentication
 			Preferences.Remove("UserName");
 			Preferences.Remove("Password");
 			IsLoggedIn = false;
-			await Shell.Current.GoToAsync("//LoginPage");
+			await Shell.Current.GoToAsync("//MainPage");
 		}
 
 		public void LogIn()

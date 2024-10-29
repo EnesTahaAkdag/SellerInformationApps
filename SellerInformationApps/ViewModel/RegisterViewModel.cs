@@ -15,30 +15,23 @@ namespace SellerInformationApps.ViewModel
 	{
 		private readonly AlertsHelper _alertsHelper = new();
 
-		[ObservableProperty]
-		private string firstName;
+		[ObservableProperty] private string firstName;
 
-		[ObservableProperty]
-		private string lastName;
+		[ObservableProperty] private string lastName;
 
-		[ObservableProperty]
-		private string userName;
+		[ObservableProperty] private string userName;
 
-		[ObservableProperty]
-		private string email;
+		[ObservableProperty] private string email;
 
-		[ObservableProperty]
-		private string password;
+		[ObservableProperty] private string password;
 
-		[ObservableProperty]
-		private string verifyPassword;
+		[ObservableProperty] private string verifyPassword;
 
-		[ObservableProperty]
+		[ObservableProperty] 
 		[JsonConverter(typeof(CustemDateTimeConverter))]
 		private DateTime? age = DateTime.Now;
 
-		[ObservableProperty]
-		private string profileImageBase64;
+		[ObservableProperty] private string profileImageBase64;
 
 		private DateTime _currentDate = DateTime.Now;
 		public DateTime CurrentDate => _currentDate;
@@ -68,8 +61,8 @@ namespace SellerInformationApps.ViewModel
 			try
 			{
 				var user = CreateUser();
-				string url = "https://48d6-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-				var httpClient = HttpClientFactory.Create("https://48d6-37-130-115-91.ngrok-free.app");
+				string url = "https://f51b-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://f51b-37-130-115-91.ngrok-free.app");
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -79,7 +72,7 @@ namespace SellerInformationApps.ViewModel
 					if (response.IsSuccessStatusCode)
 					{
 						await _alertsHelper.ShowSnackBar("Kayıt başarılı!");
-						await Shell.Current.GoToAsync("/LoginPage");
+						await Shell.Current.GoToAsync("//LoginPage");
 					}
 					else
 					{

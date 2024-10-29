@@ -19,55 +19,65 @@ namespace SellerInformationApps.ViewModel
 
 		public ObservableCollection<UserList> UserLists { get; set; } = new ObservableCollection<UserList>();
 
+		public int CurrentPage { get; set; } = 1;
+
+		public const int PageSize = 50;
+
+		public async Task FetchDataOnScrollAsync()
+		{
+			if (IsLoading) return;
+			await UserListDataFromAPI();
+		}
+
+		public async Task FetchIntialDataAsync()
+		{
+			IsLoading = true;
+			await UserListDataFromAPI();
+			IsLoading = false;
+		}
+
 		public async Task UserListDataFromAPI()
 		{
 			try
 			{
-				IsLoading = true;
-
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
+				var httpClient = HttpClientFactory.Create("https://f51b-37-130-115-91.ngrok-free.app");
+
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				var httpClient = HttpClientFactory.Create("https://48d6-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "https://48d6-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList";
-				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+				string url = $"https://f51b-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList?page={CurrentPage}&pageSize={PageSize}";
+				using (var response = await httpClient.GetAsync(url))
 				{
-					using (var response = await httpClient.SendAsync(request))
+					if (response.IsSuccessStatusCode)
 					{
-						if (response.IsSuccessStatusCode)
+						string json = await response.Content.ReadAsStringAsync();
+						var apiResponse = JsonConvert.DeserializeObject<UserApiResponse>(json);
+						if (apiResponse != null && apiResponse.Success)
 						{
-							string json = await response.Content.ReadAsStringAsync();
-							var apiResponse = JsonConvert.DeserializeObject<UserApiResponse>(json);
-							if (apiResponse.Success)
+							foreach (var item in apiResponse.Data)
 							{
-								foreach (var item in apiResponse.Data)
-								{
-									UserLists.Add(item);
-								}
+								UserLists.Add(item);
 							}
-							else
-							{
-								await alertsHelper.ShowSnackBar($"API İsteği Başarısız: {apiResponse.ErrorMessage}", true);
-							}
+							CurrentPage++;
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar($"HTTP İsteği Başarısız: {response.StatusCode}", true);
+							await alertsHelper.ShowSnackBar($"API İsteği Başarısız: {apiResponse.ErrorMessage}", true);
 						}
+					}
+					else
+					{
+						await alertsHelper.ShowSnackBar($"HTTP İsteği Başarısız: {response.StatusCode}", true);
 					}
 				}
 			}
 			catch (Exception ex)
 			{
 				await alertsHelper.ShowSnackBar($"Hata Oluştu Apiye İstek Atılamadı: {ex.Message}", true);
-			}
-			finally
-			{
-				IsLoading = false;
 			}
 		}
 	}
