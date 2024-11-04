@@ -19,7 +19,7 @@ namespace SellerInformationApps.ViewModel
 
 		private static readonly HttpClient httpClient = new HttpClient
 		{
-			BaseAddress = new Uri("https://f51b-37-130-115-91.ngrok-free.app")
+			BaseAddress = new Uri("https://5462-37-130-115-91.ngrok-free.app")
 		};
 
 		public ChartPageViewModel()

@@ -1,21 +1,14 @@
-using System.Collections.ObjectModel;
-using SellerInformationApps.Models;
 using SellerInformationApps.ViewModel;
-using Microsoft.Maui.Controls;
 
 namespace SellerInformationApps.Pages
 {
 	public partial class SellerInfosPage : ContentPage
 	{
-		public ObservableCollection<StoreInfo> StoreInfos { get; private set; }
-		private SellerInfosViewModel viewModel;
 		private bool isFetching = false;
 
 		public SellerInfosPage(SellerInfosViewModel viewModel)
 		{
 			InitializeComponent();
-			StoreInfos = new ObservableCollection<StoreInfo>();
-			this.viewModel = viewModel;
 			BindingContext = viewModel;
 		}
 
@@ -23,9 +16,8 @@ namespace SellerInformationApps.Pages
 		{
 			base.OnAppearing();
 
+			var viewModel = (SellerInfosViewModel)BindingContext;
 			viewModel.CurrentPage = 1;
-			viewModel.StoreInfos.Clear();
-
 			await viewModel.FetchInitialDataAsync();
 		}
 
@@ -39,7 +31,8 @@ namespace SellerInformationApps.Pages
 				if (scrollingSpace <= e.ScrollY)
 				{
 					isFetching = true;
-					await viewModel.FetchDataOnScrollAsync(); 
+					var viewModel = (SellerInfosViewModel)BindingContext;
+					await viewModel.FetchDataOnScrollAsync();
 					isFetching = false;
 				}
 			}

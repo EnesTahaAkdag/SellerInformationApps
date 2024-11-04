@@ -23,6 +23,14 @@ namespace SellerInformationApps.PopUps
 		{
 			try
 			{
+				using (MemoryStream ms = new MemoryStream())
+				{
+					var photo = Convert.ToBase64String(ms.ToArray());
+
+					ProfileImage.Source = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(photo)));
+					_viewModel.ProfileImageBase64 = photo;
+				}
+
 				await _viewModel.SubmitAsync();
 
 				if (_viewModel.ResultData == null)

@@ -43,21 +43,21 @@
             <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
                 <StackLayout Spacing="5">
                     <Label Text="Ad" FontSize="14" TextColor="#6200EE"/>
-                    <Entry Text="{Binding FirstName}" FontSize="20" TextColor="Black" Placeholder="Adınızı Giriniz" FontAttributes="Bold"/>
+                    <Entry Text="{Binding FirstName}" FontSize="20" TextColor="Black" Placeholder="Adınızı Giriniz" FontAttributes="Bold" MaxLength="50"/>
                 </StackLayout>
             </Frame>
 
             <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
                 <StackLayout Spacing="5">
                     <Label Text="SoyAd" FontSize="14" TextColor="#6200EE"/>
-                    <Entry Text="{Binding LastName}" FontSize="20" TextColor="Black" Placeholder="Soyadınızı Giriniz" FontAttributes="Bold"/>
+                    <Entry Text="{Binding LastName}" FontSize="20" TextColor="Black" Placeholder="Soyadınızı Giriniz" FontAttributes="Bold" MaxLength="50"/>
                 </StackLayout>
             </Frame>
 
             <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
                 <StackLayout Spacing="5">
                     <Label Text="E-Mail" FontSize="14" TextColor="#6200EE"/>
-                    <Entry Text="{Binding Email}" FontSize="20" TextColor="Black" Placeholder="Mail Adresini Giriniz" Keyboard="Email" FontAttributes="Bold"/>
+                    <Entry Text="{Binding Email}" FontSize="20" TextColor="Black" Placeholder="Mail Adresini Giriniz" Keyboard="Email" FontAttributes="Bold" MaxLength="256"/>
                 </StackLayout>
             </Frame>
 

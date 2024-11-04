@@ -64,10 +64,10 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 					return;
 				}
 
-				string url = "https://f51b-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ChangePassword";
+				string url = "https://5462-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ChangePassword";
 				var content = new StringContent(JsonConvert.SerializeObject(changePasswordModel), Encoding.UTF8, "application/json");
 
-				var httpClient = HttpClientFactory.Create("https://f51b-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
 
 				using (var response = await httpClient.PostAsync(url, content).ConfigureAwait(false))
 				{

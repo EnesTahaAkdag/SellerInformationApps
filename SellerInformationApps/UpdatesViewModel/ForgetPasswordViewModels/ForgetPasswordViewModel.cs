@@ -53,8 +53,8 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://f51b-37-130-115-91.ngrok-free.app");
-				string url = "https://f51b-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ForgetPassword";
+				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
+				string url = "https://5462-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ForgetPassword";
 
 				var content = new StringContent(JsonConvert.SerializeObject(forgetPassword), Encoding.UTF8, "application/json");
 

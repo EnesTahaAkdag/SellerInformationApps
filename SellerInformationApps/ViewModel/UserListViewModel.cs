@@ -31,25 +31,24 @@ namespace SellerInformationApps.ViewModel
 
 		public async Task FetchIntialDataAsync()
 		{
-			IsLoading = true;
 			await UserListDataFromAPI();
-			IsLoading = false;
 		}
 
 		public async Task UserListDataFromAPI()
 		{
 			try
 			{
+				IsLoading = true;
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://f51b-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
 				httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = $"https://f51b-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://5462-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList?page={CurrentPage}&pageSize={PageSize}";
 				using (var response = await httpClient.GetAsync(url))
 				{
 					if (response.IsSuccessStatusCode)
@@ -79,6 +78,7 @@ namespace SellerInformationApps.ViewModel
 			{
 				await alertsHelper.ShowSnackBar($"Hata Oluştu Apiye İstek Atılamadı: {ex.Message}", true);
 			}
+			finally { IsLoading = false; }
 		}
 	}
 }

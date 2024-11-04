@@ -27,7 +27,7 @@ namespace SellerInformationApps.ViewModel
 
 		[ObservableProperty] private string verifyPassword;
 
-		[ObservableProperty] 
+		[ObservableProperty]
 		[JsonConverter(typeof(CustemDateTimeConverter))]
 		private DateTime? age = DateTime.Now;
 
@@ -46,9 +46,9 @@ namespace SellerInformationApps.ViewModel
 
 		public async Task RegisterAsync()
 		{
-			if (!IsFormValid())
+			if (!IsFormValid(out string validationMessage))
 			{
-				await _alertsHelper.ShowSnackBar("Lütfen tüm alanları doldurduğunuzdan emin olun.", true);
+				await _alertsHelper.ShowSnackBar(validationMessage, true);
 				return;
 			}
 
@@ -61,8 +61,8 @@ namespace SellerInformationApps.ViewModel
 			try
 			{
 				var user = CreateUser();
-				string url = "https://f51b-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-				var httpClient = HttpClientFactory.Create("https://f51b-37-130-115-91.ngrok-free.app");
+				string url = "https://5462-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))
@@ -86,14 +86,41 @@ namespace SellerInformationApps.ViewModel
 			}
 		}
 
-		private bool IsFormValid()
+		private bool IsFormValid(out string validationMessage)
 		{
-			return !string.IsNullOrWhiteSpace(FirstName) &&
-				   !string.IsNullOrWhiteSpace(LastName) &&
-				   !string.IsNullOrWhiteSpace(UserName) &&
-				   !string.IsNullOrWhiteSpace(Email) &&
-				   !string.IsNullOrWhiteSpace(Password) &&
-				   Age.HasValue && IsValidEmail(Email);
+			if (string.IsNullOrWhiteSpace(FirstName))
+			{
+				validationMessage = "Ad boş olamaz.";
+				return false;
+			}
+
+			if (string.IsNullOrWhiteSpace(LastName))
+			{
+				validationMessage = "Soyad boş olamaz.";
+				return false;
+			}
+
+			if (string.IsNullOrWhiteSpace(Email))
+			{
+
+				validationMessage = "E-posta boş olamaz.";
+				return false;
+			}
+
+			if (!IsValidEmail(Email))
+			{
+				validationMessage = "Geçerli bir e-posta adresi giriniz.";
+				return false;
+			}
+
+			if (Age == null)
+			{
+				validationMessage = "Yaş boş olamaz.";
+				return false;
+			}
+
+			validationMessage = string.Empty;
+			return true;
 		}
 
 		private bool ArePasswordsMatching()

@@ -6,12 +6,17 @@ using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using ServiceHelper.Alerts;
 using System.Net.Http.Headers;
+using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SellerInformationApps.UpdatesViewModel
 {
 	public partial class UpdateProfileViewModel : ObservableObject
 	{
+		private const string DefaultProfileImage = "profilephotots.png";
+		private static readonly HttpClient client = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
+
 		public UserProfileData ResultData { get; private set; } = new UserProfileData();
 		private readonly string userName = Preferences.Get("UserName", string.Empty);
 
@@ -45,7 +50,7 @@ namespace SellerInformationApps.UpdatesViewModel
 				Age = updateUserData.Age ?? DateTime.Now;
 				ProfileImageBase64 = !string.IsNullOrWhiteSpace(updateUserData.ProfileImageBase64)
 					? updateUserData.ProfileImageBase64
-					: "profilephotots.png";
+					: DefaultProfileImage;
 			}
 			catch (Exception ex)
 			{
@@ -56,9 +61,9 @@ namespace SellerInformationApps.UpdatesViewModel
 		[RelayCommand]
 		public async Task SubmitAsync()
 		{
-			if (!IsFormValid())
+			if (!IsFormValid(out string validationMessage))
 			{
-				await alertsHelper.ShowSnackBar("Lütfen tüm alanları doldurunuz", true);
+				await alertsHelper.ShowSnackBar(validationMessage, true);
 				return;
 			}
 
@@ -73,10 +78,9 @@ namespace SellerInformationApps.UpdatesViewModel
 					return;
 				}
 
-				var client = HttpClientFactory.Create("https://f51b-37-130-115-91.ngrok-free.app");
 				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}")));
 
-				var url = "https://f51b-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
+				var url = "https://5462-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var response = await client.PostAsync(url, content))
@@ -95,7 +99,7 @@ namespace SellerInformationApps.UpdatesViewModel
 						ResultData.Age = apiResponse.Data.Age;
 						ResultData.ProfileImageBase64 = !string.IsNullOrWhiteSpace(apiResponse.Data.ProfileImageBase64)
 							? apiResponse.Data.ProfileImageBase64
-							: "profilephotots.png";
+							: DefaultProfileImage;
 					}
 					else
 					{
@@ -109,11 +113,42 @@ namespace SellerInformationApps.UpdatesViewModel
 			}
 		}
 
-		private bool IsFormValid() =>
-			!string.IsNullOrWhiteSpace(FirstName) &&
-			!string.IsNullOrWhiteSpace(LastName) &&
-			!string.IsNullOrWhiteSpace(Email) &&
-			Age != null;
+		private bool IsFormValid(out string validationMessage)
+		{
+			if (string.IsNullOrWhiteSpace(FirstName))
+			{
+				validationMessage = "Ad boş olamaz.";
+				return false;
+			}
+
+			if (string.IsNullOrWhiteSpace(LastName))
+			{
+				validationMessage = "Soyad boş olamaz.";
+				return false;
+			}
+
+			if (string.IsNullOrWhiteSpace(Email))
+			{
+
+				validationMessage = "E-posta boş olamaz.";
+				return false;
+			}
+
+			if (!IsValidEmail(Email))
+			{
+				validationMessage = "Geçerli bir e-posta adresi giriniz.";
+				return false;
+			}
+
+			if (Age == null)
+			{
+				validationMessage = "Yaş boş olamaz.";
+				return false;
+			}
+
+			validationMessage = string.Empty;
+			return true;
+		}
 
 		private UserProfileData ReadData() => new UserProfileData
 		{
@@ -124,5 +159,18 @@ namespace SellerInformationApps.UpdatesViewModel
 			Age = Age,
 			ProfileImageBase64 = ProfileImageBase64
 		};
+
+		private bool IsValidEmail(string email)
+		{
+			try
+			{
+				var addr = new MailAddress(email);
+				return addr.Address == email;
+			}
+			catch
+			{
+				return false;
+			}
+		}
 	}
 }

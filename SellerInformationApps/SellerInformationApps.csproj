@@ -139,6 +139,9 @@
 		<Compile Update="PopUps\ForgetPasswordPopUps\ForgetPasswordPopUp.xaml.cs">
 		  <DependentUpon>ForgetPasswordPopUp.xaml</DependentUpon>
 		</Compile>
+		<Compile Update="PopUps\StoreDetailsPopup.xaml.cs">
+		  <DependentUpon>StoreDetailsPopup.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="PopUps\UpdateProfilePopUp.xaml.cs">
 			<DependentUpon>UpdateProfilePopUp.xaml</DependentUpon>
 		</Compile>
