@@ -1,7 +1,5 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using System;
-using System.Threading.Tasks;
 
 namespace ServiceHelper.Alerts
 {
@@ -24,5 +22,19 @@ namespace ServiceHelper.Alerts
 
 			await snackbar.Show();
 		}
+
+		public async Task ShowToastBar(string message, bool isSuccess = false, ToastDuration duration = ToastDuration.Short)
+		{
+
+			var fontSize = isSuccess ? 16 : 14;
+
+			var toast = Toast.Make(message, duration, fontSize);
+			 
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{ 
+				await toast.Show();
+			});
+		}
+
 	}
 }

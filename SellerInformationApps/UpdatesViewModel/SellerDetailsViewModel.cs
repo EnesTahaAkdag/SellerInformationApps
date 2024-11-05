@@ -4,7 +4,6 @@ using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using ServiceHelper.Alerts;
 using ServiceHelper.Authentication;
-using System.Net.Http.Headers;
 using System.Text;
 
 namespace SellerInformationApps.UpdatesViewModel

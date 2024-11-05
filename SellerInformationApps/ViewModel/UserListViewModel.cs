@@ -31,46 +31,49 @@ namespace SellerInformationApps.ViewModel
 
 		public async Task FetchIntialDataAsync()
 		{
+			IsLoading = true;
 			await UserListDataFromAPI();
+			IsLoading = false;
 		}
 
 		public async Task UserListDataFromAPI()
 		{
 			try
 			{
-				IsLoading = true;
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
 				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-
-				httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeaderValue);
-
 				string url = $"https://5462-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList?page={CurrentPage}&pageSize={PageSize}";
-				using (var response = await httpClient.GetAsync(url))
+
+				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
-					if (response.IsSuccessStatusCode)
+					request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
+					using (var response = await httpClient.SendAsync(request))
 					{
-						string json = await response.Content.ReadAsStringAsync();
-						var apiResponse = JsonConvert.DeserializeObject<UserApiResponse>(json);
-						if (apiResponse != null && apiResponse.Success)
+						if (response.IsSuccessStatusCode)
 						{
-							foreach (var item in apiResponse.Data)
+							string json = await response.Content.ReadAsStringAsync();
+							var apiResponse = JsonConvert.DeserializeObject<UserApiResponse>(json);
+							if (apiResponse != null && apiResponse.Success)
 							{
-								UserLists.Add(item);
+								foreach (var item in apiResponse.Data)
+								{
+									UserLists.Add(item);
+								}
+								CurrentPage++;
 							}
-							CurrentPage++;
+							else
+							{
+								await alertsHelper.ShowSnackBar($"API İsteği Başarısız: {apiResponse.ErrorMessage}", true);
+							}
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar($"API İsteği Başarısız: {apiResponse.ErrorMessage}", true);
+							await alertsHelper.ShowSnackBar($"HTTP İsteği Başarısız: {response.StatusCode}", true);
 						}
-					}
-					else
-					{
-						await alertsHelper.ShowSnackBar($"HTTP İsteği Başarısız: {response.StatusCode}", true);
 					}
 				}
 			}
@@ -78,7 +81,6 @@ namespace SellerInformationApps.ViewModel
 			{
 				await alertsHelper.ShowSnackBar($"Hata Oluştu Apiye İstek Atılamadı: {ex.Message}", true);
 			}
-			finally { IsLoading = false; }
 		}
 	}
 }

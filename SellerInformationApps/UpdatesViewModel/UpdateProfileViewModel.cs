@@ -15,7 +15,7 @@ namespace SellerInformationApps.UpdatesViewModel
 	public partial class UpdateProfileViewModel : ObservableObject
 	{
 		private const string DefaultProfileImage = "profilephotots.png";
-		private static readonly HttpClient client = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
+
 
 		public UserProfileData ResultData { get; private set; } = new UserProfileData();
 		private readonly string userName = Preferences.Get("UserName", string.Empty);
@@ -78,32 +78,38 @@ namespace SellerInformationApps.UpdatesViewModel
 					return;
 				}
 
-				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}")));
-
+				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
 				var url = "https://5462-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
+				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
+
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
-				using (var response = await client.PostAsync(url, content))
+				using (var request = new HttpRequestMessage(HttpMethod.Post, url))
 				{
-					var responseContent = await response.Content.ReadAsStringAsync();
-					var apiResponse = JsonConvert.DeserializeObject<ProfileUpdateApiResponse>(responseContent);
-
-					if (response.IsSuccessStatusCode && apiResponse != null && apiResponse.Success)
+					request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
+					request.Content = content;
+					using (var response = await httpClient.SendAsync(request))
 					{
-						await alertsHelper.ShowSnackBar("Profil başarıyla güncellendi", false);
+						var responseContent = await response.Content.ReadAsStringAsync();
+						var apiResponse = JsonConvert.DeserializeObject<ProfileUpdateApiResponse>(responseContent);
 
-						ResultData.FirstName = apiResponse.Data.FirstName;
-						ResultData.LastName = apiResponse.Data.LastName;
-						ResultData.UserName = apiResponse.Data.UserName;
-						ResultData.Email = apiResponse.Data.Email;
-						ResultData.Age = apiResponse.Data.Age;
-						ResultData.ProfileImageBase64 = !string.IsNullOrWhiteSpace(apiResponse.Data.ProfileImageBase64)
-							? apiResponse.Data.ProfileImageBase64
-							: DefaultProfileImage;
-					}
-					else
-					{
-						await alertsHelper.ShowSnackBar("Profil güncellenemedi", true);
+						if (response.IsSuccessStatusCode && apiResponse != null && apiResponse.Success)
+						{
+							await alertsHelper.ShowSnackBar("Profil başarıyla güncellendi", false);
+
+							ResultData.FirstName = apiResponse.Data.FirstName;
+							ResultData.LastName = apiResponse.Data.LastName;
+							ResultData.UserName = apiResponse.Data.UserName;
+							ResultData.Email = apiResponse.Data.Email;
+							ResultData.Age = apiResponse.Data.Age;
+							ResultData.ProfileImageBase64 = !string.IsNullOrWhiteSpace(apiResponse.Data.ProfileImageBase64)
+								? apiResponse.Data.ProfileImageBase64
+								: DefaultProfileImage;
+						}
+						else
+						{
+							await alertsHelper.ShowSnackBar("Profil güncellenemedi", true);
+						}
 					}
 				}
 			}

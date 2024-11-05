@@ -108,42 +108,46 @@ namespace SellerInformationApps.ViewModel
 				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = $"/UserDataSendApi/DataSend?userName={userName}";
-				using (var response = await httpClient.GetAsync(url))
+				string url = $"https://5462-37-130-115-91.ngrok-free.app/UserDataSendApi/DataSend?userName={userName}";
+
+				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
-					if (response.IsSuccessStatusCode)
+					using (var response = await httpClient.SendAsync(request))
 					{
-						var json = await response.Content.ReadAsStringAsync();
-						var profileData = JsonConvert.DeserializeObject<ProfileApiResponse>(json);
-
-						if (profileData?.Success == true)
+						if (response.IsSuccessStatusCode)
 						{
-							FirstName = profileData.Data.FirstName ?? string.Empty;
-							LastName = profileData.Data.LastName ?? string.Empty;
-							UserName = profileData.Data.UserName ?? string.Empty;
-							Email = profileData.Data.Email ?? string.Empty;
-							Age = profileData.Data.Age;
-							UserProfileData = profileData.Data;
+							var json = await response.Content.ReadAsStringAsync();
+							var profileData = JsonConvert.DeserializeObject<ProfileApiResponse>(json);
 
-							if (!string.IsNullOrEmpty(profileData.Data.ProfileImageBase64))
+							if (profileData?.Success == true)
 							{
-								ProfileImageBase64 = profileData.Data.ProfileImageBase64;
-								UserProfilePhoto.ProfileImageBase64 = profileData.Data.ProfileImageBase64;
+								FirstName = profileData.Data.FirstName ?? string.Empty;
+								LastName = profileData.Data.LastName ?? string.Empty;
+								UserName = profileData.Data.UserName ?? string.Empty;
+								Email = profileData.Data.Email ?? string.Empty;
+								Age = profileData.Data.Age;
+								UserProfileData = profileData.Data;
+
+								if (!string.IsNullOrEmpty(profileData.Data.ProfileImageBase64))
+								{
+									ProfileImageBase64 = profileData.Data.ProfileImageBase64;
+									UserProfilePhoto.ProfileImageBase64 = profileData.Data.ProfileImageBase64;
+								}
+								else
+								{
+									ProfileImageBase64 = "profilephotots.png";
+									UserProfilePhoto.ProfileImageBase64 = "profilephotots.png";
+								}
 							}
 							else
 							{
-								ProfileImageBase64 = "profilephotots.png";
-								UserProfilePhoto.ProfileImageBase64 = "profilephotots.png";
+								await _alertsHelper.ShowSnackBar($"API isteği başarısız: {profileData?.ErrorMessage}", true);
 							}
 						}
 						else
 						{
-							await _alertsHelper.ShowSnackBar($"API isteği başarısız: {profileData?.ErrorMessage}", true);
+							await _alertsHelper.ShowSnackBar($"API isteği başarısız: {response.StatusCode}", true);
 						}
-					}
-					else
-					{
-						await _alertsHelper.ShowSnackBar($"API isteği başarısız: {response.StatusCode}", true);
 					}
 				}
 			}

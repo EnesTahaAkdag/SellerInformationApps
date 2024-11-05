@@ -19,7 +19,7 @@
     </ContentPage.BindingContext>
 
     <Grid>
-        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Color="Blue" />
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Color="Blue"/>
         <Grid IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

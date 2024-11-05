@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
+using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using SellerInformationApps.Models.MarketPlaceSellerApp.ViewModel;
 using ServiceHelper.Alerts;
@@ -16,11 +17,6 @@ namespace SellerInformationApps.ViewModel
 
 		[ObservableProperty]
 		private bool isLoading;
-
-		private static readonly HttpClient httpClient = new HttpClient
-		{
-			BaseAddress = new Uri("https://5462-37-130-115-91.ngrok-free.app")
-		};
 
 		public ChartPageViewModel()
 		{
@@ -41,51 +37,58 @@ namespace SellerInformationApps.ViewModel
 
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
+				
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
-
-				const string url = "/ApplicationContentApi/ChartData";
-				using var response = await httpClient.GetAsync(url).ConfigureAwait(false);
-
-				if (response.IsSuccessStatusCode)
+				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
+				
+				string url = "https://5462-37-130-115-91.ngrok-free.app/ApplicationContentApi/ChartData";
+				
+				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
-					string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-					var apiResponses = JsonConvert.DeserializeObject<ApiResponses>(json);
-
-					if (apiResponses?.Success == true)
+					request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
+					using (var response = await httpClient.SendAsync(request))
 					{
-						var apiData = JsonConvert.DeserializeObject<List<SellerRatingScore>>(apiResponses.Data.ToString());
-						var ratingCounts = apiData
-							.Where(item => item.RatingScore.HasValue && item.RatingScore.Value > 0)
-							.GroupBy(item => (int)Math.Floor(item.RatingScore.Value))
-							.ToDictionary(group => group.Key, group => group.Count());
-
-						var result = Enumerable.Range(1, 5)
-							.Select(i => new SellerRatingScore
-							{
-								StoreName = $"{i}",
-								RatingScore = ratingCounts.TryGetValue(i, out var count) ? count : 0
-							}).ToList();
-
-						MainThread.BeginInvokeOnMainThread(() =>
+						if (response.IsSuccessStatusCode)
 						{
-							Data.Clear();
-							foreach (var item in result)
+							string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+							var apiResponses = JsonConvert.DeserializeObject<ApiResponses>(json);
+
+							if (apiResponses?.Success == true)
 							{
-								Data.Add(item);
+								var apiData = JsonConvert.DeserializeObject<List<SellerRatingScore>>(apiResponses.Data.ToString());
+								var ratingCounts = apiData
+									.Where(item => item.RatingScore.HasValue && item.RatingScore.Value > 0)
+									.GroupBy(item => (int)Math.Floor(item.RatingScore.Value))
+									.ToDictionary(group => group.Key, group => group.Count());
+
+								var result = Enumerable.Range(1, 5)
+									.Select(i => new SellerRatingScore
+									{
+										StoreName = $"{i}",
+										RatingScore = ratingCounts.TryGetValue(i, out var count) ? count : 0
+									}).ToList();
+
+								MainThread.BeginInvokeOnMainThread(() =>
+								{
+									Data.Clear();
+									foreach (var item in result)
+									{
+										Data.Add(item);
+									}
+								});
 							}
-						});
+							else
+							{
+								await alertsHelper.ShowSnackBar(apiResponses?.ErrorMessage ?? "Unknown Error", true)
+									.ConfigureAwait(false);
+							}
+						}
+						else
+						{
+							await alertsHelper.ShowSnackBar($"HTTP Request Failed: {response.StatusCode}", true)
+								.ConfigureAwait(false);
+						}
 					}
-					else
-					{
-						await alertsHelper.ShowSnackBar(apiResponses?.ErrorMessage ?? "Unknown Error", true)
-							.ConfigureAwait(false);
-					}
-				}
-				else
-				{
-					await alertsHelper.ShowSnackBar($"HTTP Request Failed: {response.StatusCode}", true)
-						.ConfigureAwait(false);
 				}
 			}
 			catch (Exception ex)

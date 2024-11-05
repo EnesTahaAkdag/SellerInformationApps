@@ -65,7 +65,7 @@
                 <StackLayout Spacing="5">
                     <Label Text="Doğum Tarihi" FontSize="14" TextColor="#6200EE"/>
                     <DatePicker x:Name="AgeEntry" MinimumDate="1900-01-01" MaximumDate="{x:Static sys:DateTime.Now}"
-                                Date="{Binding Age, Mode=TwoWay}" FontSize="20" TextColor="Black"
+                                Date="{Binding Age, Mode=TwoWay, StringFormat='{0:dd/MM/yyyy}'}" FontSize="20" TextColor="Black"
                                 BackgroundColor="Transparent" FontAttributes="Bold" />
                 </StackLayout>
             </Frame>

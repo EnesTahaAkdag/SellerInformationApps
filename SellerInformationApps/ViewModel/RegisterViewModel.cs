@@ -65,18 +65,22 @@ namespace SellerInformationApps.ViewModel
 				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
-				using (var response = await httpClient.PostAsync(url, content))
+				using (var request = new HttpRequestMessage(HttpMethod.Post, url))
 				{
-					var responseContent = await response.Content.ReadAsStringAsync();
+					request.Content = content;
+					using (var response = await httpClient.SendAsync(request))
+					{
 
-					if (response.IsSuccessStatusCode)
-					{
-						await _alertsHelper.ShowSnackBar("Kayıt başarılı!");
-						await Shell.Current.GoToAsync("//LoginPage");
-					}
-					else
-					{
-						await _alertsHelper.ShowSnackBar($"{responseContent}", true);
+						var responseContent = await response.Content.ReadAsStringAsync();
+						if (response.IsSuccessStatusCode)
+						{
+							await _alertsHelper.ShowSnackBar("Kayıt başarılı!");
+							await Shell.Current.GoToAsync("//LoginPage");
+						}
+						else
+						{
+							await _alertsHelper.ShowSnackBar($"{responseContent}", true);
+						}
 					}
 				}
 			}

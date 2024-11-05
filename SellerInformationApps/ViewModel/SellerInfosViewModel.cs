@@ -70,32 +70,36 @@ namespace SellerInformationApps.ViewModel
 				{
 					try
 					{
-						using (var response = await httpClient.GetAsync(url))
+						using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 						{
-							if (response.IsSuccessStatusCode)
+							request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
+							using (var response = await httpClient.SendAsync(request))
 							{
-								string json = await response.Content.ReadAsStringAsync();
-								var apiResponse = JsonConvert.DeserializeObject<ApiResponsess>(json);
-
-								if (apiResponse != null && apiResponse.Success)
+								if (response.IsSuccessStatusCode)
 								{
-									foreach (var item in apiResponse.Data)
-									{
-										TrimAllStringProperties(item);
+									string json = await response.Content.ReadAsStringAsync();
+									var apiResponse = JsonConvert.DeserializeObject<ApiResponsess>(json);
 
-										StoreInfos.Add(item);
+									if (apiResponse != null && apiResponse.Success)
+									{
+										foreach (var item in apiResponse.Data)
+										{
+											TrimAllStringProperties(item);
+
+											StoreInfos.Add(item);
+										}
+										CurrentPage++;
+										isRequestSuccessful = true;
 									}
-									CurrentPage++;
-									isRequestSuccessful = true;
+									else
+									{
+										await alertsHelper.ShowSnackBar("Veri alınamadı.", true);
+									}
 								}
 								else
 								{
-									await alertsHelper.ShowSnackBar("Veri alınamadı.", true);
+									await alertsHelper.ShowSnackBar("API isteği başarısız oldu.", true);
 								}
-							}
-							else
-							{
-								await alertsHelper.ShowSnackBar("API isteği başarısız oldu.", true);
 							}
 						}
 					}

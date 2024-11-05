@@ -57,28 +57,32 @@ namespace SellerInformationApps.ViewModel
 				string url = "https://5462-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
-				using (var response = await httpClient.PostAsync(url, content))
+				using (var request = new HttpRequestMessage(HttpMethod.Post, url))
 				{
-					if (response.IsSuccessStatusCode)
+					request.Content = content;
+					using (var response = await httpClient.SendAsync(request))
 					{
-						string json = await response.Content.ReadAsStringAsync();
-						var apiResponse = JsonConvert.DeserializeObject<LoginApiResponse>(json);
-
-						if (apiResponse.Success)
+						if (response.IsSuccessStatusCode)
 						{
-							Preferences.Set("UserName", UserName);
-							Preferences.Set("Password", Password);
-							authentication.LogIn();
-							await Shell.Current.GoToAsync("//MainPage");
+							string json = await response.Content.ReadAsStringAsync();
+							var apiResponse = JsonConvert.DeserializeObject<LoginApiResponse>(json);
+
+							if (apiResponse.Success)
+							{
+								Preferences.Set("UserName", UserName);
+								Preferences.Set("Password", Password);
+								authentication.LogIn();
+								await Shell.Current.GoToAsync("//MainPage");
+							}
+							else
+							{
+								await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage, true);
+							}
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage, true);
+							await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}\n{response.Content}", true);
 						}
-					}
-					else
-					{
-						await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}\n{response.Content}", true);
 					}
 				}
 			}

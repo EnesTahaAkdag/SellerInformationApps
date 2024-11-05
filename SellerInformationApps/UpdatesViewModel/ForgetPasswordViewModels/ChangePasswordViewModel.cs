@@ -69,20 +69,24 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
 
-				using (var response = await httpClient.PostAsync(url, content).ConfigureAwait(false))
+				using (var request = new HttpRequestMessage(HttpMethod.Post,url))
 				{
-					string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-					var apiResponse = JsonConvert.DeserializeObject<ChancePasswordApiResponse>(json);
+					request.Content = content;
+					using (var response = await httpClient.SendAsync(request))
+					{
+						string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+						var apiResponse = JsonConvert.DeserializeObject<ChancePasswordApiResponse>(json);
 
-					if (response.IsSuccessStatusCode && apiResponse.Success)
-					{
-						await alertsHelper.ShowSnackBar("Şifreniz başarıyla değiştirildi. Lütfen giriş yapın.");
-						Preferences.Remove("UserName");
-						ClosePopup();
-					}
-					else
-					{
-						await alertsHelper.ShowSnackBar(apiResponse?.ErrorMessage ?? "Bilinmeyen bir hata oluştu.", true);
+						if (response.IsSuccessStatusCode && apiResponse.Success)
+						{
+							await alertsHelper.ShowSnackBar("Şifreniz başarıyla değiştirildi. Lütfen giriş yapın.");
+							Preferences.Remove("UserName");
+							ClosePopup();
+						}
+						else
+						{
+							await alertsHelper.ShowSnackBar(apiResponse?.ErrorMessage ?? "Bilinmeyen bir hata oluştu.", true);
+						}
 					}
 				}
 			}

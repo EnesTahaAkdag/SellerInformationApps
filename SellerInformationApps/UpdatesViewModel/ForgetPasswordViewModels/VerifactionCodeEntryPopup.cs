@@ -6,23 +6,28 @@ using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using SellerInformationApps.PopUps.ForgetPasswordPopUps;
 using ServiceHelper.Alerts;
-using ServiceHelper.Authentication;
 using System.Text;
+using System.Timers;
 
 namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 {
 	public partial class VerificationCodeEntryViewModel : ObservableObject
 	{
-		public AlertsHelper alertsHelper = new AlertsHelper();
-
-
 		private readonly Popup _popup;
+		private System.Timers.Timer _timer;
+		private int _remainingTime;
 
+		public AlertsHelper alertsHelper = new AlertsHelper();
 		private string UserName = Preferences.Get("UserName", string.Empty);
-
 
 		[ObservableProperty]
 		private string validationCode;
+
+		public int RemainingTime
+		{
+			get => _remainingTime;
+			set => SetProperty(ref _remainingTime, value);
+		}
 
 		public IRelayCommand SubmitCommand { get; }
 		public IRelayCommand CancelCommand { get; }
@@ -32,16 +37,45 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 			_popup = popup;
 			SubmitCommand = new AsyncRelayCommand(SubmitAsync);
 			CancelCommand = new RelayCommand(ClosePopup);
+
+			RemainingTime = 120; 
+			StartTimer();
+		}
+
+		private void StartTimer()
+		{
+			_timer = new System.Timers.Timer(1000);
+			_timer.Elapsed += OnTimedEvent;
+			_timer.AutoReset = true;
+			_timer.Enabled = true;
+		}
+
+		private void OnTimedEvent(object source, ElapsedEventArgs e)
+		{
+			if (RemainingTime > 0)
+			{
+				RemainingTime--;
+			}
+			else
+			{
+				_timer.Stop();
+				_popup.Dispatcher.Dispatch(async () =>
+				{
+					await alertsHelper.ShowSnackBar("Doğrulama kodunun süresi doldu, lütfen tekrar deneyin.", true);
+					ClosePopup();
+				});
+			}
 		}
 
 		private void ClosePopup()
 		{
+			_timer?.Stop();
 			_popup?.Close();
 		}
 
 		public async Task SubmitAsync()
 		{
-			if (ValidationCode == null)
+			if (string.IsNullOrWhiteSpace(ValidationCode))
 			{
 				await alertsHelper.ShowSnackBar("Lütfen Doğrulama Kodunu Giriniz", true);
 				return;
@@ -71,11 +105,9 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 						if (apiResponse.Success)
 						{
 							await alertsHelper.ShowSnackBar("Doğrulama Kodu Doğrulandı");
-
-							await Task.Run(() => ClosePopup());
+							ClosePopup();
 
 							var popup = new ChangePasswordPopUp();
-
 							Application.Current.MainPage.ShowPopup(popup);
 						}
 						else

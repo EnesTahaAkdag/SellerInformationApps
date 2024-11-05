@@ -39,7 +39,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 		{
 			if (!IsFormValid())
 			{
-				await alertsHelper.ShowSnackBar("Lütfen tüm alanları doldurduğunuzdan emin olun",true);
+				await alertsHelper.ShowToastBar("Lütfen tüm alanları doldurduğunuzdan emin olun",true);
 				return;
 			}
 
@@ -49,7 +49,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 				if (forgetPassword == null)
 				{
-					await alertsHelper.ShowSnackBar("Bir hata oluştu", true);
+					await alertsHelper.ShowToastBar("Bir hata oluştu", true);
 					return;
 				}
 
@@ -58,39 +58,43 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 				var content = new StringContent(JsonConvert.SerializeObject(forgetPassword), Encoding.UTF8, "application/json");
 
-				using (var response = await httpClient.PostAsync(url, content))
+				using (var request = new HttpRequestMessage(HttpMethod.Post,url))
 				{
-					if (response.IsSuccessStatusCode)
+					request.Content = content;
+					using (var response = await httpClient.SendAsync(request))
 					{
-						string json = await response.Content.ReadAsStringAsync();
-						var apiResponse = JsonConvert.DeserializeObject<ForgetPasswordApiResponse>(json);
-
-						if (apiResponse.Success)
+						if (response.IsSuccessStatusCode)
 						{
-							Preferences.Set("UserName",UserName);
-							await alertsHelper.ShowSnackBar("Doğrulama kodu e-posta adresinize gönderildi");
+							string json = await response.Content.ReadAsStringAsync();
+							var apiResponse = JsonConvert.DeserializeObject<ForgetPasswordApiResponse>(json);
 
-							var verificationCodeEntryPopup = new VerificationCodeEntryPopup();
+							if (apiResponse.Success)
+							{
+								Preferences.Set("UserName", UserName);
+								await alertsHelper.ShowToastBar("Doğrulama kodu e-posta adresinize gönderildi");
 
-							Application.Current.MainPage.ShowPopup(verificationCodeEntryPopup);
-							ClosePopup(); 
+								var verificationCodeEntryPopup = new VerificationCodeEntryPopup();
 
+								Application.Current.MainPage.ShowPopup(verificationCodeEntryPopup);
+								ClosePopup();
+
+							}
+
+							else
+							{
+								await alertsHelper.ShowToastBar(apiResponse.ErrorMessage, true);
+							}
 						}
-
 						else
 						{
-							await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage, true);
+							await alertsHelper.ShowToastBar($"HTTP isteği başarısız oldu: {response.StatusCode}", true);
 						}
-					}
-					else
-					{
-						await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}", true);
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"Bir hata oluştu: {ex.Message}", true);
+				await alertsHelper.ShowToastBar($"Bir hata oluştu: {ex.Message}", true);
 			}
 		}
 

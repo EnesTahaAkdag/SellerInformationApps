@@ -69,30 +69,35 @@ namespace SellerInformationApps.UpdatesViewModel
 
 				string url = "https://5462-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdatePassword";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-
-				using (var response = await httpClient.PostAsync(url, content))
+				
+				using (var request = new HttpRequestMessage(HttpMethod.Post,url))
 				{
-					if (response.IsSuccessStatusCode)
+					request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
+					request.Content = content;
+					using (var response = await httpClient.SendAsync(request))
 					{
-						string json = await response.Content.ReadAsStringAsync();
-						var apiResponse = JsonConvert.DeserializeObject<UpdatePasswordApiResponse>(json);
-
-						if (apiResponse.Success)
+						if (response.IsSuccessStatusCode)
 						{
-							await alertsHelper.ShowSnackBar("Şifre başarıyla güncellendi");
-							Preferences.Set("Password", NewPassword);
-							IsPasswordUpdated = true;
-							await Shell.Current.GoToAsync("//ProfilePage");
+							string json = await response.Content.ReadAsStringAsync();
+							var apiResponse = JsonConvert.DeserializeObject<UpdatePasswordApiResponse>(json);
+
+							if (apiResponse.Success)
+							{
+								await alertsHelper.ShowSnackBar("Şifre başarıyla güncellendi");
+								Preferences.Set("Password", NewPassword);
+								IsPasswordUpdated = true;
+								await Shell.Current.GoToAsync("//ProfilePage");
+							}
+							else
+							{
+								await alertsHelper.ShowSnackBar("Şifre güncelleme başarısız oldu", true);
+								IsPasswordUpdated = false;
+							}
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar("Şifre güncelleme başarısız oldu", true);
-							IsPasswordUpdated = false;
+							await alertsHelper.ShowSnackBar($"Http isteği başarısız oldu: {response.StatusCode}", true);
 						}
-					}
-					else
-					{
-						await alertsHelper.ShowSnackBar($"Http isteği başarısız oldu: {response.StatusCode}", true);
 					}
 				}
 			}
