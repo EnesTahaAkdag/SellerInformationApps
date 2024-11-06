@@ -5,10 +5,14 @@ using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using ServiceHelper.Alerts;
+using System.Net.Http;
+using System;
 using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Azure.Core;
+using Azure;
 
 namespace SellerInformationApps.UpdatesViewModel
 {
@@ -16,9 +20,9 @@ namespace SellerInformationApps.UpdatesViewModel
 	{
 		private const string DefaultProfileImage = "profilephotots.png";
 
-
 		public UserProfileData ResultData { get; private set; } = new UserProfileData();
 		private readonly string userName = Preferences.Get("UserName", string.Empty);
+		private readonly string password = Preferences.Get("Password", string.Empty);
 
 		[ObservableProperty] private string firstName;
 		[ObservableProperty] private string lastName;
@@ -58,7 +62,6 @@ namespace SellerInformationApps.UpdatesViewModel
 			}
 		}
 
-		[RelayCommand]
 		public async Task SubmitAsync()
 		{
 			if (!IsFormValid(out string validationMessage))
@@ -70,41 +73,25 @@ namespace SellerInformationApps.UpdatesViewModel
 			try
 			{
 				var user = ReadData();
-				var password = Preferences.Get("Password", string.Empty);
+				user.ProfileImageBase64 = string.IsNullOrWhiteSpace(ProfileImageBase64) ? DefaultProfileImage : ProfileImageBase64;
 
-				if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
-				{
-					await alertsHelper.ShowSnackBar("Kullanıcı adı veya şifre eksik", true);
-					return;
-				}
-
-				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
-				var url = "https://5462-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
-				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-
-				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
+				string url = "https://35ea-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
+				var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
 				using (var request = new HttpRequestMessage(HttpMethod.Post, url))
 				{
 					request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
-					request.Content = content;
+					request.Content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 					using (var response = await httpClient.SendAsync(request))
 					{
 						var responseContent = await response.Content.ReadAsStringAsync();
 						var apiResponse = JsonConvert.DeserializeObject<ProfileUpdateApiResponse>(responseContent);
 
-						if (response.IsSuccessStatusCode && apiResponse != null && apiResponse.Success)
+						if (response.IsSuccessStatusCode && apiResponse?.Success == true)
 						{
+							ResultData = apiResponse.Data;
 							await alertsHelper.ShowSnackBar("Profil başarıyla güncellendi", false);
-
-							ResultData.FirstName = apiResponse.Data.FirstName;
-							ResultData.LastName = apiResponse.Data.LastName;
-							ResultData.UserName = apiResponse.Data.UserName;
-							ResultData.Email = apiResponse.Data.Email;
-							ResultData.Age = apiResponse.Data.Age;
-							ResultData.ProfileImageBase64 = !string.IsNullOrWhiteSpace(apiResponse.Data.ProfileImageBase64)
-								? apiResponse.Data.ProfileImageBase64
-								: DefaultProfileImage;
 						}
 						else
 						{
@@ -135,7 +122,6 @@ namespace SellerInformationApps.UpdatesViewModel
 
 			if (string.IsNullOrWhiteSpace(Email))
 			{
-
 				validationMessage = "E-posta boş olamaz.";
 				return false;
 			}

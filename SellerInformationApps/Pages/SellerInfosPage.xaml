@@ -6,7 +6,6 @@
              xmlns:viewmodel="clr-namespace:SellerInformationApps.ViewModel"
              Padding="10"
              BackgroundColor="#f5f5f5">
-    <!-- x:Name Kaldırıldı -->
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -36,8 +35,10 @@
                             <ColumnDefinition Width="180"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Text="Mağaza İsmi" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
-                        <Label Grid.Column="1" Text="Telefon" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
+                        <Label Grid.Column="0" Text="Mağaza İsmi" HorizontalOptions="Center" 
+                               VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="Telefon" HorizontalOptions="Center" 
+                               VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
                     </Grid>
                 </StackLayout>
             </ScrollView>

@@ -36,14 +36,14 @@ namespace SellerInformationApps.UpdatesViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				string url = $"https://5462-37-130-115-91.ngrok-free.app/ApplicationContentApi/StoreDetails?Id={Id}";
+				string url = $"https://35ea-37-130-115-91.ngrok-free.app/ApplicationContentApi/StoreDetails?Id={Id}";
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
-					request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
+					request.Headers.TryAddWithoutValidation("Authorization", $"Basic { authHeaderValue}");
 					using (var response = await httpClient.SendAsync(request))
 					{
 						if (response.IsSuccessStatusCode)

@@ -7,11 +7,14 @@ using ServiceHelper.Alerts;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Linq;
 
 namespace SellerInformationApps.ViewModel
 {
 	public partial class ChartPageViewModel : ObservableObject
 	{
+		private readonly AlertsHelper alertsHelper = new AlertsHelper();
+
 		[ObservableProperty]
 		private ObservableCollection<SellerRatingScore> data = new();
 
@@ -20,32 +23,32 @@ namespace SellerInformationApps.ViewModel
 
 		public ChartPageViewModel()
 		{
-			InitializeAsync();
+			Task.Run(() => InitializeAsync());
 		}
 
-		private async void InitializeAsync()
+
+		private async Task InitializeAsync()
 		{
 			await GetCategoricalDataAsync();
 		}
 
 		public async Task GetCategoricalDataAsync()
 		{
-			var alertsHelper = new AlertsHelper();
 			try
 			{
 				IsLoading = true;
 
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
-				
+
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
-				
-				string url = "https://5462-37-130-115-91.ngrok-free.app/ApplicationContentApi/ChartData";
-				
+				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
+
+				string url = "https://35ea-37-130-115-91.ngrok-free.app/ApplicationContentApi/ChartData";
+
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
-					request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
+					request.Headers.TryAddWithoutValidation("Authorization", $"Basic {authHeaderValue}");
 					using (var response = await httpClient.SendAsync(request))
 					{
 						if (response.IsSuccessStatusCode)
@@ -79,13 +82,13 @@ namespace SellerInformationApps.ViewModel
 							}
 							else
 							{
-								await alertsHelper.ShowSnackBar(apiResponses?.ErrorMessage ?? "Unknown Error", true)
+								await alertsHelper.ShowSnackBar(apiResponses?.ErrorMessage ?? "Bilinmeyen Hata", true)
 									.ConfigureAwait(false);
 							}
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar($"HTTP Request Failed: {response.StatusCode}", true)
+							await alertsHelper.ShowSnackBar($"HTTP İsteği Başarısız: {response.StatusCode}", true)
 								.ConfigureAwait(false);
 						}
 					}
@@ -93,7 +96,7 @@ namespace SellerInformationApps.ViewModel
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"API Request Failed: {ex.Message}", true)
+				await alertsHelper.ShowSnackBar($"API İsteği Başarısız: {ex.Message}", true)
 					.ConfigureAwait(false);
 			}
 			finally

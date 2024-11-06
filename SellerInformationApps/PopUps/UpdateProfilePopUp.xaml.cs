@@ -23,12 +23,10 @@ namespace SellerInformationApps.PopUps
 		{
 			try
 			{
-				using (MemoryStream ms = new MemoryStream())
+				if (!string.IsNullOrWhiteSpace(_viewModel.ProfileImageBase64))
 				{
-					var photo = Convert.ToBase64String(ms.ToArray());
-
-					ProfileImage.Source = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(photo)));
-					_viewModel.ProfileImageBase64 = photo;
+					ProfileImage.Source = ImageSource.FromStream(() =>
+						new MemoryStream(Convert.FromBase64String(_viewModel.ProfileImageBase64)));
 				}
 
 				await _viewModel.SubmitAsync();
@@ -46,6 +44,7 @@ namespace SellerInformationApps.PopUps
 				await alertsHelper.ShowSnackBar($"Güncelleme sýrasýnda hata oluþtu: {ex.Message}", true);
 			}
 		}
+
 
 		public void ClosePopup(object sender, EventArgs e)
 		{
@@ -96,20 +95,15 @@ namespace SellerInformationApps.PopUps
 
 				if (result != null)
 				{
-					var stream = await result.OpenReadAsync();
-
-					using (MemoryStream ms = new MemoryStream())
+					using (var stream = await result.OpenReadAsync())
 					{
-						await stream.CopyToAsync(ms);
-						var photo = Convert.ToBase64String(ms.ToArray());
-
-						ProfileImage.Source = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(photo)));
-						_viewModel.ProfileImageBase64 = photo;
+						using (var ms = new MemoryStream())
+						{
+							await stream.CopyToAsync(ms);
+							_viewModel.ProfileImageBase64 = Convert.ToBase64String(ms.ToArray());
+							ProfileImage.Source = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(_viewModel.ProfileImageBase64)));
+						}
 					}
-				}
-				else
-				{
-					_viewModel.ProfileImageBase64 = "profilephotots.png";
 				}
 			}
 			catch (Exception ex)

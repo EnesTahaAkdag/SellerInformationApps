@@ -9,7 +9,6 @@ using SellerInformationApps.UpdatesViewModel;
 using ServiceHelper.Alerts;
 using ServiceHelper.Authentication;
 using System.Collections.ObjectModel;
-using System.Net.Http.Headers;
 using System.Text;
 
 namespace SellerInformationApps.ViewModel
@@ -28,6 +27,7 @@ namespace SellerInformationApps.ViewModel
 			OpenStoreDetailsCommand = new AsyncRelayCommand<long>(OpenStoreDetailsAsync);
 			alertsHelper = new AlertsHelper();
 		}
+
 
 		[ObservableProperty]
 		private bool isLoading;
@@ -56,12 +56,11 @@ namespace SellerInformationApps.ViewModel
 			{
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
-				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
+
+				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
-
-				string url = $"https://5462-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://35ea-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
 
 				bool isRequestSuccessful = false;
 				int retryCount = 3;
@@ -72,7 +71,7 @@ namespace SellerInformationApps.ViewModel
 					{
 						using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 						{
-							request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
+							request.Headers.TryAddWithoutValidation("Authorization", $"Basic {authHeaderValue}");
 							using (var response = await httpClient.SendAsync(request))
 							{
 								if (response.IsSuccessStatusCode)
@@ -84,8 +83,7 @@ namespace SellerInformationApps.ViewModel
 									{
 										foreach (var item in apiResponse.Data)
 										{
-											TrimAllStringProperties(item);
-
+											TrimAllStringProperties(item, 16);
 											StoreInfos.Add(item);
 										}
 										CurrentPage++;
@@ -128,7 +126,7 @@ namespace SellerInformationApps.ViewModel
 			await Application.Current.MainPage.ShowPopupAsync(popup);
 		}
 
-		private void TrimAllStringProperties(StoreInfo item)
+		private void TrimAllStringProperties(StoreInfo item, int maxLength)
 		{
 			var properties = typeof(StoreInfo).GetProperties()
 				.Where(prop => prop.PropertyType == typeof(string) && prop.CanWrite && prop.CanRead);
@@ -136,10 +134,9 @@ namespace SellerInformationApps.ViewModel
 			foreach (var prop in properties)
 			{
 				var value = (string)prop.GetValue(item);
-
-				if (!string.IsNullOrEmpty(value) && value.Length > 16)
+				if (!string.IsNullOrEmpty(value) && value.Length > maxLength)
 				{
-					prop.SetValue(item, value.Substring(0, 16) + "...");
+					prop.SetValue(item, value.Substring(0, maxLength) + "...");
 				}
 			}
 		}

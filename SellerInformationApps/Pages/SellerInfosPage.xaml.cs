@@ -4,6 +4,7 @@ namespace SellerInformationApps.Pages
 {
 	public partial class SellerInfosPage : ContentPage
 	{
+
 		private bool isFetching = false;
 
 		public SellerInfosPage(SellerInfosViewModel viewModel)
@@ -12,13 +13,16 @@ namespace SellerInformationApps.Pages
 			BindingContext = viewModel;
 		}
 
+
 		protected override async void OnAppearing()
 		{
 			base.OnAppearing();
 
-			var viewModel = (SellerInfosViewModel)BindingContext;
-			viewModel.CurrentPage = 1;
-			await viewModel.FetchInitialDataAsync();
+			if (BindingContext is SellerInfosViewModel viewModel)
+			{
+				viewModel.CurrentPage = 1;
+				await viewModel.FetchInitialDataAsync();
+			}
 		}
 
 		private async void OnScrollViewScrolled(object sender, ScrolledEventArgs e)
@@ -31,16 +35,18 @@ namespace SellerInformationApps.Pages
 				if (scrollingSpace <= e.ScrollY)
 				{
 					isFetching = true;
-					var viewModel = (SellerInfosViewModel)BindingContext;
-					await viewModel.FetchDataOnScrollAsync();
+					if (BindingContext is SellerInfosViewModel viewModel)
+					{
+						await viewModel.FetchDataOnScrollAsync();
+					}
 					isFetching = false;
 				}
 			}
 		}
 
-		private void OnScrolled(object sender, ScrolledEventArgs e)
+		private async void OnScrolled(object sender, ScrolledEventArgs e)
 		{
-			headerScroll.ScrollToAsync(e.ScrollX, 0, false);
+			await headerScroll.ScrollToAsync(e.ScrollX, 0, false);
 		}
 	}
 }

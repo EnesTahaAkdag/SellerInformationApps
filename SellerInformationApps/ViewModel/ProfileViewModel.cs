@@ -105,10 +105,10 @@ namespace SellerInformationApps.ViewModel
 				}
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = $"https://5462-37-130-115-91.ngrok-free.app/UserDataSendApi/DataSend?userName={userName}";
+				string url = $"https://35ea-37-130-115-91.ngrok-free.app/UserDataSendApi/DataSend?userName={userName}";
 
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{

@@ -8,7 +8,8 @@ namespace SellerInformationApps.PopUps.ForgetPasswordPopUps
 		public ForgetPasswordPopUp()
 		{
 			InitializeComponent();
-			var viewModel = new ForgetPasswordViewModel(this); // Pop-up referansý veriliyor
+
+			var viewModel = new ForgetPasswordViewModel(this);
 			BindingContext = viewModel;
 		}
 	}

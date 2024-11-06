@@ -49,7 +49,7 @@
 
             <Frame Padding="10" BackgroundColor="#F0F0F0" CornerRadius="15" HasShadow="True">
                 <StackLayout Spacing="5">
-                    <Label Text="SoyAd" FontSize="14" TextColor="#6200EE"/>
+                    <Label Text="Soyad" FontSize="14" TextColor="#6200EE"/>
                     <Entry Text="{Binding LastName}" FontSize="20" TextColor="Black" Placeholder="Soyadınızı Giriniz" FontAttributes="Bold" MaxLength="50"/>
                 </StackLayout>
             </Frame>
@@ -66,7 +66,7 @@
                     <Label Text="Doğum Tarihi" FontSize="14" TextColor="#6200EE"/>
                     <DatePicker x:Name="AgeEntry" MinimumDate="1900-01-01" MaximumDate="{x:Static sys:DateTime.Now}"
                                 Date="{Binding Age, Mode=TwoWay, StringFormat='{0:dd/MM/yyyy}'}" FontSize="20" TextColor="Black"
-                                BackgroundColor="Transparent" FontAttributes="Bold" />
+                                BackgroundColor="Transparent" FontAttributes="Bold"/>
                 </StackLayout>
             </Frame>
 

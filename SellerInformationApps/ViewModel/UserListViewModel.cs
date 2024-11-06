@@ -11,13 +11,12 @@ namespace SellerInformationApps.ViewModel
 {
 	public partial class UserListViewModel : Authentication
 	{
-		public AlertsHelper alertsHelper = new AlertsHelper();
-
+		private readonly AlertsHelper alertsHelper = new AlertsHelper();
 
 		[ObservableProperty]
 		private bool isLoading;
 
-		public ObservableCollection<UserList> UserLists { get; set; } = new ObservableCollection<UserList>();
+		public ObservableCollection<UserList> UserLists { get; } = new ObservableCollection<UserList>();
 
 		public int CurrentPage { get; set; } = 1;
 
@@ -26,31 +25,36 @@ namespace SellerInformationApps.ViewModel
 		public async Task FetchDataOnScrollAsync()
 		{
 			if (IsLoading) return;
-			await UserListDataFromAPI();
-		}
 
-		public async Task FetchIntialDataAsync()
-		{
 			IsLoading = true;
 			await UserListDataFromAPI();
 			IsLoading = false;
 		}
 
-		public async Task UserListDataFromAPI()
+		public async Task FetchInitialDataAsync()
+		{
+			IsLoading = true;
+			UserLists.Clear();
+			CurrentPage = 1;
+			await UserListDataFromAPI();
+			IsLoading = false;
+		}
+
+		private async Task UserListDataFromAPI()
 		{
 			try
 			{
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				string url = $"https://5462-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://35ea-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList?page={CurrentPage}&pageSize={PageSize}";
 
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
-					request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
+					request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeaderValue);
 					using (var response = await httpClient.SendAsync(request))
 					{
 						if (response.IsSuccessStatusCode)
@@ -67,7 +71,7 @@ namespace SellerInformationApps.ViewModel
 							}
 							else
 							{
-								await alertsHelper.ShowSnackBar($"API İsteği Başarısız: {apiResponse.ErrorMessage}", true);
+								await alertsHelper.ShowSnackBar($"API İsteği Başarısız: {apiResponse?.ErrorMessage}", true);
 							}
 						}
 						else

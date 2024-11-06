@@ -38,7 +38,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 			SubmitCommand = new AsyncRelayCommand(SubmitAsync);
 			CancelCommand = new RelayCommand(ClosePopup);
 
-			RemainingTime = 120; 
+			RemainingTime = 120;
 			StartTimer();
 		}
 
@@ -91,8 +91,8 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://5462-37-130-115-91.ngrok-free.app");
-				string url = "https://5462-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
+				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
+				string url = "https://35ea-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
 				var content = new StringContent(JsonConvert.SerializeObject(validationCode), Encoding.UTF8, "application/json");
 
 				using (var response = await httpClient.PostAsync(url, content))

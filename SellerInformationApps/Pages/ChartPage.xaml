@@ -14,64 +14,69 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid Padding="20" RowDefinitions="Auto, *">
+    <!-- Main Layout Grid -->
+    <Grid>
 
-        <!-- Header Section -->
-        <Grid Row="0" Padding="10,20" BackgroundColor="#3F51B5" 
-              IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
-            <Label Text="Mağaza Puanları" FontSize="24" FontAttributes="Bold" TextColor="White" 
-                   HorizontalOptions="Center" VerticalOptions="Center"/>
-        </Grid>
+        <!-- Page Content -->
+        <Grid Padding="20" RowDefinitions="Auto, *" ColumnDefinitions="*">
 
-        <!-- Main Content Section -->
-        <Grid Row="1" Margin="0,20,0,0">
+            <!-- Header Section -->
+            <Grid Grid.Row="0" BackgroundColor="#3F51B5" 
+                  IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+                <Label Text="Mağaza Puanları" FontSize="24" FontAttributes="Bold" TextColor="White" 
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Grid>
 
-            <!-- Loading Animation -->
-            <StackLayout IsVisible="{Binding IsLoading}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
-                <ActivityIndicator IsRunning="{Binding IsLoading}" Color="#3F51B5" WidthRequest="80" HeightRequest="80"/>
-                <Label Text="Yükleniyor..." FontSize="Medium" TextColor="#3F51B5" HorizontalOptions="Center"/>
-            </StackLayout>
+            <!-- Main Content Section -->
+            <Grid Grid.Row="1" Margin="0,20,0,0">
+                <Grid IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" 
+                      Padding="10" BackgroundColor="White" RowDefinitions="Auto, *">
 
-            <!-- Chart Content -->
-            <Grid IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Padding="20" BackgroundColor="White" >
+                    <!-- Chart -->
+                    <telerik:RadCartesianChart x:Name="chart" AutomationId="chart" VerticalOptions="FillAndExpand" 
+                                               HorizontalOptions="FillAndExpand" BackgroundColor="White" Grid.Row="1">
+                        <telerik:RadCartesianChart.ChartBehaviors>
+                            <telerik:ChartSelectionBehavior DataPointSelectionMode="None" SeriesSelectionMode="None" />
+                            <telerik:ChartTooltipBehavior TriggerMode="Tap" />
+                        </telerik:RadCartesianChart.ChartBehaviors>
 
-                <!-- Chart Title -->
-                <Label Text="Store Comparison Chart" FontSize="18" FontAttributes="Bold" TextColor="#333"
-                       HorizontalOptions="Center" VerticalOptions="Start" Margin="0,10,0,20"/>
+                        <!-- X Axis -->
+                        <telerik:RadCartesianChart.HorizontalAxis>
+                            <telerik:CategoricalAxis LineColor="#CCCCCC" MajorTickThickness="1" PlotMode="BetweenTicks" 
+                                                     ShowLabels="True" LabelTextColor="#666666" MajorTickBackgroundColor="#CCCCCC" />
+                        </telerik:RadCartesianChart.HorizontalAxis>
 
-                <!-- Chart -->
-                <telerik:RadCartesianChart x:Name="chart" AutomationId="chart" VerticalOptions="FillAndExpand" 
-                                           HorizontalOptions="FillAndExpand" BackgroundColor="White">
-                    <telerik:RadCartesianChart.ChartBehaviors>
-                        <telerik:ChartSelectionBehavior DataPointSelectionMode="None" SeriesSelectionMode="None" />
-                        <telerik:ChartTooltipBehavior TriggerMode="Tap" />
-                    </telerik:RadCartesianChart.ChartBehaviors>
+                        <!-- Y Axis -->
+                        <telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:NumericalAxis LineColor="#CCCCCC" ShowLabels="True" LabelFormat="0" LabelTextColor="#666666" 
+                                                   MajorTickBackgroundColor="#CCCCCC" />
+                        </telerik:RadCartesianChart.VerticalAxis>
 
-                    <!-- X Axis -->
-                    <telerik:RadCartesianChart.HorizontalAxis>
-                        <telerik:CategoricalAxis LineColor="#CCCCCC" MajorTickThickness="1" PlotMode="BetweenTicks" 
-                                                 ShowLabels="True" LabelTextColor="#666666" MajorTickBackgroundColor="#CCCCCC" />
-                    </telerik:RadCartesianChart.HorizontalAxis>
+                        <!-- Grid Lines -->
+                        <telerik:RadCartesianChart.Grid>
+                            <telerik:CartesianChartGrid MajorLinesVisibility="Y" MajorLineThickness="1" MajorLineColor="#EEEEEE" />
+                        </telerik:RadCartesianChart.Grid>
 
-                    <!-- Y Axis -->
-                    <telerik:RadCartesianChart.VerticalAxis>
-                        <telerik:NumericalAxis LineColor="#CCCCCC" ShowLabels="True" LabelFormat="0" LabelTextColor="#666666" 
-                                               MajorTickBackgroundColor="#CCCCCC" />
-                    </telerik:RadCartesianChart.VerticalAxis>
+                        <!-- Bar Series -->
+                        <telerik:RadCartesianChart.Series>
+                            <telerik:BarSeries CategoryBinding="StoreName" ValueBinding="RatingScore" ItemsSource="{Binding Data}"/>
+                        </telerik:RadCartesianChart.Series>
 
-                    <!-- Grid Lines -->
-                    <telerik:RadCartesianChart.Grid>
-                        <telerik:CartesianChartGrid MajorLinesVisibility="Y" MajorLineThickness="1" MajorLineColor="#EEEEEE" />
-                    </telerik:RadCartesianChart.Grid>
-
-                    <!-- Bar Series -->
-                    <telerik:RadCartesianChart.Series>
-                        <telerik:BarSeries CategoryBinding="StoreName" ValueBinding="RatingScore" ItemsSource="{Binding Data}"/>
-                    </telerik:RadCartesianChart.Series>
-
-                </telerik:RadCartesianChart>
-
+                    </telerik:RadCartesianChart>
+                </Grid>
             </Grid>
         </Grid>
+
+        <!-- Overlay for Activity Indicator -->
+        <Grid BackgroundColor="#F0F0F0" Opacity="0.7" IsVisible="{Binding IsLoading}" 
+              VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <ActivityIndicator IsRunning="{Binding IsLoading}" 
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center" 
+                               Color="Blue" 
+                               WidthRequest="50"
+                               HeightRequest="50"/>
+        </Grid>
+
     </Grid>
 </ContentPage>

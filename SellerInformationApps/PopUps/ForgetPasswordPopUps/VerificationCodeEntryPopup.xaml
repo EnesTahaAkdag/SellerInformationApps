@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
            xmlns:viewmodels="clr-namespace:SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels"
@@ -5,36 +6,47 @@
            xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
            CanBeDismissedByTappingOutsideOfPopup="False">
 
-    <VerticalStackLayout Padding="25" BackgroundColor="#f9f9f9">
+    <!-- Centered Frame for Popup Design -->
+    <Frame Padding="20" BackgroundColor="White" CornerRadius="15" HasShadow="True"
+           VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="320" HeightRequest="340">
 
-        <!-- Popup Frame -->
-        <Frame BackgroundColor="White" HasShadow="True" VerticalOptions="Center" 
-               HorizontalOptions="Center" Padding="30" CornerRadius="15" BorderColor="LightGray">
+        <VerticalStackLayout Spacing="25" HorizontalOptions="Center">
 
-            <StackLayout Spacing="18" VerticalOptions="Center">
+            <!-- Header Text -->
+            <Label Text="Doğrulama Kodunu Giriniz" 
+                   FontSize="20" FontAttributes="Bold" 
+                   TextColor="#2C3E50" 
+                   HorizontalOptions="Center" />
 
-                <!-- Header Label -->
-                <Label Text="Enter Verification Code" FontSize="20" FontAttributes="Bold" 
-                       HorizontalOptions="Center" TextColor="#333333"/>
+            <!-- Countdown Timer -->
+            <Label Text="{Binding RemainingTime, StringFormat='Kalan Süre: {0} Saniye'}"
+                   FontSize="14" 
+                   TextColor="#d9534f" 
+                   HorizontalOptions="Center" />
 
-                <!-- Countdown Label -->
-                <Label Text="{Binding RemainingTime, StringFormat='Time left: {0} seconds'}"
-                       FontSize="14" HorizontalOptions="Center" TextColor="#d9534f"/>
+            <!-- Verification Code Entry -->
+            <Frame BackgroundColor="#F2F3F5" CornerRadius="8" Padding="10" BorderColor="#D1D5DB">
+                <Entry x:Name="verificationCode" 
+                       Placeholder="Kodu buraya girin" 
+                       Text="{Binding ValidationCode}" 
+                       FontSize="16" 
+                       TextColor="#333333" 
+                       Keyboard="Numeric" 
+                       BackgroundColor="Transparent" 
+                       PlaceholderColor="#9CA3AF" />
+            </Frame>
 
-                <!-- Verification Code Entry Frame -->
-                <Frame BackgroundColor="#f1f1f1" CornerRadius="10" Padding="10"
-                       HasShadow="False" BorderColor="#e0e0e0">
-                    <Entry x:Name="verificationCode" Placeholder="Kodu buraya girin" BackgroundColor="Transparent" 
-                           Text="{Binding ValidationCode}" TextColor="#333333" FontSize="16" Keyboard="Numeric"/>
-                </Frame>
+            <!-- Submit Button -->
+            <Button Text="Gönder" 
+                    Command="{Binding SubmitCommand}" 
+                    BackgroundColor="#10B981" 
+                    TextColor="White" 
+                    CornerRadius="8" 
+                    HeightRequest="45" 
+                    FontAttributes="Bold"
+                    HorizontalOptions="FillAndExpand" />
 
-                <!-- Submit Button -->
-                <Button Text="Submit" Command="{Binding SubmitCommand}" BackgroundColor="#5cb85c" TextColor="White" 
-                        CornerRadius="24" HeightRequest="48" FontSize="16" HorizontalOptions="FillAndExpand"
-                        BorderColor="Transparent"/>
+        </VerticalStackLayout>
 
-            </StackLayout>
-        </Frame>
-    </VerticalStackLayout>
-
+    </Frame>
 </mct:Popup>
