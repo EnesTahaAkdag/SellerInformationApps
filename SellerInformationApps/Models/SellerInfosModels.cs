@@ -1,7 +1,4 @@
-﻿
-using System.Runtime.InteropServices;
-
-namespace SellerInformationApps.Models
+﻿namespace SellerInformationApps.Models
 {
 	public class StoreInfo
 	{

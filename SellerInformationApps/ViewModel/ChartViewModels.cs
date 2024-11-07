@@ -1,13 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
-using SellerInformationApps.Models;
 using SellerInformationApps.Models.MarketPlaceSellerApp.ViewModel;
 using ServiceHelper.Alerts;
 using System.Collections.ObjectModel;
-using System.Net.Http.Headers;
 using System.Text;
-using System.Linq;
 
 namespace SellerInformationApps.ViewModel
 {

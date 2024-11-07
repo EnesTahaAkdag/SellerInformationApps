@@ -1,6 +1,5 @@
 using CommunityToolkit.Maui.Views;
 using SellerInformationApps.UpdatesViewModel;
-using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 

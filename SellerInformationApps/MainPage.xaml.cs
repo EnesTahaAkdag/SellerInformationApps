@@ -1,7 +1,4 @@
-﻿using CommunityToolkit.Maui.Views;
-using SellerInformationApps.PopUps.ForgetPasswordPopUps;
-using SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels;
-using SellerInformationApps.ViewModel;
+﻿using SellerInformationApps.ViewModel;
 
 namespace SellerInformationApps;
 
@@ -22,7 +19,6 @@ public partial class MainPage : ContentPage
 		base.OnAppearing();
 		viewModel.LoadUserName();
 	}
-
 
 	private async void OpenChartPage(object sender, EventArgs e)
 	{

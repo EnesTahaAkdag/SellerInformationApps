@@ -1,18 +1,11 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PraPazar.ServiceHelper;
 using SellerInformationApps.Models;
 using ServiceHelper.Alerts;
-using System.Net.Http;
-using System;
-using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Text;
-using System.Threading.Tasks;
-using Azure.Core;
-using Azure;
 
 namespace SellerInformationApps.UpdatesViewModel
 {

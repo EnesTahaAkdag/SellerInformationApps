@@ -1,6 +1,5 @@
 using CommunityToolkit.Maui.Views;
 using SellerInformationApps.UpdatesViewModel;
-using SellerInformationApps.ViewModel;
 using ServiceHelper.Alerts;
 
 namespace SellerInformationApps.PopUps
