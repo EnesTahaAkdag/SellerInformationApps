@@ -91,33 +91,38 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
-				string url = "https://35ea-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
+				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
+				string url = "https://be65-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
 				var content = new StringContent(JsonConvert.SerializeObject(validationCode), Encoding.UTF8, "application/json");
 
-				using (var response = await httpClient.PostAsync(url, content))
+				using (var request = new HttpRequestMessage(HttpMethod.Post, url))
 				{
-					if (response.IsSuccessStatusCode)
+					request.Content = content;
+
+					using (var response = await httpClient.PostAsync(url, content))
 					{
-						string json = await response.Content.ReadAsStringAsync();
-						var apiResponse = JsonConvert.DeserializeObject<VerificationCodeApiResponse>(json);
-
-						if (apiResponse.Success)
+						if (response.IsSuccessStatusCode)
 						{
-							await alertsHelper.ShowSnackBar("Doğrulama Kodu Doğrulandı");
-							ClosePopup();
+							string json = await response.Content.ReadAsStringAsync();
+							var apiResponse = JsonConvert.DeserializeObject<VerificationCodeApiResponse>(json);
 
-							var popup = new ChangePasswordPopUp();
-							Application.Current.MainPage.ShowPopup(popup);
+							if (apiResponse.Success)
+							{
+								await alertsHelper.ShowSnackBar("Doğrulama Kodu Doğrulandı");
+								ClosePopup();
+
+								var popup = new ChangePasswordPopUp();
+								Application.Current.MainPage.ShowPopup(popup);
+							}
+							else
+							{
+								await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage, true);
+							}
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage, true);
+							await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}", true);
 						}
-					}
-					else
-					{
-						await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}", true);
 					}
 				}
 			}

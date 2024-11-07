@@ -16,15 +16,10 @@ namespace SellerInformationApps.ViewModel
 		private readonly AlertsHelper _alertsHelper = new();
 
 		[ObservableProperty] private string firstName;
-
 		[ObservableProperty] private string lastName;
-
 		[ObservableProperty] private string userName;
-
 		[ObservableProperty] private string email;
-
 		[ObservableProperty] private string password;
-
 		[ObservableProperty] private string verifyPassword;
 
 		[ObservableProperty]
@@ -61,8 +56,8 @@ namespace SellerInformationApps.ViewModel
 			try
 			{
 				var user = CreateUser();
-				string url = "https://35ea-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
+				string url = "https://be65-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var request = new HttpRequestMessage(HttpMethod.Post, url))

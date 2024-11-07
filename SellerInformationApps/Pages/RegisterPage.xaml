@@ -34,9 +34,22 @@
                 <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
                     <Entry Placeholder="Email" Text="{Binding Email}" Keyboard="Email" TextColor="Black" MaxLength="256"/>
                 </Frame>
+
+                <!-- Şifre Alanı ve Kurallar -->
                 <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
-                    <Entry Placeholder="Şifre" Text="{Binding Password}" IsPassword="True" TextColor="Black" MaxLength="256" />
+                    <Entry Placeholder="Şifre" Text="{Binding Password}" IsPassword="True" 
+           TextColor="Black" MaxLength="256" TextChanged="Entry_TextChanged"/>
                 </Frame>
+
+                <!-- Şifre Kuralları Göstergesi -->
+                <StackLayout x:Name="PasswordRules" Spacing="5" Padding="10, 0, 10, 0">
+                    <Label x:Name="MinLengthRule" Text="• En az 8 karakter" TextColor="Red" FontSize="12"/>
+                    <Label x:Name="UppercaseRule" Text="• En az bir büyük harf (A-Z)" TextColor="Red" FontSize="12"/>
+                    <Label x:Name="LowercaseRule" Text="• En az bir küçük harf (a-z)" TextColor="Red" FontSize="12"/>
+                    <Label x:Name="SpecialCharRule" Text="• Sadece harf ve rakam içermelidir" TextColor="Red" FontSize="12"/>
+                </StackLayout>
+
+
                 <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="8">
                     <Entry Placeholder="Şifre Tekrarı" Text="{Binding VerifyPassword}" IsPassword="True" TextColor="Black" MaxLength="256"/>
                 </Frame>

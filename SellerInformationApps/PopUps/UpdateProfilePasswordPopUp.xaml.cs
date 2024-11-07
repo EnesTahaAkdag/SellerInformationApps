@@ -1,5 +1,8 @@
 using CommunityToolkit.Maui.Views;
 using SellerInformationApps.UpdatesViewModel;
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+
 
 namespace SellerInformationApps.PopUps
 {
@@ -26,6 +29,20 @@ namespace SellerInformationApps.PopUps
 		private void ClosePopUpButton(object sender, EventArgs e)
 		{
 			Close();
+		}
+
+		private void NewPasswordEntry_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string password = e.NewTextValue;
+
+			MinLengthRule.TextColor = password.Length >= 8 ? Colors.Green : Colors.Red;
+
+			UppercaseRule.TextColor = Regex.IsMatch(password, @"[A-Z]") ? Colors.Green : Colors.Red;
+
+			LowercaseRule.TextColor = Regex.IsMatch(password, @"[a-z]") ? Colors.Green : Colors.Red;
+
+			SpecialCharRule.TextColor = Regex.IsMatch(password, @"[\W_]") ? Colors.Green : Colors.Red;
+
 		}
 	}
 }

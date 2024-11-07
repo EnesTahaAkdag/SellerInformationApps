@@ -75,8 +75,8 @@ namespace SellerInformationApps.UpdatesViewModel
 				var user = ReadData();
 				user.ProfileImageBase64 = string.IsNullOrWhiteSpace(ProfileImageBase64) ? DefaultProfileImage : ProfileImageBase64;
 
-				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
-				string url = "https://35ea-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
+				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
+				string url = "https://be65-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
 				var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
 				using (var request = new HttpRequestMessage(HttpMethod.Post, url))

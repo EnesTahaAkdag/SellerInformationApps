@@ -47,10 +47,10 @@ namespace SellerInformationApps.ViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				string url = $"https://35ea-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://be65-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList?page={CurrentPage}&pageSize={PageSize}";
 
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{

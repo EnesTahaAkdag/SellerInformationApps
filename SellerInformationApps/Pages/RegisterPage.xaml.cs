@@ -1,5 +1,6 @@
 using SellerInformationApps.ViewModel;
 using ServiceHelper.Alerts;
+using System.Text.RegularExpressions;
 
 namespace SellerInformationApps.Pages
 {
@@ -68,6 +69,24 @@ namespace SellerInformationApps.Pages
 			{
 				await _alertsHelper.ShowSnackBar(ex.Message, true);
 			}
+		}
+
+
+		private void Entry_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string password = e.NewTextValue;
+
+			// Kural 1: En az 8 karakter
+			MinLengthRule.TextColor = password.Length >= 8 ? Colors.Green : Colors.Red;
+
+			// Kural 2: En az bir büyük harf (A-Z)
+			UppercaseRule.TextColor = Regex.IsMatch(password, @"[A-Z]") ? Colors.Green : Colors.Red;
+
+			// Kural 3: En az bir küçük harf (a-z)
+			LowercaseRule.TextColor = Regex.IsMatch(password, @"[a-z]") ? Colors.Green : Colors.Red;
+
+			// Kural 4: En az bir özel karakter içermeli
+			SpecialCharRule.TextColor = Regex.IsMatch(password, @"[\W_]") ? Colors.Green : Colors.Red;
 		}
 	}
 }

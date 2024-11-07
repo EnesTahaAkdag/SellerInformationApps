@@ -53,8 +53,8 @@ namespace SellerInformationApps.ViewModel
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://35ea-37-130-115-91.ngrok-free.app");
-				string url = "https://35ea-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
+				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
+				string url = "https://be65-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var request = new HttpRequestMessage(HttpMethod.Post, url))
