@@ -1,10 +1,15 @@
-﻿namespace SellerInformationApps.Models
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace SellerInformationApps.Models
 {
-	public class StoreInfo
+	public partial class StoreInfo : ObservableObject
 	{
 		public long Id { get; set; }
 		public string StoreName { get; set; }
 		public string Telephone { get; set; }
+
+		[ObservableProperty]
+		private bool _isSelected;
 	}
 
 	public class ApiResponsess

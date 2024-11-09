@@ -1,30 +1,29 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using SellerInformationApps.Models;
-using System.Text;
 using Newtonsoft.Json;
-using CommunityToolkit.Maui.Views;
-using SellerInformationApps.PopUps.ForgetPasswordPopUps;
 using PraPazar.ServiceHelper;
+using SellerInformationApps.Models;
+using SellerInformationApps.PopUps.ForgetPasswordPopUps;
 using ServiceHelper.Alerts;
+using System.Text;
 
 namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 {
 	public partial class ForgetPasswordViewModel : ObservableObject
 	{
-		public AlertsHelper alertsHelper = new AlertsHelper();
-
+		private readonly AlertsHelper _alertsHelper = new AlertsHelper();
 		private readonly Popup _popup;
 
 		[ObservableProperty]
-		private string userName;
+		private string _userName;
 
 		public IRelayCommand SubmitCommand { get; }
 		public IRelayCommand CancelCommand { get; }
 
 		public ForgetPasswordViewModel(Popup popup)
 		{
-			_popup = popup;
+			_popup = popup ?? throw new ArgumentNullException(nameof(popup));
 			SubmitCommand = new AsyncRelayCommand(SubmitCommandAsync);
 			CancelCommand = new RelayCommand(ClosePopup);
 		}
@@ -39,62 +38,59 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 		{
 			if (!IsFormValid())
 			{
-				await alertsHelper.ShowToastBar("Lütfen tüm alanları doldurduğunuzdan emin olun",true);
+				await _alertsHelper.ShowSnackBar("Lütfen kullanıcı adını doldurduğunuzdan emin olun.", true);
 				return;
 			}
 
 			try
 			{
-				var forgetPassword = CreateForgetPassword();
+				var forgetPasswordModel = CreateForgetPassword();
 
-				if (forgetPassword == null)
+				if (forgetPasswordModel == null)
 				{
-					await alertsHelper.ShowToastBar("Bir hata oluştu", true);
+					await _alertsHelper.ShowSnackBar("Bir hata oluştu, lütfen tekrar deneyiniz.", true);
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
-				string url = "https://be65-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ForgetPassword";
+				var httpClient = HttpClientFactory.Create("https://1304-37-130-115-91.ngrok-free.app");
+				string url = "https://1304-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ForgetPassword";
+				var content = new StringContent(JsonConvert.SerializeObject(forgetPasswordModel), Encoding.UTF8, "application/json");
 
-				var content = new StringContent(JsonConvert.SerializeObject(forgetPassword), Encoding.UTF8, "application/json");
-
-				using (var request = new HttpRequestMessage(HttpMethod.Post,url))
+				using (var response = await httpClient.PostAsync(url, content))
 				{
-					request.Content = content;
-					using (var response = await httpClient.SendAsync(request))
+					if (response.IsSuccessStatusCode)
 					{
-						if (response.IsSuccessStatusCode)
+						string json = await response.Content.ReadAsStringAsync();
+						var apiResponse = JsonConvert.DeserializeObject<ForgetPasswordApiResponse>(json);
+
+						if (apiResponse?.Success == true)
 						{
-							string json = await response.Content.ReadAsStringAsync();
-							var apiResponse = JsonConvert.DeserializeObject<ForgetPasswordApiResponse>(json);
+							Preferences.Set("UserName", UserName);
+							await _alertsHelper.ShowSnackBar("Doğrulama kodu e-posta adresinize gönderildi.");
 
-							if (apiResponse.Success)
-							{
-								Preferences.Set("UserName", UserName);
-								await alertsHelper.ShowToastBar("Doğrulama kodu e-posta adresinize gönderildi");
-
-								var verificationCodeEntryPopup = new VerificationCodeEntryPopup();
-
-								Application.Current.MainPage.ShowPopup(verificationCodeEntryPopup);
-								ClosePopup();
-
-							}
-
-							else
-							{
-								await alertsHelper.ShowToastBar(apiResponse.ErrorMessage, true);
-							}
+							var verificationCodeEntryPopup = new VerificationCodeEntryPopup();
+							Application.Current.MainPage.ShowPopup(verificationCodeEntryPopup);
+							ClosePopup();
 						}
 						else
 						{
-							await alertsHelper.ShowToastBar($"HTTP isteği başarısız oldu: {response.StatusCode}", true);
+							var errorMessage = apiResponse?.ErrorMessage ?? "Bir hata oluştu.";
+							await _alertsHelper.ShowSnackBar(errorMessage, true);
 						}
+					}
+					else
+					{
+						await _alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}", true);
 					}
 				}
 			}
+			catch (HttpRequestException httpEx)
+			{
+				await _alertsHelper.ShowSnackBar("İnternet bağlantınızı kontrol edin: " + httpEx.Message, true);
+			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowToastBar($"Bir hata oluştu: {ex.Message}", true);
+				await _alertsHelper.ShowSnackBar($"Bir hata oluştu: {ex.Message}", true);
 			}
 		}
 

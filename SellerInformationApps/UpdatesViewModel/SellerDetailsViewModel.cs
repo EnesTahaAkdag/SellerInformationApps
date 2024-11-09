@@ -15,20 +15,33 @@ namespace SellerInformationApps.UpdatesViewModel
 
 		private readonly AlertsHelper alertsHelper;
 
-		public string StoreName { get; private set; }
-		public string Telephone { get; private set; }
-		public string Email { get; private set; }
-		public string Address { get; private set; }
-		public string Link { get; private set; }
+		[ObservableProperty]
+		private string storeName;
+
+		[ObservableProperty]
+		private string telephone;
+
+		[ObservableProperty]
+		private string email;
+
+		[ObservableProperty]
+		private string address;
+
+		[ObservableProperty]
+		private string link;
 
 		public SellerDetailsViewModel()
 		{
 			alertsHelper = new AlertsHelper();
 		}
 
-		public async Task LoadStoreDetailsAsync(long Id)
+		public async Task LoadStoreDetailsAsync(long id)
 		{
-			if (Id == 0) return;
+			if (id <= 0)
+			{
+				await alertsHelper.ShowSnackBar("Geçersiz mağaza kimliği.", true);
+				return;
+			}
 
 			IsLoading = true;
 			try
@@ -36,14 +49,19 @@ namespace SellerInformationApps.UpdatesViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
+				if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
+				{
+					await alertsHelper.ShowSnackBar("Kullanıcı adı veya şifre eksik. Lütfen giriş yapın.", true);
+					return;
+				}
 
+				var httpClient = HttpClientFactory.Create("https://1304-37-130-115-91.ngrok-free.app");
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
-				string url = $"https://be65-37-130-115-91.ngrok-free.app/ApplicationContentApi/StoreDetails?Id={Id}";
+				string url = $"https://1304-37-130-115-91.ngrok-free.app/ApplicationContentApi/StoreDetails?Id={id}";
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
-					request.Headers.TryAddWithoutValidation("Authorization", $"Basic { authHeaderValue}");
+					request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeaderValue);
 					using (var response = await httpClient.SendAsync(request))
 					{
 						if (response.IsSuccessStatusCode)
@@ -66,10 +84,18 @@ namespace SellerInformationApps.UpdatesViewModel
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar("API isteği başarısız oldu.", true);
+							await alertsHelper.ShowSnackBar($"API isteği başarısız oldu: {response.StatusCode}", true);
 						}
 					}
 				}
+			}
+			catch (HttpRequestException httpEx)
+			{
+				await alertsHelper.ShowSnackBar($"Ağ bağlantısında hata oluştu: {httpEx.Message}", true);
+			}
+			catch (JsonException jsonEx)
+			{
+				await alertsHelper.ShowSnackBar($"Veri işleme hatası: {jsonEx.Message}", true);
 			}
 			catch (Exception ex)
 			{

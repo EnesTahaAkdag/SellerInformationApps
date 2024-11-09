@@ -1,72 +1,67 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SellerInformationApps.Pages.SellerInfosPage"
-             xmlns:a="clr-namespace:SellerInformationApps.Converters"
              xmlns:viewmodel="clr-namespace:SellerInformationApps.ViewModel"
-             Padding="10"
-             BackgroundColor="#f5f5f5">
-
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <a:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-        </ResourceDictionary>
-    </ContentPage.Resources>
+             Padding="10" BackgroundColor="#f5f5f5">
 
     <ContentPage.BindingContext>
         <viewmodel:SellerInfosViewModel />
     </ContentPage.BindingContext>
 
     <Grid>
-        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Color="Blue"/>
-        <Grid IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
 
-            <!-- Başlıklar -->
-            <ScrollView Grid.Row="0" IsClippedToBounds="False" Orientation="Horizontal"
-                        HorizontalScrollBarVisibility="Never" x:Name="headerScroll" InputTransparent="True">
-                <StackLayout Orientation="Vertical" BackgroundColor="White" Padding="5" Spacing="5">
-                    <Grid BackgroundColor="#333" Padding="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="180"/>
-                            <ColumnDefinition Width="180"/>
-                        </Grid.ColumnDefinitions>
+        <ActivityIndicator IsRunning="{Binding IsLoading}" 
+                           IsVisible="{Binding IsLoading}" 
+                           VerticalOptions="CenterAndExpand" 
+                           HorizontalOptions="CenterAndExpand" 
+                           Color="Blue"/>
 
-                        <Label Grid.Column="0" Text="Mağaza İsmi" HorizontalOptions="Center" 
-                               VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
-                        <Label Grid.Column="1" Text="Telefon" HorizontalOptions="Center" 
-                               VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
-                    </Grid>
-                </StackLayout>
-            </ScrollView>
+        <Grid IsVisible="{Binding IsProcessing}">
+            <BoxView Color="Black" Opacity="0.5" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+            <ActivityIndicator IsRunning="{Binding IsProcessing}" 
+                               VerticalOptions="Center" 
+                               HorizontalOptions="Center" 
+                               Color="Red"/>
 
-            <!-- İçerik -->
-            <ScrollView Grid.Row="1" Orientation="Vertical" Margin="0,10,0,0" Scrolled="OnScrollViewScrolled">
-                <ScrollView Orientation="Horizontal" Scrolled="OnScrolled" x:Name="contentScroll">
-                    <StackLayout Orientation="Vertical" BackgroundColor="White" Padding="5" Spacing="5">
-                        <StackLayout BindableLayout.ItemsSource="{Binding StoreInfos}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid ColumnDefinitions="180,180" Padding="10" Margin="0,5" BackgroundColor="#e0e0e0">
-                                        <Grid.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding BindingContext.OpenStoreDetailsCommand, Source={x:Reference contentScroll}}"
+            <Grid IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <ScrollView Grid.Row="1" Orientation="Vertical" Margin="0,10,0,0" Scrolled="OnScrollViewScrolled">
+                    <ScrollView Orientation="Horizontal" Scrolled="OnScrolled" x:Name="headerScroll">
+                        <StackLayout Orientation="Vertical" BackgroundColor="White" Padding="5" Spacing="5">
+                            <StackLayout BindableLayout.ItemsSource="{Binding StoreInfos}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="180,180" Padding="10" Margin="0,5">
+                                            <Grid.Triggers>
+                                                <DataTrigger TargetType="Grid" Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="BackgroundColor" Value="LightBlue"/>
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Grid" Binding="{Binding IsSelected}" Value="False">
+                                                    <Setter Property="BackgroundColor" Value="#e0e0e0"/>
+                                                </DataTrigger>
+                                            </Grid.Triggers>
+
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding BindingContext.OpenStoreDetailsCommand, Source={x:Reference contentScroll}}"
                                                                   CommandParameter="{Binding Id}" />
-                                        </Grid.GestureRecognizers>
+                                            </Grid.GestureRecognizers>
 
-                                        <Label Grid.Column="0" Text="{Binding StoreName}" 
+                                            <Label Grid.Column="0" Text="{Binding StoreName}" 
                                                HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black"/>
-                                        <Label Grid.Column="1" Text="{Binding Telephone}"
+                                            <Label Grid.Column="1" Text="{Binding Telephone}"
                                                HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
                         </StackLayout>
-                    </StackLayout>
+                    </ScrollView>
                 </ScrollView>
-            </ScrollView>
+            </Grid>
         </Grid>
     </Grid>
 </ContentPage>

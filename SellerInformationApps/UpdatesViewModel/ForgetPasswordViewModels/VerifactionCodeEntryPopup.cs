@@ -17,11 +17,11 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 		private System.Timers.Timer _timer;
 		private int _remainingTime;
 
-		public AlertsHelper alertsHelper = new AlertsHelper();
-		private string UserName = Preferences.Get("UserName", string.Empty);
+		private readonly AlertsHelper _alertsHelper = new AlertsHelper();
+		private readonly string _userName = Preferences.Get("UserName", string.Empty);
 
 		[ObservableProperty]
-		private string validationCode;
+		private string _validationCode;
 
 		public int RemainingTime
 		{
@@ -34,11 +34,11 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 
 		public VerificationCodeEntryViewModel(Popup popup)
 		{
-			_popup = popup;
+			_popup = popup ?? throw new ArgumentNullException(nameof(popup));
 			SubmitCommand = new AsyncRelayCommand(SubmitAsync);
 			CancelCommand = new RelayCommand(ClosePopup);
 
-			RemainingTime = 120;
+			RemainingTime = 120;  // Doğrulama kodu süresi
 			StartTimer();
 		}
 
@@ -61,7 +61,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 				_timer.Stop();
 				_popup.Dispatcher.Dispatch(async () =>
 				{
-					await alertsHelper.ShowSnackBar("Doğrulama kodunun süresi doldu, lütfen tekrar deneyin.", true);
+					await _alertsHelper.ShowSnackBar("Doğrulama kodunun süresi doldu, lütfen tekrar deneyin.", true);
 					ClosePopup();
 				});
 			}
@@ -77,62 +77,58 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 		{
 			if (string.IsNullOrWhiteSpace(ValidationCode))
 			{
-				await alertsHelper.ShowSnackBar("Lütfen Doğrulama Kodunu Giriniz", true);
+				await _alertsHelper.ShowSnackBar("Lütfen doğrulama kodunu giriniz.", true);
 				return;
 			}
 
 			try
 			{
-				var validationCode = CreateVerificationCode();
+				var validationCodeModel = CreateVerificationCode();
 
-				if (validationCode == null)
+				if (validationCodeModel == null)
 				{
-					await alertsHelper.ShowSnackBar("Geçersiz doğrulama kodu", true);
+					await _alertsHelper.ShowSnackBar("Geçersiz doğrulama kodu, lütfen tekrar deneyiniz.", true);
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
-				string url = "https://be65-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
-				var content = new StringContent(JsonConvert.SerializeObject(validationCode), Encoding.UTF8, "application/json");
+				var httpClient = HttpClientFactory.Create("https://1304-37-130-115-91.ngrok-free.app");
+				string url = "https://1304-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/ValidateCode";
+				var content = new StringContent(JsonConvert.SerializeObject(validationCodeModel), Encoding.UTF8, "application/json");
 
-				using (var request = new HttpRequestMessage(HttpMethod.Post, url))
+				using (var response = await httpClient.PostAsync(url, content))
 				{
-					request.Content = content;
-
-					using (var response = await httpClient.PostAsync(url, content))
+					if (response.IsSuccessStatusCode)
 					{
-						if (response.IsSuccessStatusCode)
+						string json = await response.Content.ReadAsStringAsync();
+						var apiResponse = JsonConvert.DeserializeObject<VerificationCodeApiResponse>(json);
+
+						if (apiResponse?.Success == true)
 						{
-							string json = await response.Content.ReadAsStringAsync();
-							var apiResponse = JsonConvert.DeserializeObject<VerificationCodeApiResponse>(json);
+							await _alertsHelper.ShowSnackBar("Doğrulama kodu doğrulandı.");
+							ClosePopup();
 
-							if (apiResponse.Success)
-							{
-								await alertsHelper.ShowSnackBar("Doğrulama Kodu Doğrulandı");
-								ClosePopup();
-
-								var popup = new ChangePasswordPopUp();
-								Application.Current.MainPage.ShowPopup(popup);
-							}
-							else
-							{
-								await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage, true);
-							}
+							var popup = new ChangePasswordPopUp();
+							Application.Current.MainPage.ShowPopup(popup);
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}", true);
+							var errorMessage = apiResponse?.ErrorMessage ?? "Bilinmeyen bir hata oluştu.";
+							await _alertsHelper.ShowSnackBar(errorMessage, true);
 						}
+					}
+					else
+					{
+						await _alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}", true);
 					}
 				}
 			}
 			catch (HttpRequestException httpEx)
 			{
-				await alertsHelper.ShowSnackBar("İnternet bağlantınızı kontrol edin: " + httpEx.Message, true);
+				await _alertsHelper.ShowSnackBar("İnternet bağlantınızı kontrol edin: " + httpEx.Message, true);
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"Bir Hata Oluştu: {ex.Message}", true);
+				await _alertsHelper.ShowSnackBar($"Bir hata oluştu: {ex.Message}", true);
 			}
 		}
 
@@ -140,7 +136,7 @@ namespace SellerInformationApps.UpdatesViewModel.ForgetPasswordViewModels
 		{
 			return new VerificationCodeModel
 			{
-				UserName = UserName,
+				UserName = _userName,
 				ValidationCode = ValidationCode
 			};
 		}

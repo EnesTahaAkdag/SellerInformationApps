@@ -19,15 +19,8 @@ namespace SellerInformationApps.ViewModel
 		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 		private readonly AlertsHelper alertsHelper;
 
-		public IAsyncRelayCommand<long> OpenStoreDetailsCommand { get; }
-
-		public SellerInfosViewModel()
-		{
-			StoreInfos = new ObservableCollection<StoreInfo>();
-			OpenStoreDetailsCommand = new AsyncRelayCommand<long>(OpenStoreDetailsAsync);
-			alertsHelper = new AlertsHelper();
-		}
-
+		[ObservableProperty]
+		private bool isProcessing;
 
 		[ObservableProperty]
 		private bool isLoading;
@@ -36,9 +29,20 @@ namespace SellerInformationApps.ViewModel
 
 		public int CurrentPage { get; set; } = 1;
 
+		public IAsyncRelayCommand<long> OpenDetailsCommand { get; }
+
+		public SellerInfosViewModel()
+		{
+			StoreInfos = new ObservableCollection<StoreInfo>();
+			OpenDetailsCommand = new AsyncRelayCommand<long>(async (id) => await OpenStoreDetailsAsync(id));
+			alertsHelper = new AlertsHelper();
+		}
+
 		public async Task FetchInitialDataAsync()
 		{
 			IsLoading = true;
+			StoreInfos.Clear();
+			CurrentPage = 1;
 			await FetchDataFromAPIAsync();
 			IsLoading = false;
 		}
@@ -57,56 +61,38 @@ namespace SellerInformationApps.ViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://1304-37-130-115-91.ngrok-free.app");
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				string url = $"https://be65-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://1304-37-130-115-91.ngrok-free.app/ApplicationContentApi/MarketPlaceData?page={CurrentPage}&pageSize={PageSize}";
 
-				bool isRequestSuccessful = false;
-				int retryCount = 3;
-
-				while (!isRequestSuccessful && retryCount > 0)
+				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
-					try
+					request.Headers.TryAddWithoutValidation("Authorization", $"Basic {authHeaderValue}");
+					using (var response = await httpClient.SendAsync(request))
 					{
-						using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+						if (response.IsSuccessStatusCode)
 						{
-							request.Headers.TryAddWithoutValidation("Authorization", $"Basic {authHeaderValue}");
-							using (var response = await httpClient.SendAsync(request))
-							{
-								if (response.IsSuccessStatusCode)
-								{
-									string json = await response.Content.ReadAsStringAsync();
-									var apiResponse = JsonConvert.DeserializeObject<ApiResponsess>(json);
+							string json = await response.Content.ReadAsStringAsync();
+							var apiResponse = JsonConvert.DeserializeObject<ApiResponsess>(json);
 
-									if (apiResponse != null && apiResponse.Success)
-									{
-										foreach (var item in apiResponse.Data)
-										{
-											TrimAllStringProperties(item, 16);
-											StoreInfos.Add(item);
-										}
-										CurrentPage++;
-										isRequestSuccessful = true;
-									}
-									else
-									{
-										await alertsHelper.ShowSnackBar("Veri alınamadı.", true);
-									}
-								}
-								else
+							if (apiResponse != null && apiResponse.Success)
+							{
+								foreach (var item in apiResponse.Data)
 								{
-									await alertsHelper.ShowSnackBar("API isteği başarısız oldu.", true);
+									TrimAllStringProperties(item, 16);
+									StoreInfos.Add(item);
 								}
+								CurrentPage++;
+							}
+							else
+							{
+								await alertsHelper.ShowSnackBar("Veri alınamadı.", true);
 							}
 						}
-					}
-					catch (Exception ex)
-					{
-						retryCount--;
-						if (retryCount == 0)
+						else
 						{
-							await alertsHelper.ShowSnackBar($"API isteği sırasında bir hata oluştu: {ex.Message}", true);
+							await alertsHelper.ShowSnackBar("API isteği başarısız oldu.", true);
 						}
 					}
 				}
@@ -117,13 +103,28 @@ namespace SellerInformationApps.ViewModel
 			}
 		}
 
-		private async Task OpenStoreDetailsAsync(long Id)
+		private async Task OpenStoreDetailsAsync(long id)
 		{
+			IsProcessing = true;
+
+			foreach (var store in StoreInfos)
+			{
+				store.IsSelected = false;
+			}
+
+			var selectedStore = StoreInfos.FirstOrDefault(s => s.Id == id);
+			if (selectedStore != null)
+			{
+				selectedStore.IsSelected = true;
+			}
+
 			var storeDetailsViewModel = new SellerDetailsViewModel();
-			await storeDetailsViewModel.LoadStoreDetailsAsync(Id);
+			await storeDetailsViewModel.LoadStoreDetailsAsync(id);
 
 			var popup = new StoreDetailsPopup(storeDetailsViewModel);
 			await Application.Current.MainPage.ShowPopupAsync(popup);
+
+			IsProcessing = false;
 		}
 
 		private void TrimAllStringProperties(StoreInfo item, int maxLength)

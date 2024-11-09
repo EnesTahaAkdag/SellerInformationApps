@@ -14,7 +14,6 @@ namespace SellerInformationApps.UpdatesViewModel
 	{
 		public AlertsHelper alertsHelper = new AlertsHelper();
 
-
 		public bool IsPasswordUpdated;
 
 		[ObservableProperty]
@@ -35,15 +34,34 @@ namespace SellerInformationApps.UpdatesViewModel
 		[RelayCommand]
 		public async Task SubmitPasswordAsync()
 		{
-			if (IsOldPasswordUsed())
+			// Validation Checks
+			if (string.IsNullOrWhiteSpace(UserName))
 			{
-				await alertsHelper.ShowSnackBar("Eski Şifre ile Yeni Şifre Aynı Olamaz", true);
+				await alertsHelper.ShowSnackBar("Kullanıcı adı boş olamaz", true);
 				return;
 			}
 
-			if (!IsFormValid())
+			if (string.IsNullOrWhiteSpace(OldPassword))
 			{
-				await alertsHelper.ShowSnackBar("Tüm alanları doldurunuz ve şifreler eşleşmelidir", true);
+				await alertsHelper.ShowSnackBar("Eski şifre boş olamaz", true);
+				return;
+			}
+
+			if (string.IsNullOrWhiteSpace(NewPassword))
+			{
+				await alertsHelper.ShowSnackBar("Yeni şifre boş olamaz", true);
+				return;
+			}
+
+			if (NewPassword != VerifyNewPassword)
+			{
+				await alertsHelper.ShowSnackBar("Yeni şifre ve doğrulama şifresi eşleşmiyor", true);
+				return;
+			}
+
+			if (IsOldPasswordUsed())
+			{
+				await alertsHelper.ShowSnackBar("Eski şifre ile yeni şifre aynı olamaz", true);
 				return;
 			}
 
@@ -58,52 +76,52 @@ namespace SellerInformationApps.UpdatesViewModel
 				var user = PrepareUserData();
 				if (user == null)
 				{
-					await alertsHelper.ShowSnackBar("Kullanıcı bilgileri güncellenirken bir hata oluştu", true);
+					await alertsHelper.ShowSnackBar("Kullanıcı bilgileri hazırlanırken bir hata oluştu", true);
 					return;
 				}
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{UserName}:{UsedPassword}"));
-
-				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://1304-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = "https://be65-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdatePassword";
+				string url = "https://1304-37-130-115-91.ngrok-free.app/UserUpdateApi/UpdatePassword";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-				
-				using (var request = new HttpRequestMessage(HttpMethod.Post,url))
+
+				using (var request = new HttpRequestMessage(HttpMethod.Post, url))
 				{
-					request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
 					request.Content = content;
+
 					using (var response = await httpClient.SendAsync(request))
 					{
-						if (response.IsSuccessStatusCode)
-						{
-							string json = await response.Content.ReadAsStringAsync();
-							var apiResponse = JsonConvert.DeserializeObject<UpdatePasswordApiResponse>(json);
+						string json = await response.Content.ReadAsStringAsync();
+						var apiResponse = JsonConvert.DeserializeObject<UpdatePasswordApiResponse>(json);
 
-							if (apiResponse.Success)
-							{
-								await alertsHelper.ShowSnackBar("Şifre başarıyla güncellendi");
-								Preferences.Set("Password", NewPassword);
-								IsPasswordUpdated = true;
-								await Shell.Current.GoToAsync("//ProfilePage");
-							}
-							else
-							{
-								await alertsHelper.ShowSnackBar("Şifre güncelleme başarısız oldu", true);
-								IsPasswordUpdated = false;
-							}
+						if (response.IsSuccessStatusCode && apiResponse?.Success == true)
+						{
+							await alertsHelper.ShowSnackBar("Şifre başarıyla güncellendi");
+							Preferences.Set("Password", NewPassword);
+							IsPasswordUpdated = true;
+							await Shell.Current.GoToAsync("//ProfilePage");
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar($"Http isteği başarısız oldu: {response.StatusCode}", true);
+							await alertsHelper.ShowSnackBar(apiResponse?.ErrorMessage ?? "Şifre güncelleme başarısız oldu", true);
+							IsPasswordUpdated = false;
 						}
 					}
 				}
 			}
+			catch (HttpRequestException httpEx)
+			{
+				await alertsHelper.ShowSnackBar($"Ağ bağlantısında hata oluştu: {httpEx.Message}", true);
+			}
+			catch (JsonException jsonEx)
+			{
+				await alertsHelper.ShowSnackBar($"Veri işleme hatası: {jsonEx.Message}", true);
+			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"Hata oluştu: {ex.Message}",true);
+				await alertsHelper.ShowSnackBar($"Bir hata oluştu: {ex.Message}", true);
 			}
 		}
 

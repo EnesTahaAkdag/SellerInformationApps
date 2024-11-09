@@ -32,7 +32,7 @@ namespace SellerInformationApps.PopUps
 
 				if (_viewModel.ResultData == null)
 				{
-					await alertsHelper.ShowSnackBar("Profil verileri güncellenemedi.", true);
+					await alertsHelper.ShowSnackBar("Profil verileri güncellenemedi. Lütfen daha sonra tekrar deneyin.", true);
 					return;
 				}
 
@@ -40,10 +40,9 @@ namespace SellerInformationApps.PopUps
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"Güncelleme sýrasýnda hata oluþtu: {ex.Message}", true);
+				await alertsHelper.ShowSnackBar($"Güncelleme sýrasýnda bir hata oluþtu: {ex.Message}", true);
 			}
 		}
-
 
 		public void ClosePopup(object sender, EventArgs e)
 		{
@@ -107,7 +106,7 @@ namespace SellerInformationApps.PopUps
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar(ex.Message, true);
+				await alertsHelper.ShowSnackBar($"Resim yüklenirken hata oluþtu: {ex.Message}", true);
 			}
 		}
 	}

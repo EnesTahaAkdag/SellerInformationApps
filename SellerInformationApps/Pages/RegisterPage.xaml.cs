@@ -71,7 +71,6 @@ namespace SellerInformationApps.Pages
 			}
 		}
 
-
 		private void Entry_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			string password = e.NewTextValue;

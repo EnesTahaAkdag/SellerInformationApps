@@ -10,7 +10,7 @@ namespace SellerInformationApps.ViewModel
 {
 	public partial class ChartPageViewModel : ObservableObject
 	{
-		private readonly AlertsHelper alertsHelper = new AlertsHelper();
+		private readonly AlertsHelper alertsHelper = new();
 
 		[ObservableProperty]
 		private ObservableCollection<SellerRatingScore> data = new();
@@ -22,7 +22,6 @@ namespace SellerInformationApps.ViewModel
 		{
 			Task.Run(() => InitializeAsync());
 		}
-
 
 		private async Task InitializeAsync()
 		{
@@ -38,63 +37,81 @@ namespace SellerInformationApps.ViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
+				if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+				{
+					await alertsHelper.ShowSnackBar("Lütfen kullanıcı adı ve parola bilgilerini sağlayın.", true);
+					return;
+				}
 
-				string url = "https://be65-37-130-115-91.ngrok-free.app/ApplicationContentApi/ChartData";
+				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
+				var httpClient = HttpClientFactory.Create("https://1304-37-130-115-91.ngrok-free.app");
+
+				string url = "https://1304-37-130-115-91.ngrok-free.app/ApplicationContentApi/ChartData";
 
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
 					request.Headers.TryAddWithoutValidation("Authorization", $"Basic {authHeaderValue}");
 					using (var response = await httpClient.SendAsync(request))
 					{
-						if (response.IsSuccessStatusCode)
+						if (!response.IsSuccessStatusCode)
 						{
-							string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-							var apiResponses = JsonConvert.DeserializeObject<ApiResponses>(json);
+							await alertsHelper.ShowSnackBar($"HTTP İsteği Başarısız: {response.StatusCode}. Lütfen internet bağlantınızı kontrol edin.", true);
+							return;
+						}
 
-							if (apiResponses?.Success == true)
+						string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+						var apiResponses = JsonConvert.DeserializeObject<ApiResponses>(json);
+
+						if (apiResponses?.Success == true)
+						{
+							var apiData = JsonConvert.DeserializeObject<List<SellerRatingScore>>(apiResponses.Data.ToString());
+
+							if (apiData == null || !apiData.Any())
 							{
-								var apiData = JsonConvert.DeserializeObject<List<SellerRatingScore>>(apiResponses.Data.ToString());
-								var ratingCounts = apiData
-									.Where(item => item.RatingScore.HasValue && item.RatingScore.Value > 0)
-									.GroupBy(item => (int)Math.Floor(item.RatingScore.Value))
-									.ToDictionary(group => group.Key, group => group.Count());
+								await alertsHelper.ShowSnackBar("Sunucudan geçerli veri alınamadı.", true);
+								return;
+							}
 
-								var result = Enumerable.Range(1, 5)
-									.Select(i => new SellerRatingScore
-									{
-										StoreName = $"{i}",
-										RatingScore = ratingCounts.TryGetValue(i, out var count) ? count : 0
-									}).ToList();
+							var ratingCounts = apiData
+								.Where(item => item.RatingScore.HasValue && item.RatingScore.Value > 0)
+								.GroupBy(item => (int)Math.Floor(item.RatingScore.Value))
+								.ToDictionary(group => group.Key, group => group.Count());
 
-								MainThread.BeginInvokeOnMainThread(() =>
+							var result = Enumerable.Range(1, 5)
+								.Select(i => new SellerRatingScore
 								{
-									Data.Clear();
-									foreach (var item in result)
-									{
-										Data.Add(item);
-									}
-								});
-							}
-							else
+									StoreName = $"{i}",
+									RatingScore = ratingCounts.TryGetValue(i, out var count) ? count : 0
+								}).ToList();
+
+							MainThread.BeginInvokeOnMainThread(() =>
 							{
-								await alertsHelper.ShowSnackBar(apiResponses?.ErrorMessage ?? "Bilinmeyen Hata", true)
-									.ConfigureAwait(false);
-							}
+								Data.Clear();
+								foreach (var item in result)
+								{
+									Data.Add(item);
+								}
+							});
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar($"HTTP İsteği Başarısız: {response.StatusCode}", true)
+							await alertsHelper.ShowSnackBar(apiResponses?.ErrorMessage ?? "Bilinmeyen Hata", true)
 								.ConfigureAwait(false);
 						}
 					}
 				}
 			}
+			catch (HttpRequestException httpEx)
+			{
+				await alertsHelper.ShowSnackBar($"Ağ hatası: {httpEx.Message}. Lütfen bağlantınızı kontrol edin.", true);
+			}
+			catch (JsonException jsonEx)
+			{
+				await alertsHelper.ShowSnackBar($"Yanıt işlenirken bir hata oluştu: {jsonEx.Message}", true);
+			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"API İsteği Başarısız: {ex.Message}", true)
-					.ConfigureAwait(false);
+				await alertsHelper.ShowSnackBar($"API İsteği Başarısız: {ex.Message}", true);
 			}
 			finally
 			{

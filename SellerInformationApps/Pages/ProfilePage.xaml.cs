@@ -28,7 +28,7 @@ namespace SellerInformationApps.Pages
 			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"Bir hata oluþtu: {ex.Message}", true);
+				await alertsHelper.ShowSnackBar($"Beklenmeyen bir hata oluþtu. Lütfen tekrar deneyin veya destek ile iletiþime geçin. Hata detayý: {ex.Message}", true);
 			}
 		}
 
@@ -57,11 +57,10 @@ namespace SellerInformationApps.Pages
 						_viewModel.UserProfileData = updateProfile.ResultData;
 						BindingContext = _viewModel;
 					}
-
 				}
 				else
 				{
-					await alertsHelper.ShowSnackBar("Profil bilgileri yüklenemedi", true);
+					await alertsHelper.ShowSnackBar("Profil bilgileri yüklenemedi, lütfen tekrar deneyin.", true);
 				}
 			}
 			catch (Exception ex)

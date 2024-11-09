@@ -4,7 +4,6 @@ namespace SellerInformationApps.Pages
 {
 	public partial class SellerInfosPage : ContentPage
 	{
-
 		private bool isFetching = false;
 
 		public SellerInfosPage(SellerInfosViewModel viewModel)
@@ -12,7 +11,6 @@ namespace SellerInformationApps.Pages
 			InitializeComponent();
 			BindingContext = viewModel;
 		}
-
 
 		protected override async void OnAppearing()
 		{

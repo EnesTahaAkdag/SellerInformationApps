@@ -28,7 +28,7 @@ namespace SellerInformationApps.ViewModel
 
 		[ObservableProperty] private string profileImageBase64;
 
-		private DateTime _currentDate = DateTime.Now;
+		private readonly DateTime _currentDate = DateTime.Now;
 		public DateTime CurrentDate => _currentDate;
 
 		public ICommand RegisterUserCommand { get; }
@@ -47,17 +47,11 @@ namespace SellerInformationApps.ViewModel
 				return;
 			}
 
-			if (!ArePasswordsMatching())
-			{
-				await _alertsHelper.ShowSnackBar("Şifreler eşleşmiyor.", true);
-				return;
-			}
-
 			try
 			{
 				var user = CreateUser();
-				string url = "https://be65-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
-				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
+				string url = "https://1304-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/RegisterUser";
+				var httpClient = HttpClientFactory.Create("https://1304-37-130-115-91.ngrok-free.app");
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var request = new HttpRequestMessage(HttpMethod.Post, url))
@@ -65,7 +59,6 @@ namespace SellerInformationApps.ViewModel
 					request.Content = content;
 					using (var response = await httpClient.SendAsync(request))
 					{
-
 						var responseContent = await response.Content.ReadAsStringAsync();
 						if (response.IsSuccessStatusCode)
 						{
@@ -99,9 +92,14 @@ namespace SellerInformationApps.ViewModel
 				return false;
 			}
 
+			if (string.IsNullOrWhiteSpace(UserName))
+			{
+				validationMessage = "Kullanıcı Adı boş olamaz";
+				return false;
+			}
+
 			if (string.IsNullOrWhiteSpace(Email))
 			{
-
 				validationMessage = "E-posta boş olamaz.";
 				return false;
 			}
@@ -109,6 +107,21 @@ namespace SellerInformationApps.ViewModel
 			if (!IsValidEmail(Email))
 			{
 				validationMessage = "Geçerli bir e-posta adresi giriniz.";
+				return false;
+			}
+
+			if(!string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(VerifyPassword))
+			{
+				if(!ArePasswordsMatching())
+				{
+					validationMessage = "Şifre Doğrulanamadı";
+					return false;
+				}
+
+			}
+			else
+			{
+				validationMessage = "Şifre veya Şifreyi doğrula boş olamaz";
 				return false;
 			}
 
@@ -132,13 +145,18 @@ namespace SellerInformationApps.ViewModel
 			try
 			{
 				var addr = new MailAddress(email);
-				return addr.Address == email;
+				string host = addr.Host;
+
+				string[] validTlds = { ".com", ".net", ".org", ".edu", ".gov", ".co", ".us", ".uk" };
+
+				return validTlds.Any(tld => host.EndsWith(tld, StringComparison.OrdinalIgnoreCase));
 			}
 			catch
 			{
 				return false;
 			}
 		}
+
 
 		private User CreateUser()
 		{

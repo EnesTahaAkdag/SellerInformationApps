@@ -31,14 +31,15 @@ namespace SellerInformationApps.ViewModel
 			_authentication = Authentication.Instance;
 			UserProfilePhoto = new UserProfilePhoto();
 		}
+
 		public void ClearProfileData()
 		{
 			FirstName = LastName = UserName = Email = string.Empty;
 			Age = null;
 			ProfileImageBase64 = null;
 			UserProfilePhoto = new UserProfilePhoto();
-			
 		}
+
 		public async Task WriteData(UserProfileData updateUserData)
 		{
 			if (updateUserData == null)
@@ -105,10 +106,10 @@ namespace SellerInformationApps.ViewModel
 				}
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://1304-37-130-115-91.ngrok-free.app");
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-				string url = $"https://be65-37-130-115-91.ngrok-free.app/UserDataSendApi/DataSend?userName={userName}";
+				string url = $"https://1304-37-130-115-91.ngrok-free.app/UserDataSendApi/DataSend?userName={userName}";
 
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{

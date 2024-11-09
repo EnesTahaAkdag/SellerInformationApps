@@ -14,7 +14,7 @@ namespace SellerInformationApps.ViewModel
 {
 	public partial class LoginPageViewModel : ObservableObject
 	{
-		public AlertsHelper alertsHelper = new AlertsHelper();
+		private readonly AlertsHelper alertsHelper = new();
 		private readonly Authentication authentication;
 
 		[ObservableProperty]
@@ -26,13 +26,11 @@ namespace SellerInformationApps.ViewModel
 		public ICommand RegisterCommand { get; }
 		public IRelayCommand RememberYourPassword { get; }
 
-
 		public LoginPageViewModel()
 		{
 			authentication = Authentication.Instance;
 			RegisterCommand = new AsyncRelayCommand(NavigateToRegisterPageAsync);
 			RememberYourPassword = new AsyncRelayCommand(RememberPasswordAsync);
-
 		}
 
 		[RelayCommand]
@@ -49,46 +47,60 @@ namespace SellerInformationApps.ViewModel
 				var user = CreateLoginUser();
 				if (user == null)
 				{
-					await alertsHelper.ShowSnackBar("Giriş yaparken bir hata oluştu.", true);
+					await alertsHelper.ShowSnackBar("Giriş bilgileri oluşturulurken bir hata oluştu.", true);
 					return;
 				}
 
-				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
-				string url = "https://be65-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
+				var httpClient = HttpClientFactory.Create("https://1304-37-130-115-91.ngrok-free.app");
+				string url = "https://1304-37-130-115-91.ngrok-free.app/RegisterAndLoginApi/LoginUserData";
 				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
 				using (var request = new HttpRequestMessage(HttpMethod.Post, url))
 				{
 					request.Content = content;
+
 					using (var response = await httpClient.SendAsync(request))
 					{
-						if (response.IsSuccessStatusCode)
+						if (!response.IsSuccessStatusCode)
 						{
-							string json = await response.Content.ReadAsStringAsync();
-							var apiResponse = JsonConvert.DeserializeObject<LoginApiResponse>(json);
+							await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}. Lütfen internet bağlantınızı kontrol edin.", true);
+							return;
+						}
 
-							if (apiResponse.Success)
-							{
-								Preferences.Set("UserName", UserName);
-								Preferences.Set("Password", Password);
-								authentication.LogIn();
-								await Shell.Current.GoToAsync("//MainPage");
-							}
-							else
-							{
-								await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage, true);
-							}
+						string json = await response.Content.ReadAsStringAsync();
+						var apiResponse = JsonConvert.DeserializeObject<LoginApiResponse>(json);
+
+						if (apiResponse == null)
+						{
+							await alertsHelper.ShowSnackBar("Sunucudan alınan yanıt işlenemedi. Lütfen daha sonra tekrar deneyin.", true);
+							return;
+						}
+
+						if (apiResponse.Success)
+						{
+							Preferences.Set("UserName", UserName);
+							Preferences.Set("Password", Password);
+							authentication.LogIn();
+							await Shell.Current.GoToAsync("//MainPage");
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar($"HTTP isteği başarısız oldu: {response.StatusCode}\n{response.Content}", true);
+							await alertsHelper.ShowSnackBar(apiResponse.ErrorMessage ?? "Giriş başarısız oldu.", true);
 						}
 					}
 				}
 			}
+			catch (HttpRequestException httpEx)
+			{
+				await alertsHelper.ShowSnackBar($"Ağ hatası: {httpEx.Message}. Lütfen bağlantınızı kontrol edin.", true);
+			}
+			catch (JsonException jsonEx)
+			{
+				await alertsHelper.ShowSnackBar($"Yanıt işlenirken bir hata oluştu: {jsonEx.Message}", true);
+			}
 			catch (Exception ex)
 			{
-				await alertsHelper.ShowSnackBar($"Hata oluştu: {ex.Message}\n{ex.StackTrace}", true);
+				await alertsHelper.ShowSnackBar($"Beklenmeyen bir hata oluştu: {ex.Message}", true);
 			}
 		}
 
@@ -110,6 +122,7 @@ namespace SellerInformationApps.ViewModel
 		{
 			await Shell.Current.GoToAsync("//RegisterPage");
 		}
+
 		private async Task RememberPasswordAsync()
 		{
 			var popup = new ForgetPasswordPopUp();

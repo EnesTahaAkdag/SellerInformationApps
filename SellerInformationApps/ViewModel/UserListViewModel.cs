@@ -19,13 +19,12 @@ namespace SellerInformationApps.ViewModel
 		public ObservableCollection<UserList> UserLists { get; } = new ObservableCollection<UserList>();
 
 		public int CurrentPage { get; set; } = 1;
-
 		public const int PageSize = 50;
+		private int TotalPage { get; set; } // Toplam sayfa kontrolü için eklenmiştir.
 
 		public async Task FetchDataOnScrollAsync()
 		{
-			if (IsLoading) return;
-
+			if (IsLoading || CurrentPage > TotalPage) return; // Son sayfaya ulaşıldıysa veri çekme
 			IsLoading = true;
 			await UserListDataFromAPI();
 			IsLoading = false;
@@ -47,10 +46,10 @@ namespace SellerInformationApps.ViewModel
 				var userName = Preferences.Get("UserName", string.Empty);
 				var password = Preferences.Get("Password", string.Empty);
 
-				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
+				var httpClient = HttpClientFactory.Create("https://1304-37-130-115-91.ngrok-free.app");
 
 				string authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
-				string url = $"https://be65-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList?page={CurrentPage}&pageSize={PageSize}";
+				string url = $"https://1304-37-130-115-91.ngrok-free.app/UserDataSendApi/UserList?page={CurrentPage}&pageSize={PageSize}";
 
 				using (var request = new HttpRequestMessage(HttpMethod.Get, url))
 				{
@@ -61,6 +60,7 @@ namespace SellerInformationApps.ViewModel
 						{
 							string json = await response.Content.ReadAsStringAsync();
 							var apiResponse = JsonConvert.DeserializeObject<UserApiResponse>(json);
+
 							if (apiResponse != null && apiResponse.Success)
 							{
 								foreach (var item in apiResponse.Data)
@@ -68,6 +68,7 @@ namespace SellerInformationApps.ViewModel
 									UserLists.Add(item);
 								}
 								CurrentPage++;
+								TotalPage = apiResponse.TotalPage;
 							}
 							else
 							{

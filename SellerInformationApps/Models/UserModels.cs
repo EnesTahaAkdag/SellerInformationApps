@@ -192,6 +192,7 @@ namespace SellerInformationApps.Models
 		public string ErrorMessage { get; set; }
 		public List<UserList> Data { get; set; }
 		public int TotalCount { get; set; }
+		public int TotalPage { get; set; }
 	}
 
 	public class UserUpdateApiResponse

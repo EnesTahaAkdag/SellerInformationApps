@@ -68,7 +68,7 @@
         </Grid>
 
         <!-- Overlay for Activity Indicator -->
-        <Grid BackgroundColor="#F0F0F0" Opacity="0.7" IsVisible="{Binding IsLoading}" 
+        <Grid BackgroundColor="#F0F0F0" Opacity="0.7" IsVisible="{Binding IsLoading}"
               VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <ActivityIndicator IsRunning="{Binding IsLoading}" 
                                HorizontalOptions="Center" 
@@ -77,6 +77,5 @@
                                WidthRequest="50"
                                HeightRequest="50"/>
         </Grid>
-
     </Grid>
 </ContentPage>

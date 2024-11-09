@@ -68,13 +68,13 @@ namespace SellerInformationApps.UpdatesViewModel
 				var user = ReadData();
 				user.ProfileImageBase64 = string.IsNullOrWhiteSpace(ProfileImageBase64) ? DefaultProfileImage : ProfileImageBase64;
 
-				var httpClient = HttpClientFactory.Create("https://be65-37-130-115-91.ngrok-free.app");
-				string url = "https://be65-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
+				var httpClient = HttpClientFactory.Create("https://1304-37-130-115-91.ngrok-free.app");
+				string url = "https://1304-37-130-115-91.ngrok-free.app/UserUpdateApi/EditUserData";
 				var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"));
 
 				using (var request = new HttpRequestMessage(HttpMethod.Post, url))
 				{
-					request.Headers.TryAddWithoutValidation("Basic", authHeaderValue);
+					request.Headers.TryAddWithoutValidation("Authorization", $"Basic {authHeaderValue}");
 					request.Content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 					using (var response = await httpClient.SendAsync(request))
 					{
@@ -88,7 +88,7 @@ namespace SellerInformationApps.UpdatesViewModel
 						}
 						else
 						{
-							await alertsHelper.ShowSnackBar("Profil güncellenemedi", true);
+							await alertsHelper.ShowSnackBar(apiResponse?.ErrorMessage ?? "Profil güncellenemedi", true);
 						}
 					}
 				}
@@ -115,15 +115,19 @@ namespace SellerInformationApps.UpdatesViewModel
 
 			if (string.IsNullOrWhiteSpace(Email))
 			{
+
 				validationMessage = "E-posta boş olamaz.";
 				return false;
 			}
-
-			if (!IsValidEmail(Email))
+			else
 			{
-				validationMessage = "Geçerli bir e-posta adresi giriniz.";
-				return false;
+				if (!IsValidEmail(Email))
+				{
+					validationMessage = "Geçerli bir e-posta adresi giriniz.";
+					return false;
+				}
 			}
+
 
 			if (Age == null)
 			{
@@ -150,7 +154,11 @@ namespace SellerInformationApps.UpdatesViewModel
 			try
 			{
 				var addr = new MailAddress(email);
-				return addr.Address == email;
+				string host = addr.Host;
+
+				string[] validTlds = { ".com", ".net", ".org", ".edu", ".gov", ".co", ".us", ".uk" };
+
+				return validTlds.Any(tld => host.EndsWith(tld, StringComparison.OrdinalIgnoreCase));
 			}
 			catch
 			{
